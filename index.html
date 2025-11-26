@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nihongo Sensei - Complete JLPT N5 Mastery</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary-red: #c53d32;
+      --primary-blue: #2a4b8d;
+      --primary-gold: #d9a761;
+      --ink-black: #0a0a14;
+      --paper-beige: #f5f1e6;
+      --sakura-pink: #ffd7d7;
+      --bamboo-green: #6a8c5c;
+      --indigo-blue: #3f4464;
+    }
+    
+    [data-theme="light"] {
+      --bg-primary: #f5f1e6;
+      --bg-secondary: #ffffff;
+      --text-primary: #0a0a14;
+      --text-secondary: #4a5568;
+      --accent: #2a4b8d;
+      --accent-light: #d9a761;
+    }
+    
+    [data-theme="dark"] {
+      --bg-primary: #0a0a14;
+      --bg-secondary: #1a1a2e;
+      --text-primary: #f5f1e6;
+      --text-secondary: #cbd5e0;
+      --accent: #d9a761;
+      --accent-light: #2a4b8d;
+    }
+    
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(217, 167, 97, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .glass::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary-red), var(--primary-gold), var(--bamboo-green));
+      z-index: 10;
+    }
+    
+    .japanese-font {
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    
+    .japanese-decorative {
+      font-family: 'Yuji Syuku', serif;
+    }
+    
+    .sakura {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ffd7d7' d='M12 18c0 .5.3.9.6 1.3.4.5.4 1.2.2 1.8-.2.5-.7.9-1.2.9-1.1 0-2.1-.5-2.8-1.3-.8-.8-1.3-1.9-1.3-3 0-.5.3-.9.6-1.3.4-.5.4-1.2.2-1.8-.2-.5-.7-.9-1.2-.9-1.1 0-2.1.5-2.8 1.3C3.5 16.1 3 17.2 3 18.4c0 1.2.5 2.3 1.3 3.1.8.8 1.9 1.3 3.1 1.3 1.2 0 2.3-.5 3.1-1.3.8-.8 1.3-1.9 1.3-3.1 0-.5-.1-1-.2-1.5-.2-.5-.5-1-.9-1.4-.4-.4-.9-.7-1.4-.9-.5-.2-1-.2-1.5-.2-.5 0-1 .1-1.5.2'/%3E%3C/svg%3E");
+      background-size: contain;
+      opacity: 0.6;
+      z-index: 0;
+      filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+      animation: floating 8s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(10deg); }
+    }
+    
+    .wave-pattern {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23d9a761'/%3E%3Cpath d='M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z' opacity='.5' fill='%23d9a761'/%3E%3Cpath d='M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z' fill='%23d9a761'/%3E%3C/svg%3E");
+      background-size: 1200px 100%;
+      opacity: 0.1;
+    }
+    
+    .mode-btn {
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px 16px;
+      border-radius: 10px;
+      background: rgba(42, 75, 141, 0.3);
+      border: 1px solid rgba(217, 167, 97, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .mode-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      background: rgba(42, 75, 141, 0.4);
+      border-color: rgba(217, 167, 97, 0.3);
+    }
+    
+    .mode-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: var(--primary-gold);
+    }
+    
+    .action-btn {
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 500;
+      white-space: nowrap;
+      background: rgba(42, 75, 141, 0.4);
+      border: 1px solid rgba(217, 167, 97, 0.2);
+    }
+    
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      background: rgba(42, 75, 141, 0.5);
+      border-color: rgba(217, 167, 97, 0.3);
+    }
+    
+    .panel {
+      display: none;
+    }
+    
+    .panel.active {
+      display: block;
+    }
+    
+    .nav-btn {
+      display: block;
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      border: 0;
+      background: transparent;
+      color: var(--text-secondary);
+      text-align: left;
+      cursor: pointer;
+    }
+    
+    .nav-btn.active {
+      background: linear-gradient(90deg, rgba(6,182,212,0.08), rgba(96,165,250,0.03));
+      color: var(--accent-light);
+    }
+    
+    .progress-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-red), var(--primary-gold));
+      transition: width 0.3s ease;
+    }
+    
+    .kanji-card, .kana-card, .vocab-card {
+      min-height: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20, 21, 40, 0.5);
+      border: 1px solid rgba(217, 167, 97, 0.2);
+      border-radius: 12px;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .kanji-char {
+      font-size: 92px;
+      line-height: 1;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    
+    .kanji-reading {
+      font-size: 20px;
+      color: var(--primary-gold);
+      margin-top: 10px;
+    }
+    
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    
+    .choice {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      background: rgba(20, 21, 40, 0.5);
+    }
+    
+    .choice.correct {
+      outline: 2px solid rgba(34, 197, 94, 0.3);
+    }
+    
+    .choice.wrong {
+      outline: 2px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .meter {
+      height: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    
+    .meter > span {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #06b6d4, #60a5fa);
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    
+    input, select, textarea {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: inherit;
+      padding: 8px;
+      border-radius: 6px;
+      width: 100%;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-gold);
+    }
+    
+    .title-container {
+      position: relative;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .title-container::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      right: 25%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+    }
+    
+    .flip-card {
+      perspective: 1000px;
+    }
+    
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    
+    .flip-card-front, .flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      border-radius: 12px;
+    }
+    
+    .flip-card-back {
+      transform: rotateY(180deg);
+    }
+    
+    .reading-passage {
+      line-height: 1.8;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .exam-timer {
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    
+    .exam-warning {
+      color: #e53e3e;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .srs-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    
+    .srs-new { background-color: #e53e3e; }
+    .srs-learning { background-color: #dd6b20; }
+    .srs-review { background-color: #38a169; }
+    .srs-mastered { background-color: #3182ce; }
+    
+    .leaderboard-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .leaderboard-rank {
+      font-weight: bold;
+      font-size: 1.2rem;
+      width: 30px;
+      text-align: center;
+    }
+    
+    .leaderboard-name {
+      flex: 1;
+      margin-left: 1rem;
+    }
+    
+    .leaderboard-score {
+      font-weight: bold;
+      color: var(--primary-gold);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      border-radius: 8px;
+      background: var(--bg-secondary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.success {
+      border-left: 4px solid #38a169;
+    }
+    
+    .notification.warning {
+      border-left: 4px solid #dd6b20;
+    }
+    
+    .notification.error {
+      border-left: 4px solid #e53e3e;
+    }
+  </style>
+</head>
+<body data-theme="dark" class="transition-colors duration-300">
+  <!-- Decorative elements -->
+  <div class="sakura"></div>
+  <div class="sakura"></div>
+  <div class="sakura"></div>
+  <div class="sakura"></div>
+  <div class="wave-pattern"></div>
+
+  <!-- Notification System -->
+  <div id="notification" class="notification"></div>
+
+  <div class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Header -->
+    <header class="glass p-4 mb-8 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" rx="6" fill="#05263a"/>
+          <path d="M7 8h10v2H7zM7 12h10v2H7z" fill="#06b6d4"/>
+        </svg>
+        <h1 class="text-2xl font-bold japanese-decorative bg-gradient-to-r from-red-400 to-yellow-500 bg-clip-text text-transparent">Nihongo Sensei</h1>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <!-- Theme Toggle -->
+        <button id="themeToggle" class="action-btn px-3 py-1">
+          <i class="fas fa-moon mr-2"></i> Dark Mode
+        </button>
+        
+        <!-- Progress Stats -->
+        <div class="hidden md:flex items-center gap-2 text-sm">
+          <span>Daily: <span id="dailyProgress">0/20</span></span>
+          <span>Total: <span id="totalProgress">0/700</span></span>
+        </div>
+        
+        <!-- Export/Import Buttons -->
+        <button id="exportBtn" class="action-btn px-3 py-1 text-sm">Export</button>
+        <button id="importBtn" class="action-btn px-3 py-1 text-sm">Import</button>
+      </div>
+    </header>
+    
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- Navigation -->
+      <nav class="glass p-4 md:col-span-1">
+        <button data-panel="dashboard" class="nav-btn active">
+          <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+        </button>
+        <button data-panel="kana" class="nav-btn">
+          <i class="fas fa-journal-whills mr-2"></i> Kana Practice
+        </button>
+        <button data-panel="vocab" class="nav-btn">
+          <i class="fas fa-language mr-2"></i> Vocabulary
+        </button>
+        <button data-panel="kanji" class="nav-btn">
+          <i class="fas fa-book mr-2"></i> Kanji Flashcards
+        </button>
+        <button data-panel="quiz" class="nav-btn">
+          <i class="fas fa-tasks mr-2"></i> Vocabulary Quiz
+        </button>
+        <button data-panel="grammar" class="nav-btn">
+          <i class="fas fa-pen-fancy mr-2"></i> Grammar Drills
+        </button>
+        <button data-panel="listening" class="nav-btn">
+          <i class="fas fa-headphones mr-2"></i> Listening Practice
+        </button>
+        <button data-panel="reading" class="nav-btn">
+          <i class="fas fa-book-reader mr-2"></i> Reading Practice
+        </button>
+        <button data-panel="mock" class="nav-btn">
+          <i class="fas fa-file-alt mr-2"></i> Mock Test
+        </button>
+        <button data-panel="srs" class="nav-btn">
+          <i class="fas fa-brain mr-2"></i> SRS Review
+        </button>
+        <button data-panel="leaderboard" class="nav-btn">
+          <i class="fas fa-trophy mr-2"></i> Leaderboard
+        </button>
+        <hr class="my-4 border-gray-700">
+        <button data-panel="editor" class="nav-btn">
+          <i class="fas fa-edit mr-2"></i> Data Editor
+        </button>
+        <button data-panel="settings" class="nav-btn">
+          <i class="fas fa-cog mr-2"></i> Settings
+        </button>
+      </nav>
+      
+      <!-- Main Content -->
+      <main class="glass p-6 md:col-span-3">
+        <!-- Dashboard -->
+        <section id="dashboard" class="panel active">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Dashboard</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Track your Japanese learning progress</p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Progress Overview -->
+            <div class="glass p-4">
+              <h3 class="text-xl font-semibold mb-4">Progress Overview</h3>
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Kanji Mastery</span>
+                    <span id="kanjiProgressText">0%</span>
+                  </div>
+                  <div class="meter">
+                    <span id="kanjiProgressBar"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Vocabulary Mastery</span>
+                    <span id="vocabProgressText">0%</span>
+                  </div>
+                  <div class="meter">
+                    <span id="vocabProgressBar"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Grammar Mastery</span>
+                    <span id="grammarProgressText">0%</span>
+                  </div>
+                  <div class="meter">
+                    <span id="grammarProgressBar"></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between mb-1">
+                    <span>Daily Goal (20 words)</span>
+                    <span id="dailyGoalText">0%</span>
+                  </div>
+                  <div class="meter">
+                    <span id="dailyGoalBar"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Quick Start -->
+            <div class="glass p-4">
+              <h3 class="text-xl font-semibold mb-4">Quick Start</h3>
+              <p class="text-gray-600 dark:text-gray-400 mb-4">Jump right into your Japanese practice</p>
+              <div class="grid grid-cols-2 gap-3">
+                <button id="startKana" class="mode-btn">
+                  <i class="mode-icon fas fa-journal-whills"></i>
+                  <span>Kana Practice</span>
+                </button>
+                <button id="startVocab" class="mode-btn">
+                  <i class="mode-icon fas fa-language"></i>
+                  <span>Vocabulary</span>
+                </button>
+                <button id="startKanji" class="mode-btn">
+                  <i class="mode-icon fas fa-book"></i>
+                  <span>Kanji Flashcards</span>
+                </button>
+                <button id="startQuiz" class="mode-btn">
+                  <i class="mode-icon fas fa-tasks"></i>
+                  <span>Quick Quiz</span>
+                </button>
+                <button id="startSRS" class="mode-btn">
+                  <i class="mode-icon fas fa-brain"></i>
+                  <span>SRS Review</span>
+                </button>
+                <button id="startMock" class="mode-btn">
+                  <i class="mode-icon fas fa-file-alt"></i>
+                  <span>Mock Test</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Progress Chart -->
+          <div class="glass p-4 mb-6">
+            <h3 class="text-xl font-semibold mb-4">Progress Chart</h3>
+            <div class="h-64">
+              <canvas id="progressChart"></canvas>
+            </div>
+          </div>
+          
+          <!-- Recent Activity -->
+          <div class="glass p-4">
+            <h3 class="text-xl font-semibold mb-4">Recent Activity</h3>
+            <div id="recentActivity" class="text-gray-600 dark:text-gray-400">
+              <p>No recent activity. Start learning to see your progress here!</p>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Kana Practice -->
+        <section id="kana" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Kana Practice</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Master Hiragana and Katakana</p>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-6">
+            <button onclick="startKanaGame(1)" class="mode-btn">
+              <i class="mode-icon fas fa-journal-whills"></i>
+              <span>Hiragana (Basic)</span>
+            </button>
+            <button onclick="startKanaGame(2)" class="mode-btn">
+              <i class="mode-icon fas fa-book"></i>
+              <span>Hiragana (All)</span>
+            </button>
+            <button onclick="startKanaGame(3)" class="mode-btn">
+              <i class="mode-icon fas fa-project-diagram"></i>
+              <span>Katakana (Basic)</span>
+            </button>
+            <button onclick="startKanaGame(4)" class="mode-btn">
+              <i class="mode-icon fas fa-book-open"></i>
+              <span>Katakana (All)</span>
+            </button>
+            <button onclick="startKanaGame(5)" class="mode-btn">
+              <i class="mode-icon fas fa-random"></i>
+              <span>Mix (Basic)</span>
+            </button>
+            <button onclick="startKanaGame(6)" class="mode-btn">
+              <i class="mode-icon fas fa-shuffle"></i>
+              <span>Mix (All)</span>
+            </button>
+          </div>
+          
+          <div id="kanaGame" class="hidden">
+            <div class="flex justify-between text-sm mb-4">
+              <div>Score: <span id="score" class="font-bold">0</span></div>
+              <div>High Score: <span id="highScore" class="font-bold">0</span></div>
+              <div>Lives: <span id="lives" class="font-bold">3</span></div>
+              <div>Time: <span id="time" class="font-bold">15</span>s</div>
+            </div>
+
+            <div class="progress-bar mb-6">
+              <div id="timeProgress" class="progress-fill" style="width: 100%"></div>
+            </div>
+
+            <div id="kanaCard" class="kana-card mb-6">
+              <span id="kanaChar" class="text-8xl font-bold japanese-font"></span>
+              <div id="romajiHint" class="absolute bottom-4 right-4 text-gray-500 hidden"></div>
+            </div>
+
+            <input id="userInput" type="text" placeholder="Type romaji here..." class="w-full p-4 rounded-xl bg-gray-900 text-white outline-none focus:ring-2 focus:ring-yellow-500 border border-gray-700 mb-4">
+
+            <div id="resultMsg" class="text-xl font-semibold min-h-[32px] mb-6 text-center"></div>
+
+            <div class="flex flex-wrap justify-center gap-4">
+              <button onclick="restartKanaGame()" class="action-btn px-6 py-3">
+                <i class="fas fa-rotate mr-2"></i>Restart
+              </button>
+              <button onclick="goBackToModes()" class="action-btn px-6 py-3">
+                <i class="fas fa-arrow-left mr-2"></i>Back
+              </button>
+              <button onclick="toggleHint()" id="hintBtn" class="action-btn px-6 py-3">
+                <i class="fas fa-lightbulb mr-2"></i>Hint
+              </button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Vocabulary -->
+        <section id="vocab" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Vocabulary</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Master JLPT N5 Vocabulary</p>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+            <div class="flex-1 w-full sm:w-auto">
+              <label for="vocabSetSelector" class="text-gray-600 dark:text-gray-400 text-sm">Select Set:</label>
+              <select id="vocabSetSelector" class="bg-gray-900 p-3 rounded-xl w-full mt-1 focus:ring-2 focus:ring-yellow-500 border border-gray-700">
+                <!-- Sets will be populated by JS -->
+              </select>
+            </div>
+            
+            <div class="flex-1 w-full sm:w-auto">
+              <label for="vocabSearch" class="text-gray-600 dark:text-gray-400 text-sm">Search Vocabulary:</label>
+              <div class="relative mt-1">
+                <input id="vocabSearch" type="text" placeholder="Search..." class="w-full p-3 pl-10 rounded-xl bg-gray-900 outline-none focus:ring-2 focus:ring-yellow-500 border border-gray-700">
+                <i class="fas fa-search absolute left-3 top-3.5 text-gray-500"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="toggle-container mb-6">
+            <span class="toggle-label">Study Mode</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="viewToggle" onchange="toggleViewMode()">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">List View</span>
+          </div>
+
+          <div id="studyMode">
+            <div class="text-center">
+              <div id="vocabCard" class="flip-card vocab-card glass mx-auto max-w-sm sm:max-w-md mb-6" onclick="flipCard()">
+                <div class="flip-card-inner">
+                  <div class="flip-card-front glass">
+                    <div id="vocabFront" class="japanese-text text-4xl"></div>
+                    <div class="flip-icon mt-4"><i class="fas fa-sync-alt mr-1"></i> Click to flip</div>
+                  </div>
+                  <div class="flip-card-back glass">
+                    <div id="vocabBack" class="meaning-text text-2xl"></div>
+                    <div id="vocabReading" class="reading-text mt-2"></div>
+                    <div id="vocabBangla" class="text-gray-600 dark:text-gray-400 mt-2"></div>
+                    <div class="flip-icon mt-4"><i class="fas fa-sync-alt mr-1"></i> Click to flip</div>
+                  </div>
+                </div>
+              </div>
+              <div id="progressInfo" class="text-sm text-gray-600 dark:text-gray-400 mb-6">Progress: <span id="vocabProgress">0 / 0</span></div>
+            </div>
+
+            <div class="vocab-actions">
+              <button onclick="prevVocab()" class="action-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span class="ml-2 hidden sm:inline">Previous</span>
+              </button>
+              
+              <button onclick="nextVocab()" class="action-btn">
+                <i class="fas fa-arrow-right"></i>
+                <span class="ml-2 hidden sm:inline">Next</span>
+              </button>
+              <button onclick="toggleSaveCard()" id="saveBtn" class="action-btn">
+                <i class="far fa-bookmark"></i>
+                <span class="ml-2 hidden sm:inline">Save</span>
+              </button>
+              
+              <button onclick="shuffleVocab()" class="action-btn">
+                <i class="fas fa-random"></i>
+                <span class="ml-2 hidden sm:inline">Shuffle</span>
+              </button>
+              
+              <button onclick="markAsKnown()" id="knownBtn" class="action-btn">
+                <i class="fas fa-check"></i>
+                <span class="ml-2 hidden sm:inline">Known</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="listMode" class="hidden">
+            <div class="vocab-list-container" id="vocabList">
+              <!-- Vocabulary list will be populated here -->
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="text-lg font-semibold flex items-center">
+                <i class="fas fa-bookmark mr-2 text-yellow-500"></i> Saved Cards
+                <span id="savedCount" class="ml-2 text-sm bg-yellow-900 rounded-full px-2 py-0.5">0</span>
+              </h2>
+              <button onclick="clearSavedCards()" class="action-btn bg-transparent hover:bg-gray-800 text-gray-400 hover:text-red-400 text-sm px-3 py-1.5 rounded-lg">
+                <i class="fas fa-trash-alt mr-1"></i> Clear All
+              </button>
+            </div>
+            <div id="savedCardList" class="saved-container space-y-3"></div>
+          </div>
+        </section>
+        
+        <!-- Kanji Flashcards -->
+        <section id="kanji" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Kanji Flashcards</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Master Japanese characters</p>
+          </div>
+          
+          <div class="kanji-card mb-6">
+            <div id="flashcardFace">
+              <div class="kanji-char" id="kanjiChar">日</div>
+              <div class="kanji-reading" id="kanjiReading">(にち / ひ) — day, sun</div>
+            </div>
+          </div>
+          
+          <div class="flex justify-center gap-4 mb-6">
+            <button id="prevCard" class="action-btn">
+              <i class="fas fa-arrow-left mr-2"></i> Prev
+            </button>
+            <button id="flipCard" class="action-btn">
+              <i class="fas fa-sync-alt mr-2"></i> Flip
+            </button>
+            <button id="nextCard" class="action-btn">
+              Next <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+            <button id="knownBtn" class="action-btn">
+              <i class="fas fa-check mr-2"></i> Mark Known
+            </button>
+          </div>
+          
+          <div class="glass p-4">
+            <label>Study mode: 
+              <select id="studyMode" class="mt-2">
+                <option value="all">All Kanji</option>
+                <option value="unknown">Only Unknown</option>
+                <option value="srs">SRS Review</option>
+              </select>
+            </label>
+          </div>
+        </section>
+        
+        <!-- Vocabulary Quiz -->
+        <section id="quiz" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Vocabulary Quiz</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Test your knowledge with multiple choice questions</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div id="vocabQuestion" class="text-xl mb-6">What is the meaning of: たべます</div>
+            <div class="choices" id="vocabChoices">
+              <!-- Choices will be populated here -->
+            </div>
+            <div class="mt-6 text-center">
+              <button id="nextVocab" class="action-btn px-6 py-3">Next Question</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Grammar Drills -->
+        <section id="grammar" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Grammar Drills</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Practice Japanese grammar and particles</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div id="grammarPrompt" class="text-xl mb-4">Fill in the correct particle: 私は___学校へ行きます。</div>
+            <input id="grammarAnswer" placeholder="Type your answer here" class="mb-4">
+            <div class="flex items-center">
+              <button id="checkGrammar" class="action-btn">Check Answer</button>
+              <span id="grammarResult" class="ml-4"></span>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Listening Practice -->
+        <section id="listening" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Listening Practice</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Improve your Japanese listening skills</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div class="mb-4">
+              <label for="audioUpload" class="block mb-2">Upload Audio File:</label>
+              <input type="file" id="audioUpload" accept="audio/*" class="mb-4">
+              <button id="uploadAudio" class="action-btn">Upload</button>
+            </div>
+            
+            <div class="mb-4">
+              <audio id="listeningAudio" controls class="w-full"></audio>
+            </div>
+            
+            <div id="listeningQuestion" class="text-xl mb-4"></div>
+            <div class="choices" id="listeningChoices">
+              <!-- Choices will be populated here -->
+            </div>
+            <div class="mt-4">
+              <button id="checkListening" class="action-btn">Check Answer</button>
+              <span id="listeningResult" class="ml-4"></span>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Reading Practice -->
+        <section id="reading" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Reading Practice</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Improve your Japanese reading comprehension</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div id="readingPassage" class="reading-passage mb-6">
+              <!-- Reading passage will be populated here -->
+            </div>
+            
+            <div id="readingQuestions" class="space-y-4">
+              <!-- Questions will be populated here -->
+            </div>
+            
+            <div class="mt-6 text-center">
+              <button id="checkReading" class="action-btn">Check Answers</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Mock Test -->
+        <section id="mock" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Mock Test</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Simulate the JLPT N5 test experience</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div class="mb-4">
+              <label for="testType" class="block mb-2">Test Type:</label>
+              <select id="testType" class="mb-4">
+                <option value="quick">Quick Test (10 questions)</option>
+                <option value="full">Full Mock Test (60 minutes)</option>
+              </select>
+            </div>
+            
+            <div id="examTimer" class="exam-timer hidden"></div>
+            
+            <div id="mockArea" class="space-y-6">
+              <p class="text-gray-600 dark:text-gray-400">Start a mock test to evaluate your Japanese proficiency.</p>
+            </div>
+            
+            <div class="mt-6 text-center">
+              <button id="startMockBtn" class="action-btn px-6 py-3">Start Mock Test</button>
+              <button id="endTestBtn" class="action-btn px-6 py-3 hidden">End Test</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- SRS Review -->
+        <section id="srs" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">SRS Review</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Spaced Repetition System for optimal learning</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div class="mb-4">
+              <p>Items due for review: <span id="srsDueCount" class="font-bold">0</span></p>
+              <div class="flex items-center mt-2">
+                <span class="srs-indicator srs-new"></span> New
+                <span class="srs-indicator srs-learning ml-4"></span> Learning
+                <span class="srs-indicator srs-review ml-4"></span> Review
+                <span class="srs-indicator srs-mastered ml-4"></span> Mastered
+              </div>
+            </div>
+            
+            <div id="srsCard" class="flip-card vocab-card glass mx-auto max-w-sm sm:max-w-md mb-6" onclick="flipSrsCard()">
+              <div class="flip-card-inner">
+                <div class="flip-card-front glass">
+                  <div id="srsFront" class="japanese-text text-4xl"></div>
+                  <div class="flip-icon mt-4"><i class="fas fa-sync-alt mr-1"></i> Click to flip</div>
+                </div>
+                <div class="flip-card-back glass">
+                  <div id="srsBack" class="meaning-text text-2xl"></div>
+                  <div id="srsReading" class="reading-text mt-2"></div>
+                  <div id="srsBangla" class="text-gray-600 dark:text-gray-400 mt-2"></div>
+                  <div class="flip-icon mt-4"><i class="fas fa-sync-alt mr-1"></i> Click to flip</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-center gap-4">
+              <button id="srsAgain" class="action-btn bg-red-500">Again</button>
+              <button id="srsHard" class="action-btn bg-orange-500">Hard</button>
+              <button id="srsGood" class="action-btn bg-green-500">Good</button>
+              <button id="srsEasy" class="action-btn bg-blue-500">Easy</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Leaderboard -->
+        <section id="leaderboard" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Leaderboard</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Compare your progress with others</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div id="leaderboardList" class="space-y-4">
+              <!-- Leaderboard items will be populated here -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- Data Editor -->
+        <section id="editor" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Data Editor</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Add or modify learning content</p>
+          </div>
+          
+          <div class="glass p-6">
+            <label>Type: 
+              <select id="editorType">
+                <option value="kanji">Kanji</option>
+                <option value="vocab">Vocab</option>
+                <option value="grammar">Grammar</option>
+                <option value="reading">Reading</option>
+                <option value="listening">Listening</option>
+              </select>
+            </label>
+            <div id="editorForm" class="mt-4">
+              <!-- Dynamic form will be populated here -->
+            </div>
+            <div class="mt-6">
+              <button id="addItem" class="action-btn">Add / Update</button>
+            </div>
+          </div>
+        </section>
+        
+        <!-- Settings -->
+        <section id="settings" class="panel">
+          <div class="title-container">
+            <h2 class="text-3xl font-bold text-center">Settings</h2>
+            <p class="text-center text-gray-600 dark:text-gray-400">Customize your learning experience</p>
+          </div>
+          
+          <div class="glass p-6">
+            <div class="mb-4">
+              <label class="flex items-center">
+                <input type="checkbox" id="dailyGoalNotification" class="mr-2">
+                Enable daily goal notifications
+              </label>
+            </div>
+            
+            <div class="mb-4">
+              <label for="dailyGoalTarget" class="block mb-2">Daily Goal Target:</label>
+              <input type="number" id="dailyGoalTarget" value="20" min="5" max="100" class="mb-4">
+            </div>
+            
+            <div class="mb-4">
+              <label for="srsAlgorithm" class="block mb-2">SRS Algorithm:</label>
+              <select id="srsAlgorithm" class="mb-4">
+                <option value="default">Default</option>
+                <option value="sm2">SM-2 (Anki)</option>
+                <option value="fsrs">FSRS</option>
+              </select>
+            </div>
+            
+            <div class="mb-4">
+              <button id="exportData" class="action-btn mr-2">Export Data</button>
+              <button id="importData" class="action-btn mr-2">Import Data</button>
+              <button id="resetData" class="action-btn bg-red-500">Reset All Data</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    
+    <footer class="glass p-4 mt-8 text-center text-gray-600 dark:text-gray-400 text-sm">
+      <p>Nihongo Sensei - JLPT N5 Complete Mastery • All data is stored locally in your browser</p>
+    </footer>
+  </div>
+
+  <script>
+    // ============================
+    // DATA MODELS AND CONSTANTS
+    // ============================
+    
+    // Kana data
+    const hiraganaBasic = [
+      ['あ','a'],['い','i'],['う','u'],['え','e'],['お','o'],
+      ['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko'],
+      ['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so'],
+      ['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to'],
+      ['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no'],
+      ['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho'],
+      ['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo'],
+      ['や','ya'],['ゆ','yu'],['よ','yo'],
+      ['ら','ra'],['り','ri'],['る','ru'],['れ','re'],['ろ','ro'],
+      ['わ','wa'],['を','wo'],['ん','n']
+    ];
+    
+    const hiraganaDakuten = [
+      ['が','ga'],['ぎ','gi'],['ぐ','gu'],['げ','ge'],['ご','go'],
+      ['ざ','za'],['じ','ji'],['ず','zu'],['ぜ','ze'],['ぞ','zo'],
+      ['だ','da'],['ぢ','ji'],['づ','zu'],['で','de'],['ど','do'],
+      ['ば','ba'],['び','bi'],['ぶ','bu'],['べ','be'],['ぼ','bo'],
+      ['ぱ','pa'],['ぴ','pi'],['ぷ','pu'],['ぺ','pe'],['ぽ','po']
+    ];
+    
+    const hiraganaYouon = [
+      ['きゃ','kya'],['きゅ','kyu'],['きょ','kyo'],
+      ['しゃ','sha'],['しゅ','shu'],['しょ','sho'],
+      ['ちゃ','cha'],['ちゅ','chu'],['ちょ','cho'],
+      ['にゃ','nya'],['にゅ','nyu'],['にょ','nyo'],
+      ['ひゃ','hya'],['ひゅ','hyu'],['ひょ','hyo'],
+      ['みゃ','mya'],['みゅ','myu'],['みょ','myo'],
+      ['りゃ','rya'],['りゅ','ryu'],['りょ','ryo'],
+      ['ぎゃ','gya'],['ぎゅ','gyu'],['ぎょ','gyo'],
+      ['じゃ','ja'],['じゅ','ju'],['じょ','jo'],
+      ['びゃ','bya'],['びゅ','byu'],['びょ','byo'],
+      ['ぴゃ','pya'],['ぴゅ','pyu'],['ぴょ','pyo']
+    ];
+    
+    const kanaToKatakana = kana => kana.replace(/./g, ch => String.fromCharCode(ch.charCodeAt(0) + 0x60));
+    
+    const katakanaBasic = hiraganaBasic.map(([k, r]) => [kanaToKatakana(k), r]);
+    const katakanaDakuten = hiraganaDakuten.map(([k, r]) => [kanaToKatakana(k), r]);
+    const katakanaYouon = hiraganaYouon.map(([k, r]) => [kanaToKatakana(k), r]);
+
+    // Sample data (in a real app, this would be much larger)
+    const sampleData = {
+      kanji: [
+        {id:1,char:'日',onyomi:'にち',kunyomi:'ひ',meaning:'day/sun',examples:['今日(きょう)','日本(にほん)'],known:false},
+        {id:2,char:'月',onyomi:'げつ',kunyomi:'つき',meaning:'month/moon',examples:['今月(こんげつ)'],known:false},
+        {id:3,char:'人',onyomi:'じん,にん',kunyomi:'ひと',meaning:'person',examples:['日本人(にほんじん)'],known:false}
+      ],
+      vocab: [
+        {id:1,jp:'たべます',romaji:'tabemasu',meaning:'to eat',bangla:'খাওয়া',type:'verb',srs: {stage: 0, nextReview: Date.now(), interval: 0}},
+        {id:2,jp:'みます',romaji:'mimasu',meaning:'to see/look',bangla:'দেখা',type:'verb',srs: {stage: 0, nextReview: Date.now(), interval: 0}},
+        {id:3,jp:'えき',romaji:'eki',meaning:'station',bangla:'স্টেশন',type:'noun',srs: {stage: 0, nextReview: Date.now(), interval: 0}}
+      ],
+      grammar: [
+        {id:1,prompt:'私は___学校へ行きます。 (choose particle)',answer:'に'},
+        {id:2,prompt:'ジュースを___飲みますか。 (choose particle)',answer:'を'}
+      ],
+      reading: [
+        {
+          id: 1,
+          title: "My Daily Routine",
+          passage: "私は毎朝六時に起きます。それから、歯を磨いて、朝ご飯を食べます。八時に家を出て、学校へ行きます。学校は九時から三時までです。家に帰ってから、宿題をします。夜七時に晩ご飯を食べます。それから、テレビを見たり、本を読んだりします。十一時に寝ます。",
+          questions: [
+            {id: 1, question: "私は何時に起きますか。", answer: "六時", options: ["五時", "六時", "七時", "八時"]},
+            {id: 2, question: "学校は何時からですか。", answer: "九時", options: ["八時", "九時", "十時", "十一時"]}
+          ]
+        }
+      ],
+      listening: [
+        {
+          id: 1,
+          title: "At the Station",
+          script: "男：すみません、駅はどこですか。女：あそこに大きい建物がありますね。あれが駅です。男：どうもありがとうございます。",
+          questions: [
+            {id: 1, question: "駅はどこですか。", answer: "あそこ", options: ["ここ", "そこ", "あそこ", "どこ"]}
+          ]
+        }
+      ]
+    };
+
+    // ============================
+    // GLOBAL VARIABLES
+    // ============================
+    
+    let currentGameMode = 0;
+    let kanaList = [], currentKana;
+    let score = 0, highScore = 0, lives = 3, timeLeft = 15, timer;
+    let gameOver = false;
+    
+    let currentVocab = [], currentVocabIndex = 0;
+    let savedVocab = JSON.parse(localStorage.getItem('savedVocab') || '[]');
+    let isListViewMode = false;
+    
+    let data = JSON.parse(localStorage.getItem('jlpt_n5_data_v1')) || sampleData;
+    let state = {
+      kanjiIndex: 0,
+      mode: 'all',
+      mock: null,
+      dailyGoal: 0,
+      theme: 'dark',
+      progress: JSON.parse(localStorage.getItem('userProgress') || '{"dates": [], "scores": []}')
+    };
+
+    // ============================
+    // UTILITY FUNCTIONS
+    // ============================
+    
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type} show`;
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+    
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    // ============================
+    // INITIALIZATION
+    // ============================
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize UI
+      initNavigation();
+      initDashboard();
+      initKanaGame();
+      initVocabulary();
+      initKanjiFlashcards();
+      initQuiz();
+      initGrammar();
+      initListening();
+      initReading();
+      initMockTest();
+      initSRS();
+      initLeaderboard();
+      initEditor();
+      initSettings();
+      
+      // Load high score
+      highScore = parseInt(localStorage.getItem('kanaHighScore') || '0');
+      document.getElementById('highScore').textContent = highScore;
+      
+      // Update progress displays
+      updateProgress();
+      updateDailyGoal();
+      
+      // Initialize chart
+      initProgressChart();
+      
+      // Show welcome notification
+      showNotification('Welcome to Nihongo Sensei! Start your Japanese learning journey.', 'success');
+    });
+
+    // ============================
+    // NAVIGATION
+    // ============================
+    
+    function initNavigation() {
+      const panels = document.querySelectorAll('.panel');
+      const navButtons = document.querySelectorAll('.nav-btn');
+      
+      navButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          navButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const panel = btn.getAttribute('data-panel');
+          panels.forEach(p => p.classList.remove('active'));
+          document.getElementById(panel).classList.add('active');
+        });
+      });
+
+      // Quick start buttons
+      document.getElementById('startKana').addEventListener('click', () => {
+        document.querySelector('button[data-panel="kana"]').click();
+      });
+      
+      document.getElementById('startVocab').addEventListener('click', () => {
+        document.querySelector('button[data-panel="vocab"]').click();
+        loadVocabSets();
+      });
+      
+      document.getElementById('startKanji').addEventListener('click', () => {
+        document.querySelector('button[data-panel="kanji"]').click();
+      });
+      
+      document.getElementById('startQuiz').addEventListener('click', () => {
+        document.querySelector('button[data-panel="quiz"]').click();
+        generateVocabQ();
+      });
+      
+      document.getElementById('startSRS').addEventListener('click', () => {
+        document.querySelector('button[data-panel="srs"]').click();
+        loadSRSItems();
+      });
+      
+      document.getElementById('startMock').addEventListener('click', () => {
+        document.querySelector('button[data-panel="mock"]').click();
+      });
+    }
+
+    // ============================
+    // DASHBOARD
+    // ============================
+    
+    function initDashboard() {
+      updateProgress();
+      updateDailyGoal();
+    }
+    
+    function updateProgress() {
+      const totalKanji = data.kanji.length || 1;
+      const known = data.kanji.filter(k => k.known).length;
+      const pctK = Math.round((known/totalKanji)*100);
+      document.getElementById('kanjiProgressBar').style.width = pctK + '%';
+      document.getElementById('kanjiProgressText').textContent = pctK + '%';
+      
+      // For demo purposes, set vocab and grammar progress
+      const vocabKnown = data.vocab.filter(v => v.srs && v.srs.stage > 2).length;
+      const pctV = Math.round((vocabKnown/data.vocab.length)*100);
+      document.getElementById('vocabProgressBar').style.width = pctV + '%';
+      document.getElementById('vocabProgressText').textContent = pctV + '%';
+      
+      document.getElementById('grammarProgressBar').style.width = '30%';
+      document.getElementById('grammarProgressText').textContent = '30%';
+    }
+    
+    function updateDailyGoal() {
+      const goal = 20; // Default daily goal
+      const today = new Date().toDateString();
+      const todayProgress = state.progress.daily && state.progress.daily[today] ? state.progress.daily[today] : 0;
+      const pct = Math.round((todayProgress/goal)*100);
+      
+      document.getElementById('dailyGoalBar').style.width = pct + '%';
+      document.getElementById('dailyGoalText').textContent = pct + '%';
+      document.getElementById('dailyProgress').textContent = `${todayProgress}/${goal}`;
+      document.getElementById('totalProgress').textContent = `${data.vocab.filter(v => v.srs && v.srs.stage > 0).length}/${data.vocab.length}`;
+    }
+    
+    function initProgressChart() {
+      const ctx = document.getElementById('progressChart').getContext('2d');
+      const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: state.progress.dates || [],
+          datasets: [{
+            label: 'Vocabulary Mastery',
+            data: state.progress.scores || [],
+            borderColor: '#d9a761',
+            backgroundColor: 'rgba(217, 167, 97, 0.1)',
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+
+    // ============================
+    // KANA GAME
+    // ============================
+    
+    function initKanaGame() {
+      document.getElementById('userInput').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !gameOver) {
+          const userAnswer = this.value.trim().toLowerCase();
+          if (userAnswer === currentKana[1]) {
+            handleKanaCorrect();
+          } else {
+            handleKanaIncorrect();
+          }
+        }
+      });
+    }
+    
+    function getKanaSet(mode) {
+      switch (mode) {
+        case 1: return hiraganaBasic;
+        case 2: return [...hiraganaBasic, ...hiraganaDakuten, ...hiraganaYouon];
+        case 3: return katakanaBasic;
+        case 4: return [...katakanaBasic, ...katakanaDakuten, ...katakanaYouon];
+        case 5: return [...hiraganaBasic, ...katakanaBasic];
+        case 6: return [
+          ...hiraganaBasic, ...katakanaBasic, 
+          ...hiraganaDakuten, ...katakanaDakuten, 
+          ...hiraganaYouon, ...katakanaYouon
+        ];
+        default: return hiraganaBasic;
+      }
+    }
+
+    function startKanaGame(mode) {
+      document.getElementById('kanaGame').classList.remove('hidden');
+      currentGameMode = mode;
+      kanaList = [...getKanaSet(mode)];
+      score = 0;
+      lives = 3;
+      timeLeft = 15;
+      gameOver = false;
+      
+      document.getElementById('score').textContent = score;
+      document.getElementById('lives').textContent = lives;
+      document.getElementById('time').textContent = timeLeft;
+      document.getElementById('timeProgress').style.width = '100%';
+      document.getElementById('resultMsg').textContent = '';
+      
+      nextKanaQuestion();
+      startKanaTimer();
+      document.getElementById('userInput').focus();
+    }
+
+    function goBackToModes() {
+      clearInterval(timer);
+      document.getElementById('kanaGame').classList.add('hidden');
+    }
+
+    function restartKanaGame() {
+      startKanaGame(currentGameMode);
+    }
+
+    function startKanaTimer() {
+      clearInterval(timer);
+      timer = setInterval(() => {
+        if (!gameOver) {
+          timeLeft--;
+          document.getElementById('time').textContent = timeLeft;
+          document.getElementById('timeProgress').style.width = `${(timeLeft / 15) * 100}%`;
+          
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            handleKanaIncorrect();
+          }
+          
+          if (timeLeft <= 5) {
+            document.getElementById('time').classList.add('text-red-400', 'pulse');
+          } else {
+            document.getElementById('time').classList.remove('text-red-400', 'pulse');
+          }
+        }
+      }, 1000);
+    }
+
+    function nextKanaQuestion() {
+      if (kanaList.length === 0) kanaList = [...getKanaSet(currentGameMode)];
+      currentKana = kanaList.pop();
+      document.getElementById('kanaChar').textContent = currentKana[0];
+      document.getElementById('romajiHint').classList.add('hidden');
+      document.getElementById('userInput').value = '';
+      document.getElementById('resultMsg').textContent = '';
+      timeLeft = 15;
+      document.getElementById('time').textContent = timeLeft;
+      document.getElementById('timeProgress').style.width = '100%';
+      startKanaTimer();
+    }
+
+    function toggleHint() {
+      document.getElementById('romajiHint').textContent = currentKana[1];
+      document.getElementById('romajiHint').classList.toggle('hidden');
+    }
+
+    async function handleKanaCorrect() {
+      const card = document.getElementById('kanaCard');
+      card.classList.add('flash-green');
+      document.getElementById('romajiHint').textContent = currentKana[1];
+      document.getElementById('romajiHint').classList.remove('hidden');
+      
+      score++;
+      if (score > highScore) {
+        highScore = score;
+        document.getElementById('highScore').textContent = highScore;
+        localStorage.setItem('kanaHighScore', highScore.toString());
+      }
+      document.getElementById('score').textContent = score;
+      
+      document.getElementById('resultMsg').textContent = '✅ Correct!';
+      document.getElementById('resultMsg').classList.add('text-green-400');
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      card.classList.remove('flash-green');
+      document.getElementById('romajiHint').classList.add('hidden');
+      nextKanaQuestion();
+    }
+
+    async function handleKanaIncorrect() {
+      clearInterval(timer);
+      if (gameOver) return;
+      
+      const card = document.getElementById('kanaCard');
+      card.classList.add('flash-red', 'shake');
+      document.getElementById('romajiHint').textContent = currentKana[1];
+      document.getElementById('romajiHint').classList.remove('hidden');
+      
+      lives = Math.max(0, lives - 1);
+      document.getElementById('lives').textContent = lives;
+      
+      document.getElementById('resultMsg').textContent = `❌ Correct: ${currentKana[1]}`;
+      document.getElementById('resultMsg').classList.add('text-red-400');
+      
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      card.classList.remove('flash-red', 'shake');
+      document.getElementById('romajiHint').classList.add('hidden');
+      
+      if (lives <= 0) {
+        gameOver = true;
+        document.getElementById('kanaChar').textContent = 'Game Over';
+        document.getElementById('resultMsg').textContent = `Final Score: ${score}`;
+      } else {
+        nextKanaQuestion();
+      }
+    }
+
+    // ============================
+    // VOCABULARY
+    // ============================
+    
+    function initVocabulary() {
+      document.getElementById('vocabSetSelector').addEventListener('change', loadVocabSet);
+      document.getElementById('vocabSearch').addEventListener('input', searchVocab);
+      loadVocabSets();
+    }
+    
+    function loadVocabSets() {
+      const selector = document.getElementById('vocabSetSelector');
+      selector.innerHTML = '';
+      
+      // Create sets of 20 words each
+      const setCount = Math.ceil(data.vocab.length / 20);
+      for (let i = 0; i < setCount; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Set ${i+1} (Words ${i*20+1}-${Math.min((i+1)*20, data.vocab.length)})`;
+        selector.appendChild(option);
+      }
+      
+      loadVocabSet();
+    }
+    
+    function loadVocabSet() {
+      const setIndex = parseInt(document.getElementById('vocabSetSelector').value);
+      const start = setIndex * 20;
+      const end = Math.min(start + 20, data.vocab.length);
+      currentVocab = data.vocab.slice(start, end);
+      currentVocabIndex = 0;
+      showVocabCard();
+      updateVocabList();
+      updateSavedList();
+    }
+    
+    function searchVocab() {
+      const term = document.getElementById('vocabSearch').value.trim().toLowerCase();
+      
+      if (!term) {
+        loadVocabSet();
+        return;
+      }
+      
+      currentVocab = data.vocab.filter(item => 
+        item.jp.includes(term) || 
+        item.romaji.includes(term) || 
+        item.meaning.toLowerCase().includes(term) ||
+        (item.bangla && item.bangla.includes(term))
+      );
+      
+      currentVocabIndex = 0;
+      showVocabCard();
+      updateVocabList();
+    }
+    
+    function showVocabCard() {
+      if (currentVocab.length === 0) {
+        document.getElementById('vocabFront').textContent = 'No vocabulary found';
+        document.getElementById('vocabBack').textContent = '';
+        document.getElementById('vocabReading').textContent = '';
+        document.getElementById('vocabBangla').textContent = '';
+        return;
+      }
+      
+      const card = currentVocab[currentVocabIndex];
+      document.getElementById('vocabFront').textContent = card.jp;
+      document.getElementById('vocabBack').textContent = card.meaning;
+      document.getElementById('vocabReading').textContent = card.romaji;
+      document.getElementById('vocabBangla').textContent = card.bangla || '';
+      
+      document.getElementById('vocabCard').classList.remove('flipped');
+      
+      document.getElementById('vocabProgress').textContent = `${currentVocabIndex + 1} / ${currentVocab.length}`;
+      
+      const isSaved = savedVocab.some(v => v.id === card.id);
+      document.getElementById('saveBtn').innerHTML = isSaved 
+        ? '<i class="fas fa-bookmark mr-1"></i> Saved' 
+        : '<i class="far fa-bookmark mr-1"></i> Save';
+    }
+    
+    function flipCard() {
+      document.getElementById('vocabCard').classList.toggle('flipped');
+    }
+    
+    function nextVocab() {
+      if (currentVocab.length === 0) return;
+      currentVocabIndex = (currentVocabIndex + 1) % currentVocab.length;
+      showVocabCard();
+    }
+    
+    function prevVocab() {
+      if (currentVocab.length === 0) return;
+      currentVocabIndex = (currentVocabIndex - 1 + currentVocab.length) % currentVocab.length;
+      showVocabCard();
+    }
+    
+    function toggleSaveCard() {
+      const card = currentVocab[currentVocabIndex];
+      if (!card) return;
+      const index = savedVocab.findIndex(v => v.id === card.id);
+      
+      if (index >= 0) {
+        savedVocab.splice(index, 1);
+      } else {
+        savedVocab.push(card);
+      }
+      
+      localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+      updateSavedList();
+      showVocabCard();
+      showNotification('Card saved to your collection!', 'success');
+    }
+    
+    function markAsKnown() {
+      const card = currentVocab[currentVocabIndex];
+      if (!card) return;
+      
+      // Update SRS data
+      if (!card.srs) card.srs = {stage: 0, nextReview: Date.now(), interval: 0};
+      card.srs.stage = Math.min(card.srs.stage + 1, 4);
+      
+      // Update daily progress
+      const today = new Date().toDateString();
+      if (!state.progress.daily) state.progress.daily = {};
+      state.progress.daily[today] = (state.progress.daily[today] || 0) + 1;
+      localStorage.setItem('userProgress', JSON.stringify(state.progress));
+      
+      // Update UI
+      updateDailyGoal();
+      updateProgress();
+      showVocabCard();
+      
+      // Show confirmation
+      showNotification('Marked as known!', 'success');
+    }
+    
+    function updateSavedList() {
+      const savedCardList = document.getElementById('savedCardList');
+      savedCardList.innerHTML = '';
+      document.getElementById('savedCount').textContent = savedVocab.length;
+      
+      if (savedVocab.length === 0) {
+        savedCardList.innerHTML = '<div class="text-gray-500 text-center py-4">No saved cards yet</div>';
+        return;
+      }
+      
+      savedVocab.forEach((card, index) => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'saved-card glass p-4 rounded-lg flex justify-between items-center';
+        cardElement.innerHTML = `
+          <div>
+            <div class="font-medium">${card.jp}</div>
+            <div class="text-sm text-gray-400">${card.meaning}</div>
+          </div>
+          <button onclick="removeSavedCard(event, ${index})" class="text-red-400 hover:text-red-300">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        cardElement.addEventListener('click', () => {
+          const cardIndex = currentVocab.findIndex(c => c.id === card.id);
+          if (cardIndex !== -1) {
+            currentVocabIndex = cardIndex;
+            showVocabCard();
+            toggleViewMode(false);
+          }
+        });
+        savedCardList.appendChild(cardElement);
+      });
+    }
+    
+    function removeSavedCard(event, index) {
+      event.stopPropagation();
+      savedVocab.splice(index, 1);
+      localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+      updateSavedList();
+      showVocabCard();
+      showNotification('Card removed from collection', 'warning');
+    }
+    
+    function clearSavedCards() {
+      if (confirm("Are you sure you want to clear all saved cards?")) {
+        savedVocab = [];
+        localStorage.removeItem('savedVocab');
+        updateSavedList();
+        showNotification('All saved cards cleared', 'warning');
+      }
+    }
+    
+    function shuffleVocab() {
+      currentVocab = shuffleArray([...currentVocab]);
+      currentVocabIndex = 0;
+      showVocabCard();
+      updateVocabList();
+      showNotification('Vocabulary shuffled!', 'success');
+    }
+    
+    function toggleViewMode() {
+      isListViewMode = document.getElementById('viewToggle').checked;
+      
+      if (isListViewMode) {
+        document.getElementById('studyMode').classList.add('hidden');
+        document.getElementById('listMode').classList.remove('hidden');
+        updateVocabList();
+      } else {
+        document.getElementById('studyMode').classList.remove('hidden');
+        document.getElementById('listMode').classList.add('hidden');
+      }
+    }
+    
+    function updateVocabList() {
+      const vocabList = document.getElementById('vocabList');
+      vocabList.innerHTML = '';
+      
+      if (currentVocab.length === 0) {
+        vocabList.innerHTML = '<div class="text-gray-500 text-center py-4">No vocabulary found</div>';
+        return;
+      }
+      
+      currentVocab.forEach((card, index) => {
+        const isCurrent = index === currentVocabIndex;
+        const itemElement = document.createElement('div');
+        itemElement.className = `vocab-list-item ${isCurrent ? 'border-l-4 border-yellow-500' : ''}`;
+        itemElement.innerHTML = `
+          <div class="vocab-list-japanese">${card.jp}</div>
+          <div class="vocab-list-info">
+            <div class="vocab-list-romaji">${card.romaji}</div>
+            <div class="vocab-list-meaning">${card.meaning}</div>
+          </div>
+        `;
+        
+        itemElement.addEventListener('click', () => {
+          currentVocabIndex = index;
+          showVocabCard();
+          toggleViewMode(false);
+        });
+        
+        vocabList.appendChild(itemElement);
+      });
+    }
+
+    // ============================
+    // KANJI FLASHCARDS
+    // ============================
+    
+    function initKanjiFlashcards() {
+      document.getElementById('nextCard').addEventListener('click', () => { 
+        state.kanjiIndex++; 
+        renderFlashcard(); 
+      });
+      
+      document.getElementById('prevCard').addEventListener('click', () => { 
+        state.kanjiIndex = Math.max(0, state.kanjiIndex - 1); 
+        renderFlashcard(); 
+      });
+      
+      document.getElementById('flipCard').addEventListener('click', () => { 
+        alert(document.getElementById('kanjiReading').textContent); 
+      });
+      
+      document.getElementById('knownBtn').addEventListener('click', () => {
+        const id = Number(document.getElementById('kanjiChar').dataset.id);
+        const item = data.kanji.find(k => k.id === id);
+        if (item) { 
+          item.known = !item.known; 
+          localStorage.setItem('jlpt_n5_data_v1', JSON.stringify(data)); 
+          updateProgress(); 
+          renderFlashcard(); 
+          showNotification(`Marked ${item.char} as ${item.known ? 'known' : 'unknown'}`, 'success');
+        }
+      });
+      
+      document.getElementById('studyMode').addEventListener('change', () => { 
+        state.kanjiIndex = 0; 
+        renderFlashcard(); 
+      });
+      
+      renderFlashcard();
+    }
+    
+    function renderFlashcard() {
+      const mode = document.getElementById('studyMode').value;
+      let pool;
+      
+      if (mode === 'unknown') {
+        pool = data.kanji.filter(k => !k.known);
+      } else if (mode === 'srs') {
+        // In a real implementation, this would use SRS algorithm
+        pool = data.kanji.filter(k => !k.known || Math.random() > 0.7);
+      } else {
+        pool = data.kanji;
+      }
+      
+      if (pool.length === 0) { 
+        document.getElementById('kanjiChar').textContent = '—'; 
+        document.getElementById('kanjiReading').textContent = 'No items'; 
+        return; 
+      }
+      
+      const item = pool[state.kanjiIndex % pool.length];
+      document.getElementById('kanjiChar').textContent = item.char;
+      document.getElementById('kanjiReading').textContent = `(${item.onyomi || ''} / ${item.kunyomi || ''}) — ${item.meaning}`;
+      document.getElementById('kanjiChar').dataset.id = item.id;
+    }
+
+    // ============================
+    // VOCABULARY QUIZ
+    // ============================
+    
+    function initQuiz() {
+      document.getElementById('nextVocab').addEventListener('click', generateVocabQ);
+      generateVocabQ();
+    }
+    
+    function generateVocabQ() {
+      if (data.vocab.length === 0) return;
+      
+      const item = data.vocab[Math.floor(Math.random() * data.vocab.length)];
+      const choices = [item.meaning];
+      
+      // Add distractors
+      while (choices.length < 4) {
+        const r = data.vocab[Math.floor(Math.random() * data.vocab.length)];
+        if (!choices.includes(r.meaning)) choices.push(r.meaning);
+      }
+      
+      // Shuffle choices
+      choices = shuffleArray(choices);
+      
+      document.getElementById('vocabQuestion').textContent = `What is the meaning of: ${item.jp}`;
+      const container = document.getElementById('vocabChoices'); 
+      container.innerHTML = '';
+      
+      choices.forEach(c => {
+        const choiceElement = document.createElement('div'); 
+        choiceElement.className = 'choice'; 
+        choiceElement.textContent = c; 
+        choiceElement.addEventListener('click', () => {
+          if (c === item.meaning) { 
+            choiceElement.classList.add('correct'); 
+            setTimeout(generateVocabQ, 700);
+            
+            // Update progress
+            const today = new Date().toDateString();
+            if (!state.progress.daily) state.progress.daily = {};
+            state.progress.daily[today] = (state.progress.daily[today] || 0) + 1;
+            localStorage.setItem('userProgress', JSON.stringify(state.progress));
+            updateDailyGoal();
+            
+            showNotification('Correct! Well done!', 'success');
+          } else { 
+            choiceElement.classList.add('wrong'); 
+            showNotification('Incorrect. Try again!', 'error');
+          }
+        }); 
+        container.appendChild(choiceElement);
+      });
+    }
+
+    // ============================
+    // GRAMMAR DRILLS
+    // ============================
+    
+    function initGrammar() {
+      document.getElementById('checkGrammar').addEventListener('click', checkGrammarAnswer);
+      pickGrammar();
+    }
+    
+    function pickGrammar() {
+      if (data.grammar.length === 0) return;
+      
+      const g = data.grammar[Math.floor(Math.random() * data.grammar.length)];
+      document.getElementById('grammarPrompt').textContent = g.prompt;
+      document.getElementById('grammarAnswer').value = '';
+      document.getElementById('grammarResult').textContent = '';
+      document.getElementById('grammarAnswer').dataset.ans = g.answer;
+    }
+    
+    function checkGrammarAnswer() {
+      const val = document.getElementById('grammarAnswer').value.trim(); 
+      const ans = document.getElementById('grammarAnswer').dataset.ans;
+      
+      if (!val) {
+        showNotification('Please enter an answer', 'warning');
+        return;
+      }
+      
+      if (val === ans) {
+        document.getElementById('grammarResult').textContent = '✅ Correct';
+        document.getElementById('grammarResult').className = 'ml-4 text-green-500';
+        setTimeout(pickGrammar, 1000);
+        
+        // Update progress
+        const today = new Date().toDateString();
+        if (!state.progress.daily) state.progress.daily = {};
+        state.progress.daily[today] = (state.progress.daily[today] || 0) + 1;
+        localStorage.setItem('userProgress', JSON.stringify(state.progress));
+        updateDailyGoal();
+        
+        showNotification('Correct! Well done!', 'success');
+      } else {
+        document.getElementById('grammarResult').textContent = '❌ Try again';
+        document.getElementById('grammarResult').className = 'ml-4 text-red-500';
+        showNotification('Incorrect. Try again!', 'error');
+      }
+    }
+
+    // ============================
+    // LISTENING PRACTICE
+    // ============================
+    
+    function initListening() {
+      document.getElementById('uploadAudio').addEventListener('click', uploadAudio);
+      document.getElementById('checkListening').addEventListener('click', checkListeningAnswer);
+      loadListeningPractice();
+    }
+    
+    function uploadAudio() {
+      const fileInput = document.getElementById('audioUpload');
+      if (fileInput.files.length === 0) {
+        showNotification('Please select an audio file', 'warning');
+        return;
+      }
+      
+      const file = fileInput.files[0];
+      const url = URL.createObjectURL(file);
+      document.getElementById('listeningAudio').src = url;
+      
+      // In a real app, you would save this to your data
+      showNotification('Audio uploaded successfully!', 'success');
+    }
+    
+    function loadListeningPractice() {
+      if (data.listening.length === 0) return;
+      
+      const item = data.listening[0];
+      document.getElementById('listeningQuestion').textContent = item.script;
+      
+      const container = document.getElementById('listeningChoices');
+      container.innerHTML = '';
+      
+      if (item.questions && item.questions.length > 0) {
+        const question = item.questions[0];
+        question.options.forEach(option => {
+          const choiceElement = document.createElement('div');
+          choiceElement.className = 'choice';
+          choiceElement.textContent = option;
+          choiceElement.dataset.correct = option === question.answer;
+          container.appendChild(choiceElement);
+        });
+      }
+    }
+    
+    function checkListeningAnswer() {
+      const choices = document.querySelectorAll('#listeningChoices .choice');
+      let correct = false;
+      
+      choices.forEach(choice => {
+        if (choice.dataset.correct === 'true') {
+          choice.classList.add('correct');
+          correct = true;
+        }
+      });
+      
+      if (correct) {
+        document.getElementById('listeningResult').textContent = '✅ Correct';
+        document.getElementById('listeningResult').className = 'ml-4 text-green-500';
+        
+        // Update progress
+        const today = new Date().toDateString();
+        if (!state.progress.daily) state.progress.daily = {};
+        state.progress.daily[today] = (state.progress.daily[today] || 0) + 1;
+        localStorage.setItem('userProgress', JSON.stringify(state.progress));
+        updateDailyGoal();
+        
+        showNotification('Correct! Well done!', 'success');
+      } else {
+        document.getElementById('listeningResult').textContent = '❌ Incorrect';
+        document.getElementById('listeningResult').className = 'ml-4 text-red-500';
+        showNotification('Incorrect. Try again!', 'error');
+      }
+    }
+
+    // ============================
+    // READING PRACTICE
+    // ============================
+    
+    function initReading() {
+      document.getElementById('checkReading').addEventListener('click', checkReadingAnswers);
+      loadReadingPractice();
+    }
+    
+    function loadReadingPractice() {
+      if (data.reading.length === 0) return;
+      
+      const item = data.reading[0];
+      document.getElementById('readingPassage').textContent = item.passage;
+      
+      const container = document.getElementById('readingQuestions');
+      container.innerHTML = '';
+      
+      item.questions.forEach((q, index) => {
+        const questionElement = document.createElement('div');
+        questionElement.className = 'glass p-4';
+        questionElement.innerHTML = `
+          <p class="font-semibold mb-2">${index + 1}. ${q.question}</p>
+          <div class="space-y-2">
+            ${q.options.map(option => `
+              <label class="flex items-center">
+                <input type="radio" name="q${index}" value="${option}" class="mr-2">
+                ${option}
+              </label>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(questionElement);
+      });
+    }
+    
+    function checkReadingAnswers() {
+      const item = data.reading[0];
+      let correctCount = 0;
+      
+      item.questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected && selected.value === q.answer) {
+          correctCount++;
+        }
+      });
+      
+      const percentage = Math.round((correctCount / item.questions.length) * 100);
+      showNotification(`You got ${correctCount} out of ${item.questions.length} correct (${percentage}%)`, 
+        percentage > 70 ? 'success' : percentage > 50 ? 'warning' : 'error');
+      
+      // Update progress
+      const today = new Date().toDateString();
+      if (!state.progress.daily) state.progress.daily = {};
+      state.progress.daily[today] = (state.progress.daily[today] || 0) + 1;
+      localStorage.setItem('userProgress', JSON.stringify(state.progress));
+      updateDailyGoal();
+    }
+
+    // ============================
+    // MOCK TEST
+    // ============================
+    
+    function initMockTest() {
+      document.getElementById('startMockBtn').addEventListener('click', startMockTest);
+      document.getElementById('endTestBtn').addEventListener('click', endMockTest);
+    }
+    
+    function startMockTest() {
+      const testType = document.getElementById('testType').value;
+      const area = document.getElementById('mockArea'); 
+      
+      if (testType === 'quick') {
+        startQuickTest();
+      } else {
+        startFullTest();
+      }
+      
+      document.getElementById('startMockBtn').classList.add('hidden');
+      document.getElementById('endTestBtn').classList.remove('hidden');
+    }
+    
+    function startQuickTest() {
+      const qs = [];
+      const questionCount = 10;
+      
+      for (let i = 0; i < questionCount; i++) {
+        const type = ['kanji','vocab','grammar'][Math.floor(Math.random() * 3)];
+        if (type === 'kanji') {
+          const item = data.kanji[Math.floor(Math.random() * data.kanji.length)];
+          qs.push({
+            type: 'kanji', 
+            id: item.id, 
+            question: `What is the meaning of ${item.char}?`, 
+            answer: item.meaning
+          });
+        } else if (type === 'vocab') {
+          const item = data.vocab[Math.floor(Math.random() * data.vocab.length)];
+          qs.push({
+            type: 'vocab', 
+            question: `Meaning of ${item.jp}`, 
+            answer: item.meaning
+          });
+        } else {
+          const item = data.grammar[Math.floor(Math.random() * data.grammar.length)];
+          qs.push({
+            type: 'grammar', 
+            question: item.prompt, 
+            answer: item.answer
+          });
+        }
+      }
+      
+      state.mock = {qs, cur: 0, correct: 0, startTime: Date.now()};
+      renderMockQuestion();
+    }
+    
+    function startFullTest() {
+      document.getElementById('examTimer').classList.remove('hidden');
+      startExamTimer(60 * 60); // 60 minutes
+      startQuickTest(); // For demo, using quick test structure
+    }
+    
+    function startExamTimer(minutes) {
+      let timeLeft = minutes * 60; // Convert to seconds
+      const timerElement = document.getElementById('examTimer');
+      
+      const timer = setInterval(() => {
+        if (!state.mock) {
+          clearInterval(timer);
+          return;
+        }
+        
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (timeLeft <= 300) { // 5 minutes warning
+          timerElement.classList.add('exam-warning');
+          showNotification('Only 5 minutes remaining!', 'warning');
+        }
+        
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          endMockTest();
+        }
+        
+        timeLeft--;
+      }, 1000);
+      
+      state.mock.timer = timer;
+    }
+    
+    function renderMockQuestion() {
+      const area = document.getElementById('mockArea'); 
+      const m = state.mock; 
+      
+      if (!m || m.cur >= m.qs.length) { 
+        endMockTest();
+        return; 
+      }
+      
+      const q = m.qs[m.cur];
+      area.innerHTML = `
+        <div class="glass p-4">
+          <div class="text-xl mb-4">${m.cur+1}. ${q.question}</div>
+          <input id="mockAns" class="mb-4 w-full p-2" placeholder="Your answer">
+          <div class="flex items-center">
+            <button id="submitMock" class="action-btn">Submit</button>
+            <span id="mockRes" class="ml-4"></span>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('submitMock').addEventListener('click', () => {
+        const v = document.getElementById('mockAns').value.trim(); 
+        if (!v) {
+          showNotification('Please enter an answer', 'warning');
+          return;
+        } 
+        
+        if (v === q.answer) { 
+          m.correct++; 
+          document.getElementById('mockRes').textContent = '✅'; 
+          document.getElementById('mockRes').className = 'ml-4 text-green-500';
+          showNotification('Correct!', 'success');
+        } else { 
+          document.getElementById('mockRes').textContent = '❌ — Ans: ' + q.answer; 
+          document.getElementById('mockRes').className = 'ml-4 text-red-500';
+          showNotification('Incorrect. The answer was: ' + q.answer, 'error');
+        } 
+        
+        m.cur++; 
+        setTimeout(renderMockQuestion, 1000);
+      });
+    }
+    
+    function endMockTest() {
+      if (state.mock && state.mock.timer) {
+        clearInterval(state.mock.timer);
+      }
+      
+      const m = state.mock;
+      const area = document.getElementById('mockArea');
+      const score = m ? Math.round((m.correct / m.qs.length) * 100) : 0;
+      
+      area.innerHTML = `
+        <div class="glass p-4 text-center">
+          <h3 class="text-2xl font-bold mb-4">Test Complete!</h3>
+          <p class="text-xl">Your score: ${m ? m.correct : 0}/${m ? m.qs.length : 0} (${score}%)</p>
+          <p class="mt-4">Time taken: ${m ? Math.round((Date.now() - m.startTime) / 1000 / 60) : 0} minutes</p>
+        </div>
+      `;
+      
+      document.getElementById('startMockBtn').classList.remove('hidden');
+      document.getElementById('endTestBtn').classList.add('hidden');
+      document.getElementById('examTimer').classList.add('hidden');
+      
+      // Update progress
+      const today = new Date().toDateString();
+      if (!state.progress.dates) state.progress.dates = [];
+      if (!state.progress.scores) state.progress.scores = [];
+      
+      state.progress.dates.push(today);
+      state.progress.scores.push(score);
+      localStorage.setItem('userProgress', JSON.stringify(state.progress));
+      
+      // Update chart
+      initProgressChart();
+      
+      // Show result notification
+      if (score >= 80) {
+        showNotification(`Excellent! You scored ${score}%`, 'success');
+      } else if (score >= 60) {
+        showNotification(`Good job! You scored ${score}%`, 'warning');
+      } else {
+        showNotification(`You scored ${score}%. Keep practicing!`, 'error');
+      }
+      
+      state.mock = null;
+    }
+
+    // ============================
+    // SRS REVIEW
+    // ============================
+    
+    function initSRS() {
+      document.getElementById('srsAgain').addEventListener('click', () => srsAnswer('again'));
+      document.getElementById('srsHard').addEventListener('click', () => srsAnswer('hard'));
+      document.getElementById('srsGood').addEventListener('click', () => srsAnswer('good'));
+      document.getElementById('srsEasy').addEventListener('click', () => srsAnswer('easy'));
+      
+      loadSRSItems();
+    }
+    
+    function loadSRSItems() {
+      // Get items due for review
+      const now = Date.now();
+      const dueItems = data.vocab.filter(item => 
+        item.srs && item.srs.nextReview <= now
+      );
+      
+      document.getElementById('srsDueCount').textContent = dueItems.length;
+      
+      if (dueItems.length === 0) {
+        document.getElementById('srsFront').textContent = 'No items due for review';
+        document.getElementById('srsBack').textContent = 'Great job!';
+        return;
+      }
+      
+      // For demo, just use the first due item
+      const item = dueItems[0];
+      state.srsCurrent = item;
+      
+      document.getElementById('srsFront').textContent = item.jp;
+      document.getElementById('srsBack').textContent = item.meaning;
+      document.getElementById('srsReading').textContent = item.romaji;
+      document.getElementById('srsBangla').textContent = item.bangla || '';
+      
+      document.getElementById('srsCard').classList.remove('flipped');
+    }
+    
+    function flipSrsCard() {
+      document.getElementById('srsCard').classList.toggle('flipped');
+    }
+    
+    function srsAnswer(quality) {
+      if (!state.srsCurrent) return;
+      
+      const item = state.srsCurrent;
+      const srs = item.srs;
+      
+      // Simple SRS algorithm (simplified version of SM-2)
+      if (quality === 'again') {
+        srs.stage = 0;
+        srs.interval = 1;
+        showNotification('Marked for review again', 'warning');
+      } else if (quality === 'hard') {
+        srs.stage = Math.max(0, srs.stage - 1);
+        srs.interval = srs.interval * 1.2;
+        showNotification('Marked as hard', 'warning');
+      } else if (quality === 'good') {
+        srs.interval = srs.interval * 2.5;
+        showNotification('Good job!', 'success');
+      } else if (quality === 'easy') {
+        srs.stage = Math.min(4, srs.stage + 1);
+        srs.interval = srs.interval * 3;
+        showNotification('Easy! Well done!', 'success');
+      }
+      
+      // Calculate next review time (in milliseconds)
+      srs.nextReview = Date.now() + (srs.interval * 24 * 60 * 60 * 1000);
+      
+      // Update progress
+      const today = new Date().toDateString();
+      if (!state.progress.daily) state.progress.daily = {};
+      state.progress.daily[today] = (state.progress.daily[today] || 0) + 1;
+      localStorage.setItem('userProgress', JSON.stringify(state.progress));
+      updateDailyGoal();
+      
+      // Save data and load next item
+      localStorage.setItem('jlpt_n5_data_v1', JSON.stringify(data));
+      loadSRSItems();
+    }
+
+    // ============================
+    // LEADERBOARD
+    // ============================
+    
+    function initLeaderboard() {
+      loadLeaderboard();
+    }
+    
+    function loadLeaderboard() {
+      // In a real app, this would fetch from a server
+      // For demo, we'll use localStorage or generate sample data
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [
+        {name: 'Taro', score: 95, date: '2023-10-15'},
+        {name: 'Hanako', score: 87, date: '2023-10-14'},
+        {name: 'Jiro', score: 82, date: '2023-10-13'},
+        {name: 'Yuki', score: 78, date: '2023-10-12'},
+        {name: 'Kenji', score: 75, date: '2023-10-11'}
+      ];
+      
+      const container = document.getElementById('leaderboardList');
+      container.innerHTML = '';
+      
+      leaderboard.forEach((user, index) => {
+        const item = document.createElement('div');
+        item.className = 'leaderboard-item glass';
+        item.innerHTML = `
+          <div class="leaderboard-rank">${index + 1}</div>
+          <div class="leaderboard-name">${user.name}</div>
+          <div class="leaderboard-score">${user.score}%</div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // ============================
+    // DATA EDITOR
+    // ============================
+    
+    function initEditor() {
+      document.getElementById('editorType').addEventListener('change', renderEditorForm);
+      document.getElementById('addItem').addEventListener('click', addItem);
+      renderEditorForm();
+    }
+    
+    function renderEditorForm() {
+      const t = document.getElementById('editorType').value; 
+      const form = document.getElementById('editorForm');
+      
+      if (t === 'kanji') {
+        form.innerHTML = `
+          <div class="mb-4">
+            <label class="block mb-1">Char:</label>
+            <input id="ef_char" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Onyomi:</label>
+            <input id="ef_onyomi" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Kunyomi:</label>
+            <input id="ef_kunyomi" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Meaning:</label>
+            <input id="ef_meaning" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Examples (comma separated):</label>
+            <input id="ef_examples" class="w-full">
+          </div>
+        `;
+      } else if (t === 'vocab') {
+        form.innerHTML = `
+          <div class="mb-4">
+            <label class="block mb-1">Japanese:</label>
+            <input id="ef_jp" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Romaji:</label>
+            <input id="ef_romaji" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Meaning:</label>
+            <input id="ef_meaning_v" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Bangla:</label>
+            <input id="ef_bangla" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Type:</label>
+            <input id="ef_type" class="w-full">
+          </div>
+        `;
+      } else if (t === 'grammar') {
+        form.innerHTML = `
+          <div class="mb-4">
+            <label class="block mb-1">Prompt:</label>
+            <input id="ef_prompt" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Answer:</label>
+            <input id="ef_answer" class="w-full">
+          </div>
+        `;
+      } else if (t === 'reading') {
+        form.innerHTML = `
+          <div class="mb-4">
+            <label class="block mb-1">Title:</label>
+            <input id="ef_title" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Passage:</label>
+            <textarea id="ef_passage" class="w-full" rows="5"></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Questions (JSON):</label>
+            <textarea id="ef_questions" class="w-full" rows="5" placeholder='[{"question": "...", "answer": "...", "options": ["...", "..."]}]'></textarea>
+          </div>
+        `;
+      } else if (t === 'listening') {
+        form.innerHTML = `
+          <div class="mb-4">
+            <label class="block mb-1">Title:</label>
+            <input id="ef_title_l" class="w-full">
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Script:</label>
+            <textarea id="ef_script" class="w-full" rows="5"></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block mb-1">Questions (JSON):</label>
+            <textarea id="ef_questions_l" class="w-full" rows="5" placeholder='[{"question": "...", "answer": "...", "options": ["...", "..."]}]'></textarea>
+          </div>
+        `;
+      }
+    }
+    
+    function addItem() {
+      const t = document.getElementById('editorType').value;
+      
+      if (t === 'kanji') {
+        const obj = {
+          id: Date.now(),
+          char: document.getElementById('ef_char').value,
+          onyomi: document.getElementById('ef_onyomi').value,
+          kunyomi: document.getElementById('ef_kunyomi').value,
+          meaning: document.getElementById('ef_meaning').value,
+          examples: (document.getElementById('ef_examples').value || '').split(',').map(s => s.trim()),
+          known: false
+        };
+        data.kanji.push(obj);
+      } else if (t === 'vocab') {
+        const obj = {
+          id: Date.now(),
+          jp: document.getElementById('ef_jp').value,
+          romaji: document.getElementById('ef_romaji').value,
+          meaning: document.getElementById('ef_meaning_v').value,
+          bangla: document.getElementById('ef_bangla').value,
+          type: document.getElementById('ef_type').value,
+          srs: {stage: 0, nextReview: Date.now(), interval: 0}
+        }; 
+        data.vocab.push(obj);
+      } else if (t === 'grammar') {
+        const obj = {
+          id: Date.now(),
+          prompt: document.getElementById('ef_prompt').value,
+          answer: document.getElementById('ef_answer').value
+        }; 
+        data.grammar.push(obj);
+      } else if (t === 'reading') {
+        try {
+          const questions = JSON.parse(document.getElementById('ef_questions').value);
+          const obj = {
+            id: Date.now(),
+            title: document.getElementById('ef_title').value,
+            passage: document.getElementById('ef_passage').value,
+            questions: questions
+          };
+          data.reading.push(obj);
+        } catch (e) {
+          showNotification('Invalid JSON format for questions', 'error');
+          return;
+        }
+      } else if (t === 'listening') {
+        try {
+          const questions = JSON.parse(document.getElementById('ef_questions_l').value);
+          const obj = {
+            id: Date.now(),
+            title: document.getElementById('ef_title_l').value,
+            script: document.getElementById('ef_script').value,
+            questions: questions
+          };
+          data.listening.push(obj);
+        } catch (e) {
+          showNotification('Invalid JSON format for questions', 'error');
+          return;
+        }
+      }
+      
+      localStorage.setItem('jlpt_n5_data_v1', JSON.stringify(data)); 
+      showNotification('Item added successfully!', 'success');
+      updateProgress(); 
+      
+      // Clear form
+      renderEditorForm();
+    }
+
+    // ============================
+    // SETTINGS
+    // ============================
+    
+    function initSettings() {
+      // Theme toggle
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      
+      // Export/Import buttons
+      document.getElementById('exportData').addEventListener('click', exportData);
+      document.getElementById('importData').addEventListener('click', importData);
+      document.getElementById('resetData').addEventListener('click', resetData);
+      
+      // Load current settings
+      loadSettings();
+    }
+    
+    function toggleTheme() {
+      const currentTheme = document.body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      document.getElementById('themeToggle').innerHTML = 
+        newTheme === 'dark' 
+          ? '<i class="fas fa-moon mr-2"></i> Dark Mode' 
+          : '<i class="fas fa-sun mr-2"></i> Light Mode';
+      
+      localStorage.setItem('theme', newTheme);
+      showNotification(`Switched to ${newTheme} mode`, 'success');
+    }
+    
+    function loadSettings() {
+      // Load theme
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+      document.getElementById('themeToggle').innerHTML = 
+        savedTheme === 'dark' 
+          ? '<i class="fas fa-moon mr-2"></i> Dark Mode' 
+          : '<i class="fas fa-sun mr-2"></i> Light Mode';
+      
+      // Load other settings
+      const dailyGoal = localStorage.getItem('dailyGoal') || 20;
+      document.getElementById('dailyGoalTarget').value = dailyGoal;
+      
+      const notifications = localStorage.getItem('dailyGoalNotification') !== 'false';
+      document.getElementById('dailyGoalNotification').checked = notifications;
+      
+      const srsAlgorithm = localStorage.getItem('srsAlgorithm') || 'default';
+      document.getElementById('srsAlgorithm').value = srsAlgorithm;
+    }
+    
+    function exportData() {
+      const exportData = {
+        appData: data,
+        userProgress: state.progress,
+        savedVocab: savedVocab,
+        settings: {
+          theme: document.body.getAttribute('data-theme'),
+          dailyGoal: document.getElementById('dailyGoalTarget').value,
+          notifications: document.getElementById('dailyGoalNotification').checked,
+          srsAlgorithm: document.getElementById('srsAlgorithm').value
+        }
+      };
+      
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'nihongo_sensei_data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showNotification('Data exported successfully!', 'success');
+    }
+    
+    function importData() {
+      const inp = document.createElement('input');
+      inp.type = 'file';
+      inp.accept = 'application/json';
+      inp.addEventListener('change', e => {
+        const f = e.target.files[0];
+        if (!f) return;
+        
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try {
+            const importedData = JSON.parse(ev.target.result);
+            
+            if (importedData.appData) data = importedData.appData;
+            if (importedData.userProgress) state.progress = importedData.userProgress;
+            if (importedData.savedVocab) savedVocab = importedData.savedVocab;
+            
+            if (importedData.settings) {
+              document.body.setAttribute('data-theme', importedData.settings.theme || 'dark');
+              document.getElementById('dailyGoalTarget').value = importedData.settings.dailyGoal || 20;
+              document.getElementById('dailyGoalNotification').checked = importedData.settings.notifications !== false;
+              document.getElementById('srsAlgorithm').value = importedData.settings.srsAlgorithm || 'default';
+            }
+            
+            localStorage.setItem('jlpt_n5_data_v1', JSON.stringify(data));
+            localStorage.setItem('userProgress', JSON.stringify(state.progress));
+            localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+            localStorage.setItem('theme', document.body.getAttribute('data-theme'));
+            
+            updateProgress();
+            updateDailyGoal();
+            showNotification('Data imported successfully!', 'success');
+          } catch(err) {
+            showNotification('Import failed: ' + err.message, 'error');
+          }
+        };
+        reader.readAsText(f);
+      });
+      inp.click();
+    }
+    
+    function resetData() {
+      if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+        localStorage.removeItem('jlpt_n5_data_v1');
+        localStorage.removeItem('userProgress');
+        localStorage.removeItem('savedVocab');
+        localStorage.removeItem('kanaHighScore');
+        
+        data = sampleData;
+        state.progress = {dates: [], scores: []};
+        savedVocab = [];
+        
+        updateProgress();
+        updateDailyGoal();
+        showNotification('All data has been reset.', 'warning');
+      }
+    }
+
+    // ============================
+    // HEADER BUTTONS
+    // ============================
+    
+    document.getElementById('exportBtn').addEventListener('click', exportData);
+    
+    document.getElementById('importBtn').addEventListener('click', () => {
+      const inp = document.createElement('input');
+      inp.type = 'file';
+      inp.accept = 'application/json';
+      inp.addEventListener('change', e => {
+        const f = e.target.files[0];
+        if (!f) return;
+        
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try {
+            const importedData = JSON.parse(ev.target.result);
+            if (importedData.appData) {
+              data = importedData.appData;
+              localStorage.setItem('jlpt_n5_data_v1', JSON.stringify(data));
+              updateProgress();
+              showNotification('Data imported successfully!', 'success');
+            } else {
+              showNotification('Invalid data format', 'error');
+            }
+          } catch(err) {
+            showNotification('Import failed: ' + err.message, 'error');
+          }
+        };
+        reader.readAsText(f);
+      });
+      inp.click();
+    });
+    
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (confirm('Reset all progress and data?')) {
+        localStorage.removeItem('jlpt_n5_data_v1');
+        localStorage.removeItem('userProgress');
+        data = sampleData;
+        state.progress = {dates: [], scores: []};
+        updateProgress();
+        showNotification('Data reset successfully!', 'warning');
+      }
+    });
+  </script>
+</body>
+</html>
