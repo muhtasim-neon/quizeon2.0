@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quizeon</title>
+  <title>SakuraLearn - Japanese Mastery</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,18 +13,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     :root {
-      --primary: #e91e63;
-      --primary-light: #f8bbd9;
-      --primary-dark: #ad1457;
-      --secondary: #4a148c;
-      --accent: #ff4081;
-      --error: #f44336;
-      --success: #4caf50;
-      --dark-bg: #0a0a1a;
-      --card-bg: rgba(26, 15, 51, 0.8);
-      --text-color: #ffffff;
-      --text-secondary: #b39ddb;
-      --cherry-blossom: #ffb7c5;
+      --primary: #3a86ff;
+      --primary-light: #5fa3ff;
+      --primary-dark: #2667cc;
+      --secondary: #0a0f1a;
+      --accent: #4361ee;
+      --error: #4361ee;
+      --success: #4361ee;
+      --dark-bg: #0f1419;
+      --card-bg: rgba(23, 25, 35, 0.9);
+      --text-color: #e1e5e9;
+      --text-secondary: #8a8f98;
+      --accent-glow: #4361ee;
     }
     
     * {
@@ -34,7 +34,7 @@
     }
     
     body {
-      background: linear-gradient(135deg, #0a0a1a 0%, #1a1039 100%);
+      background: linear-gradient(135deg, #0a0f1a 0%, #151b2d 100%);
       font-family: 'Inter', sans-serif;
       color: var(--text-color);
       min-height: 100vh;
@@ -42,8 +42,8 @@
       position: relative;
     }
     
-    /* Cherry Blossom Animation */
-    .cherry-blossom-container {
+    /* Particle Animation */
+    .particles-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -54,49 +54,62 @@
       overflow: hidden;
     }
     
-    .petal {
+    .particle {
       position: absolute;
-      background-color: var(--cherry-blossom);
-      border-radius: 50% 0 50% 50%;
-      opacity: 0.7;
-      animation-name: fall;
-      animation-timing-function: linear;
+      background-color: var(--primary);
+      border-radius: 50%;
+      opacity: 0.5;
+      animation-name: float;
+      animation-timing-function: ease-in-out;
       animation-iteration-count: infinite;
     }
     
-    @keyframes fall {
-      0% {
-        transform: translateY(-100px) rotate(0deg);
-        opacity: 0.7;
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.5;
       }
-      100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+        opacity: 0.8;
       }
     }
     
     /* 3D Card Effects */
     .card-3d {
       background: var(--card-bg);
-      border-radius: 20px;
+      border-radius: 16px;
       box-shadow: 
         0 10px 30px rgba(0, 0, 0, 0.5),
-        0 1px 8px rgba(233, 30, 99, 0.3);
+        0 1px 8px rgba(58, 134, 255, 0.3);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       transform-style: preserve-3d;
       transition: transform 0.5s ease, box-shadow 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card-3d::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      z-index: 1;
     }
     
     .card-3d:hover {
-      transform: translateY(-10px) rotateX(5deg);
+      transform: translateY(-8px) rotateX(2deg);
       box-shadow: 
         0 15px 40px rgba(0, 0, 0, 0.6),
-        0 5px 15px rgba(233, 30, 99, 0.4);
+        0 5px 15px rgba(58, 134, 255, 0.4);
     }
     
-    /* Japanese Pattern Background */
-    .japanese-pattern {
+    /* Circuit Pattern Background */
+    .circuit-pattern {
       position: absolute;
       top: 0;
       left: 0;
@@ -104,8 +117,8 @@
       height: 100%;
       opacity: 0.03;
       background-image: 
-        radial-gradient(circle at 25% 25%, var(--primary) 2px, transparent 2px),
-        radial-gradient(circle at 75% 75%, var(--primary) 2px, transparent 2px);
+        linear-gradient(rgba(58, 134, 255, 0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(58, 134, 255, 0.3) 1px, transparent 1px);
       background-size: 50px 50px;
       z-index: -1;
     }
@@ -129,25 +142,27 @@
     .title {
       font-size: 4rem;
       font-weight: 800;
-      background: linear-gradient(45deg, var(--primary), var(--primary-light));
+      background: linear-gradient(45deg, var(--primary), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 0.5rem;
-      text-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
-      font-family: 'Yuji Syuku', serif;
+      text-shadow: 0 5px 15px rgba(58, 134, 255, 0.3);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: -0.02em;
     }
     
     .subtitle {
       font-size: 1.2rem;
       color: var(--text-secondary);
       margin-bottom: 2rem;
+      font-weight: 500;
     }
     
     /* Button Styles */
     .btn-3d {
       background: linear-gradient(145deg, var(--primary), var(--primary-dark));
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       color: white;
       padding: 12px 24px;
       font-weight: 600;
@@ -161,6 +176,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      letter-spacing: 0.5px;
     }
     
     .btn-3d:before {
@@ -202,12 +218,12 @@
     
     .mode-card {
       background: var(--card-bg);
-      border-radius: 20px;
+      border-radius: 16px;
       padding: 2rem;
       text-align: center;
       transition: all 0.3s ease;
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
       overflow: hidden;
     }
@@ -218,7 +234,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 5px;
+      height: 4px;
       background: linear-gradient(90deg, var(--primary), var(--accent));
     }
     
@@ -254,10 +270,10 @@
     
     .stat-card {
       background: var(--card-bg);
-      border-radius: 15px;
+      border-radius: 12px;
       padding: 1.5rem;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .stat-number {
@@ -284,11 +300,11 @@
     
     .vocab-card {
       background: var(--card-bg);
-      border-radius: 15px;
+      border-radius: 12px;
       padding: 1.5rem;
       transition: all 0.3s ease;
       cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
     }
     
@@ -342,7 +358,7 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 20px;
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -350,7 +366,7 @@
       padding: 2rem;
       background: var(--card-bg);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .flashcard-back {
@@ -396,8 +412,8 @@
       margin-bottom: 2rem;
       padding: 1.5rem;
       background: var(--card-bg);
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .quiz-options {
@@ -409,12 +425,12 @@
     
     .quiz-option {
       background: var(--card-bg);
-      border-radius: 12px;
+      border-radius: 10px;
       padding: 1.5rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.3s ease;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .quiz-option:hover {
@@ -424,21 +440,21 @@
     }
     
     .quiz-option.correct {
-      background: rgba(76, 175, 80, 0.2);
+      background: rgba(67, 97, 238, 0.2);
       border-color: var(--success);
     }
     
     .quiz-option.incorrect {
-      background: rgba(244, 67, 54, 0.2);
+      background: rgba(67, 97, 238, 0.2);
       border-color: var(--error);
     }
     
     /* Progress Bar */
     .progress-container {
       width: 100%;
-      height: 10px;
+      height: 8px;
       background: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
+      border-radius: 4px;
       overflow: hidden;
       margin: 1rem 0;
     }
@@ -446,7 +462,7 @@
     .progress-bar {
       height: 100%;
       background: linear-gradient(90deg, var(--primary), var(--accent));
-      border-radius: 5px;
+      border-radius: 4px;
       transition: width 0.3s ease;
     }
     
@@ -568,23 +584,348 @@
       z-index: -1;
       pointer-events: none;
     }
+    
+    /* Improved button styles */
+    .btn-glow {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4);
+    }
+    
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: 0.5s;
+    }
+    
+    .btn-glow:hover::before {
+      left: 100%;
+    }
+    
+    /* Form controls */
+    .form-control {
+      background: rgba(30, 30, 46, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: white;
+      padding: 12px 16px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+    }
+    
+    /* Enhanced card styles */
+    .card-glow {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 1px 8px rgba(58, 134, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .card-glow:hover {
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 5px 15px rgba(58, 134, 255, 0.3);
+    }
+    
+    /* Music Control */
+    .music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 100;
+      background: var(--card-bg);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .music-control:hover {
+      transform: scale(1.1);
+    }
+    
+    /* Study Mode / Flashcard Mode Buttons */
+    .mode-toggle-buttons {
+      display: flex;
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 1.5rem;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .mode-toggle-btn {
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      color: var(--text-color);
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .mode-toggle-btn.active {
+      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4);
+    }
+    
+    .mode-toggle-btn:hover:not(.active) {
+      background: rgba(58, 134, 255, 0.2);
+    }
+    
+    /* Documents Grid */
+    .documents-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .document-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .document-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .document-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+    
+    .document-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .document-category {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    
+    .document-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    
+    /* Document Preview Modal */
+    .document-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+    
+    .document-modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90%;
+      overflow: auto;
+      padding: 2rem;
+      position: relative;
+    }
+    
+    .document-modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .document-preview {
+      width: 100%;
+      height: 500px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: auto;
+      position: relative;
+    }
+    
+    .document-preview img {
+      width: 100%;
+      transition: transform 0.3s ease;
+    }
+    
+    .document-preview iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Document Preview Controls */
+    .document-preview-controls {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 8px;
+      border-radius: 8px;
+      z-index: 10;
+    }
+    
+    .document-preview-controls button {
+      background: var(--primary);
+      border: none;
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .document-preview-controls button:hover {
+      background: var(--primary-dark);
+      transform: scale(1.1);
+    }
+    
+    /* Floating Animation */
+    .float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    /* Glow Effect */
+    .glow {
+      box-shadow: 0 0 20px rgba(58, 134, 255, 0.5);
+    }
+    
+    /* Vocabulary Section Header */
+    .vocab-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .vocab-controls {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    /* Kanji Card Styles */
+    .kanji-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      text-align: center;
+    }
+    
+    .kanji-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .kanji-character {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-family: 'Noto Sans JP', sans-serif;
+      color: var(--primary);
+    }
+    
+    .kanji-reading {
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .kanji-meaning {
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+    
+    /* Saved Mode Styles */
+    .saved-vocab-count {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <!-- 3D Background -->
   <div id="three-container"></div>
   
-  <!-- Cherry Blossom Animation -->
-  <div class="cherry-blossom-container" id="cherryBlossomContainer"></div>
+  <!-- Particle Animation -->
+  <div class="particles-container" id="particlesContainer"></div>
   
-  <!-- Japanese Pattern -->
-  <div class="japanese-pattern"></div>
+  <!-- Circuit Pattern -->
+  <div class="circuit-pattern"></div>
+  
+  <!-- Music Control -->
+  <div class="music-control" id="musicControl">
+    <i class="fas fa-volume-up text-primary"></i>
+  </div>
   
   <div class="main-container">
     <!-- Main Mode Selector -->
     <div id="modeSelector" class="fade-in">
       <div class="header">
-        <h1 class="title">Quizeon</h1>
+        <h1 class="title">SakuraLearn</h1>
+        <p class="subtitle japanese-font">桜の学習 - Master Japanese with AI</p>
       </div>
       
       <div class="mode-grid">
@@ -644,20 +985,20 @@
           <div class="mode-desc">500+ words</div>
         </div>
         
-        <div class="mode-card card-3d" onclick="showSavedVocab()">
+        <div class="mode-card card-3d" onclick="showKanjiMode()">
           <div class="mode-icon">
-            <i class="fas fa-bookmark"></i>
+            <i class="fas fa-pen-nib"></i>
           </div>
-          <div class="mode-title">Saved Vocabulary</div>
-          <div class="mode-desc">Your saved words</div>
+          <div class="mode-title">Kanji Practice</div>
+          <div class="mode-desc">Learn Japanese characters</div>
         </div>
         
-        <div class="mode-card card-3d" onclick="showProgressMode()">
+        <div class="mode-card card-3d" onclick="showDocumentsMode()">
           <div class="mode-icon">
-            <i class="fas fa-chart-bar"></i>
+            <i class="fas fa-folder"></i>
           </div>
-          <div class="mode-title">Progress Analytics</div>
-          <div class="mode-desc">Track your growth</div>
+          <div class="mode-title">Documents</div>
+          <div class="mode-desc">Study materials</div>
         </div>
       </div>
     </div>
@@ -679,15 +1020,15 @@
         <span id="kanaChar" class="japanese-font text-6xl text-primary"></span>
       </div>
 
-      <input id="userInput" type="text" placeholder="Type romaji here..." class="w-full p-4 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-pink-500 border border-gray-700 text-lg mb-4">
+      <input id="userInput" type="text" placeholder="Type romaji here..." class="w-full p-4 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700 text-lg mb-4">
 
       <div id="resultMsg" class="text-2xl font-semibold text-center min-h-10"></div>
 
       <div class="flex justify-center gap-4 mt-6">
-        <button onclick="restartGame()" class="btn-3d">
+        <button onclick="restartGame()" class="btn-3d btn-glow">
           <i class="fas fa-rotate mr-2"></i>Restart
         </button>
-        <button onclick="goBack()" class="btn-3d">
+        <button onclick="goBack()" class="btn-3d btn-glow">
           <i class="fas fa-arrow-left mr-2"></i>Back
         </button>
       </div>
@@ -695,76 +1036,68 @@
 
     <!-- Vocabulary Container -->
     <div id="vocabContainer" class="hidden card-3d p-6">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-        <div class="flex-1 w-full md:w-auto">
-          <label for="lessonSelector" class="text-secondary text-lg font-semibold">Select Lesson:</label>
-          <select id="lessonSelector" class="w-full p-3 rounded-lg bg-gray-800 text-white mt-2 focus:ring-2 focus:ring-pink-500 border border-gray-700">
-            <option value="1">People & Family </option>
-            <option value="2">Places </option>
-            <option value="3">Time & Date </option>
-            <option value="4">Objects / Things </option>
-            <option value="5">Food & Drink </option>
-            <option value="6">Clothes </option>
-            <option value="7">Colors </option>
-            <option value="8">Question Words </option>
-            <option value="9">Directions & Position </option>
-            <option value="10">Animals </option>
-            <option value="11">Occupations </option>
-            <option value="12">Adjectives (な) </option>
-            <option value="13">Adjectives (い) </option>
-            <option value="14">Verbs </option>
-            <option value="15">Adverbs (positive) </option>
-            <option value="16">Adverbs (Negative) </option>
-            <option value="17">Particles </option>
-            <option value="18">Weather </option>
-            <option value="19">Transport </option>
-            <option value="20">Numbers & Counters </option>
-            <option value="21">Days, Months, Seasons & Time Expressions </option>
-            <option value="22">Countries </option>
-            <option value="23">Body parts </option>
-            <option value="24">Weights & Measures </option>
-            <option value="25">Sports </option>
-            <option value="26">Kanji </option>
-            <option value="custom">Custom Vocabulary</option>
-          </select>
-        </div>
-        
-        <div class="flex-1 w-full md:w-auto">
-          <label for="vocabSearch" class="text-secondary text-lg font-semibold">Search Vocabulary:</label>
-          <div class="relative mt-2">
-            <input id="vocabSearch" type="text" placeholder="Search words..." class="w-full p-3 pl-10 rounded-lg bg-gray-800 text-white outline-none focus:ring-2 focus:ring-pink-500 border border-gray-700">
-            <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
-          </div>
-        </div>
-        
-        <div class="flex gap-3">
-          <button onclick="showAddVocabForm()" class="btn-3d">
+      <!-- Vocabulary Section Header -->
+      <div class="vocab-section-header">
+        <h2 class="section-title">Vocabulary & Kanji</h2>
+        <div class="vocab-controls">
+          <button onclick="showAddVocabForm()" class="btn-3d btn-glow">
             <i class="fas fa-plus mr-2"></i>Add Word
           </button>
-          <button onclick="goBack()" class="btn-3d">
+          <button onclick="goBack()" class="btn-3d btn-glow">
             <i class="fas fa-arrow-left mr-2"></i>Back
           </button>
         </div>
       </div>
+      
+      <!-- Search and Filter Controls -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <!-- Search Vocabulary -->
+        <div>
+          <label for="vocabSearch" class="text-secondary text-lg font-semibold">Search Vocabulary:</label>
+          <input id="vocabSearch" type="text" placeholder="Search words..." class="w-full form-control mt-2">
+        </div>
+        
+        <!-- Course Type -->
+        <div>
+          <label for="courseType" class="text-secondary text-lg font-semibold">Course Type:</label>
+          <select id="courseType" class="w-full form-control mt-2">
+            <option value="minna">Minna no Nihongo</option>
+            <option value="category">Category</option>
+          </select>
+        </div>
+        
+        <!-- Select Lesson -->
+        <div>
+          <label for="lessonSelector" class="text-secondary text-lg font-semibold">Select Lesson:</label>
+          <select id="lessonSelector" class="w-full form-control mt-2">
+            <!-- Options will be populated based on course type -->
+          </select>
+        </div>
+      </div>
 
-      <!-- Study Mode / Flashcard Mode Toggle -->
-      <div class="flex bg-gray-800 rounded-xl p-1 mb-6 w-fit mx-auto">
-        <button id="studyModeBtn" class="btn-3d flex-1 px-4 py-2 active" onclick="setStudyMode()">
+      <!-- Study Mode / Flashcard Mode / Saved Mode Toggle -->
+      <div class="mode-toggle-buttons">
+        <button id="studyModeBtn" class="mode-toggle-btn active" onclick="setStudyMode()">
           Study Mode
         </button>
-        <button id="flashcardModeBtn" class="btn-3d flex-1 px-4 py-2" onclick="setFlashcardMode()">
+        <button id="flashcardModeBtn" class="mode-toggle-btn" onclick="setFlashcardMode()">
           Flashcard Mode
+        </button>
+        <button id="savedModeBtn" class="mode-toggle-btn" onclick="setSavedMode()">
+          Saved Mode
         </button>
       </div>
 
       <!-- Study Mode (Grid) -->
       <div id="studyMode">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-2xl font-bold">Vocabulary Study</h2>
-          <button onclick="startStudyQuiz()" class="btn-3d">
+          <div class="text-lg text-secondary">Progress: <span id="vocabProgress">0 / 0</span></div>
+          <button onclick="startStudyQuiz()" class="btn-3d btn-glow">
             <i class="fas fa-play mr-2"></i>Start Quiz
           </button>
         </div>
+        
+        <div class="text-secondary text-center mb-4">Click on words to select</div>
         
         <div class="vocab-grid" id="vocabGrid">
           <!-- Vocabulary grid will be populated here -->
@@ -802,25 +1135,43 @@
         </div>
 
         <div class="flex justify-center gap-4 mt-6">
-          <button onclick="prevFlashcard()" class="btn-3d">
+          <button onclick="prevFlashcard()" class="btn-3d btn-glow">
             <i class="fas fa-arrow-left"></i>
             <span class="ml-2">Previous</span>
           </button>
           
-          <button onclick="nextFlashcard()" class="btn-3d">
+          <button onclick="nextFlashcard()" class="btn-3d btn-glow">
             <i class="fas fa-arrow-right"></i>
             <span class="ml-2">Next</span>
           </button>
           
-          <button onclick="toggleSaveCard()" id="saveBtn" class="btn-3d">
+          <button onclick="toggleSaveCard()" id="saveBtn" class="btn-3d btn-glow">
             <i class="far fa-bookmark"></i>
             <span class="ml-2">Save</span>
           </button>
           
-          <button onclick="shuffleFlashcards()" class="btn-3d">
+          <button onclick="shuffleFlashcards()" class="btn-3d btn-glow">
             <i class="fas fa-random"></i>
             <span class="ml-2">Shuffle</span>
           </button>
+        </div>
+      </div>
+
+      <!-- Saved Mode -->
+      <div id="savedMode" class="hidden">
+        <div class="saved-vocab-count">Total: <span id="savedCount">0</span> words</div>
+        
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-lg text-secondary">Saved Vocabulary</div>
+          <button onclick="startSavedQuiz()" class="btn-3d btn-glow">
+            <i class="fas fa-play mr-2"></i>Quiz on Saved Words
+          </button>
+        </div>
+        
+        <div class="text-secondary text-center mb-4">Click on words to select</div>
+        
+        <div class="vocab-grid" id="savedVocabGrid">
+          <!-- Saved vocabulary grid will be populated here -->
         </div>
       </div>
 
@@ -831,9 +1182,10 @@
             <h2 class="text-2xl font-bold">Vocabulary Quiz</h2>
             <div class="flex items-center gap-4">
               <div class="text-lg">Score: <span id="quizScore" class="font-bold text-primary">0</span></div>
+              <div class="text-lg">High Score: <span id="quizHighScore" class="font-bold text-success">0</span></div>
               <div class="text-lg">Lives: <span id="quizLives" class="font-bold text-error">5</span></div>
-              <div class="text-lg">Time: <span id="quizTime" class="font-bold">10</span>s</div>
-              <button onclick="exitStudyQuiz()" class="btn-3d">
+              <div class="text-lg">Time: <span id="quizTime" class="font-bold">15</span>s</div>
+              <button onclick="exitStudyQuiz()" class="btn-3d btn-glow">
                 <i class="fas fa-times mr-2"></i>Exit
               </button>
             </div>
@@ -854,25 +1206,182 @@
       </div>
     </div>
 
-    <!-- Saved Vocabulary Container -->
-    <div id="savedVocabContainer" class="hidden card-3d p-6">
+    <!-- Kanji Container -->
+    <div id="kanjiContainer" class="hidden card-3d p-6">
+      <!-- Kanji Section Header -->
+      <div class="vocab-section-header">
+        <h2 class="section-title">Kanji Practice</h2>
+        <div class="vocab-controls">
+          <button onclick="showAddKanjiForm()" class="btn-3d btn-glow">
+            <i class="fas fa-plus mr-2"></i>Add Kanji
+          </button>
+          <button onclick="goBack()" class="btn-3d btn-glow">
+            <i class="fas fa-arrow-left mr-2"></i>Back
+          </button>
+        </div>
+      </div>
+      
+      <!-- Search and Filter Controls -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <!-- Search Kanji -->
+        <div>
+          <label for="kanjiSearch" class="text-secondary text-lg font-semibold">Search Kanji:</label>
+          <input id="kanjiSearch" type="text" placeholder="Search kanji..." class="w-full form-control mt-2">
+        </div>
+        
+        <!-- JLPT Level -->
+        <div>
+          <label for="jlptLevel" class="text-secondary text-lg font-semibold">JLPT Level:</label>
+          <select id="jlptLevel" class="w-full form-control mt-2">
+            <option value="all">All Levels</option>
+            <option value="n5">N5</option>
+            <option value="n4">N4</option>
+            <option value="n3">N3</option>
+            <option value="n2">N2</option>
+            <option value="n1">N1</option>
+          </select>
+        </div>
+        
+        <!-- Select Category -->
+        <div>
+          <label for="kanjiCategory" class="text-secondary text-lg font-semibold">Category:</label>
+          <select id="kanjiCategory" class="w-full form-control mt-2">
+            <option value="all">All Categories</option>
+            <option value="numbers">Numbers</option>
+            <option value="time">Time</option>
+            <option value="nature">Nature</option>
+            <option value="people">People</option>
+            <option value="verbs">Verbs</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Kanji Study Mode / Flashcard Mode Toggle -->
+      <div class="mode-toggle-buttons">
+        <button id="kanjiStudyModeBtn" class="mode-toggle-btn active" onclick="setKanjiStudyMode()">
+          Study Mode
+        </button>
+        <button id="kanjiFlashcardModeBtn" class="mode-toggle-btn" onclick="setKanjiFlashcardMode()">
+          Flashcard Mode
+        </button>
+      </div>
+
+      <!-- Kanji Study Mode (Grid) -->
+      <div id="kanjiStudyMode">
+        <div class="flex justify-between items-center mb-4">
+          <div class="text-lg text-secondary">Progress: <span id="kanjiProgress">0 / 0</span></div>
+          <button onclick="startKanjiQuiz()" class="btn-3d btn-glow">
+            <i class="fas fa-play mr-2"></i>Start Quiz
+          </button>
+        </div>
+        
+        <div class="text-secondary text-center mb-4">Click on kanji to select</div>
+        
+        <div class="vocab-grid" id="kanjiGrid">
+          <!-- Kanji grid will be populated here -->
+        </div>
+      </div>
+
+      <!-- Kanji Flashcard Mode -->
+      <div id="kanjiFlashcardMode" class="hidden">
+        <div class="text-center mb-6">
+          <h2 class="text-2xl font-bold">Kanji Flashcard Mode</h2>
+          <p class="text-secondary">Use arrow keys to navigate and Enter to flip cards</p>
+        </div>
+        
+        <!-- Flashcard Container -->
+        <div class="flashcard-container">
+          <div id="kanjiFlashcard" class="flashcard">
+            <div class="flashcard-front">
+              <div class="flashcard-japanese" id="kanjiFlashcardFront"></div>
+              <div class="text-secondary mt-4">
+                <i class="fas fa-sync-alt mr-2"></i> Click or press Enter to flip
+              </div>
+            </div>
+            <div class="flashcard-back">
+              <div class="flashcard-meaning" id="kanjiFlashcardBack"></div>
+              <div class="flashcard-reading" id="kanjiFlashcardReading"></div>
+              <div class="text-secondary mt-4">
+                <i class="fas fa-sync-alt mr-2"></i> Click or press Enter to flip
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-center items-center gap-4 mt-6">
+          <div class="text-lg text-secondary">Progress: <span id="kanjiFlashcardProgress">0 / 0</span></div>
+        </div>
+
+        <div class="flex justify-center gap-4 mt-6">
+          <button onclick="prevKanjiFlashcard()" class="btn-3d btn-glow">
+            <i class="fas fa-arrow-left"></i>
+            <span class="ml-2">Previous</span>
+          </button>
+          
+          <button onclick="nextKanjiFlashcard()" class="btn-3d btn-glow">
+            <i class="fas fa-arrow-right"></i>
+            <span class="ml-2">Next</span>
+          </button>
+          
+          <button onclick="toggleSaveKanji()" id="saveKanjiBtn" class="btn-3d btn-glow">
+            <i class="far fa-bookmark"></i>
+            <span class="ml-2">Save</span>
+          </button>
+          
+          <button onclick="shuffleKanjiFlashcards()" class="btn-3d btn-glow">
+            <i class="fas fa-random"></i>
+            <span class="ml-2">Shuffle</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Container -->
+    <div id="documentsContainer" class="hidden card-3d p-6">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">Saved Vocabulary</h2>
+        <h2 class="text-2xl font-bold">Study Documents</h2>
         <div class="flex gap-3">
-          <button onclick="startSavedQuiz()" class="btn-3d">
-            <i class="fas fa-play mr-2"></i>Quiz on Saved Words
+          <button onclick="showUploadDocumentForm()" class="btn-3d btn-glow">
+            <i class="fas fa-upload mr-2"></i>Upload Document
           </button>
-          <button onclick="clearSavedVocab()" class="btn-3d" style="background: linear-gradient(145deg, var(--error), #b71c1c);">
-            <i class="fas fa-trash mr-2"></i>Clear All
-          </button>
-          <button onclick="goBack()" class="btn-3d">
+          <button onclick="goBack()" class="btn-3d btn-glow">
             <i class="fas fa-arrow-left mr-2"></i>Back
           </button>
         </div>
       </div>
 
-      <div class="vocab-grid" id="savedVocabGrid">
-        <!-- Saved vocabulary grid will be populated here -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="md:col-span-2">
+          <label for="documentSearch" class="text-secondary text-lg font-semibold">Search Documents:</label>
+          <input id="documentSearch" type="text" placeholder="Search documents..." class="w-full form-control mt-2">
+        </div>
+        
+        <div>
+          <label for="documentCategory" class="text-secondary text-lg font-semibold">Filter by Category:</label>
+          <select id="documentCategory" class="w-full form-control mt-2">
+            <option value="all">All Categories</option>
+            <option value="grammar">Grammar</option>
+            <option value="vocabulary">Vocabulary</option>
+            <option value="kanji">Kanji</option>
+            <option value="reading">Reading</option>
+            <option value="listening">Listening</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div>
+          <label for="documentType" class="text-secondary text-lg font-semibold">Filter by Type:</label>
+          <select id="documentType" class="w-full form-control mt-2">
+            <option value="all">All Types</option>
+            <option value="pdf">PDF</option>
+            <option value="image">Image</option>
+            <option value="doc">Document</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="documents-grid" id="documentsGrid">
+        <!-- Documents will be populated here -->
       </div>
     </div>
 
@@ -880,7 +1389,7 @@
     <div id="addVocabForm" class="hidden card-3d p-6">
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold">Add New Vocabulary</h2>
-        <button onclick="hideAddVocabForm()" class="btn-3d">
+        <button onclick="hideAddVocabForm()" class="btn-3d btn-glow">
           <i class="fas fa-times mr-2"></i>Close
         </button>
       </div>
@@ -888,73 +1397,187 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
           <label class="block text-secondary mb-2 text-lg">Japanese Word</label>
-          <input type="text" id="newJapanese" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700" placeholder="Enter Japanese word">
+          <input type="text" id="newJapanese" class="w-full form-control" placeholder="Enter Japanese word">
         </div>
         
         <div>
           <label class="block text-secondary mb-2 text-lg">Romaji</label>
-          <input type="text" id="newRomaji" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700" placeholder="Enter romaji pronunciation">
+          <input type="text" id="newRomaji" class="w-full form-control" placeholder="Enter romaji pronunciation">
         </div>
         
         <div>
           <label class="block text-secondary mb-2 text-lg">English Meaning</label>
-          <input type="text" id="newEnglish" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700" placeholder="Enter English meaning">
+          <input type="text" id="newEnglish" class="w-full form-control" placeholder="Enter English meaning">
         </div>
         
         <div>
           <label class="block text-secondary mb-2 text-lg">Bengali Meaning</label>
-          <input type="text" id="newBengali" class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-700" placeholder="Enter Bengali meaning">
+          <input type="text" id="newBengali" class="w-full form-control" placeholder="Enter Bengali meaning">
         </div>
       </div>
       
       <div class="flex justify-end gap-4">
-        <button onclick="hideAddVocabForm()" class="btn-3d" style="background: linear-gradient(145deg, #6b7280, #4b5563);">
+        <button onclick="hideAddVocabForm()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, #6b7280, #4b5563);">
           Cancel
         </button>
-        <button onclick="addNewVocabulary()" class="btn-3d" style="background: linear-gradient(145deg, var(--success), #2e7d32);">
+        <button onclick="addNewVocabulary()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, var(--success), #4361ee);">
           <i class="fas fa-plus mr-2"></i>Add Vocabulary
         </button>
       </div>
     </div>
 
-    <!-- Progress Tracking Container -->
-    <div id="progressContainer" class="hidden card-3d p-6">
+    <!-- Add Kanji Form -->
+    <div id="addKanjiForm" class="hidden card-3d p-6">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold">Your Progress Analytics</h2>
-        <button onclick="goBack()" class="btn-3d">
-          <i class="fas fa-arrow-left mr-2"></i>Back
+        <h2 class="text-2xl font-bold">Add New Kanji</h2>
+        <button onclick="hideAddKanjiForm()" class="btn-3d btn-glow">
+          <i class="fas fa-times mr-2"></i>Close
         </button>
       </div>
-
-      <div class="stats-grid mb-8">
-        <div class="stat-card card-3d">
-          <div class="stat-number" id="progressCorrect">0</div>
-          <div class="stat-label">Correct Answers</div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-secondary mb-2 text-lg">Kanji Character</label>
+          <input type="text" id="newKanji" class="w-full form-control" placeholder="Enter kanji character">
         </div>
-        <div class="stat-card card-3d">
-          <div class="stat-number" id="progressIncorrect">0</div>
-          <div class="stat-label">Incorrect Answers</div>
+        
+        <div>
+          <label class="block text-secondary mb-2 text-lg">JLPT Level</label>
+          <select id="newJlptLevel" class="w-full form-control">
+            <option value="n5">N5</option>
+            <option value="n4">N4</option>
+            <option value="n3">N3</option>
+            <option value="n2">N2</option>
+            <option value="n1">N1</option>
+          </select>
         </div>
-        <div class="stat-card card-3d">
-          <div class="stat-number" id="progressAccuracy">0%</div>
-          <div class="stat-label">Accuracy Rate</div>
+        
+        <div>
+          <label class="block text-secondary mb-2 text-lg">On'yomi Reading</label>
+          <input type="text" id="newOnyomi" class="w-full form-control" placeholder="Enter on'yomi reading">
         </div>
-        <div class="stat-card card-3d">
-          <div class="stat-number" id="progressWords">0</div>
-          <div class="stat-label">Words Learned</div>
+        
+        <div>
+          <label class="block text-secondary mb-2 text-lg">Kun'yomi Reading</label>
+          <input type="text" id="newKunyomi" class="w-full form-control" placeholder="Enter kun'yomi reading">
+        </div>
+        
+        <div class="md:col-span-2">
+          <label class="block text-secondary mb-2 text-lg">English Meaning</label>
+          <input type="text" id="newKanjiEnglish" class="w-full form-control" placeholder="Enter English meaning">
+        </div>
+        
+        <div class="md:col-span-2">
+          <label class="block text-secondary mb-2 text-lg">Bengali Meaning</label>
+          <input type="text" id="newKanjiBengali" class="w-full form-control" placeholder="Enter Bengali meaning">
         </div>
       </div>
+      
+      <div class="flex justify-end gap-4">
+        <button onclick="hideAddKanjiForm()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, #6b7280, #4b5563);">
+          Cancel
+        </button>
+        <button onclick="addNewKanji()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, var(--success), #4361ee);">
+          <i class="fas fa-plus mr-2"></i>Add Kanji
+        </button>
+      </div>
+    </div>
 
-      <div class="card-3d p-6">
-        <h3 class="text-xl font-bold mb-4">Learning Progress Chart</h3>
-        <canvas id="progressChart" height="300"></canvas>
+    <!-- Upload Document Form -->
+    <div id="uploadDocumentForm" class="hidden card-3d p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Upload New Document</h2>
+        <button onclick="hideUploadDocumentForm()" class="btn-3d btn-glow">
+          <i class="fas fa-times mr-2"></i>Close
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-secondary mb-2 text-lg">Document Name</label>
+          <input type="text" id="documentName" class="w-full form-control" placeholder="Enter document name">
+        </div>
+        
+        <div>
+          <label class="block text-secondary mb-2 text-lg">Category</label>
+          <select id="documentCategorySelect" class="w-full form-control">
+            <option value="grammar">Grammar</option>
+            <option value="vocabulary">Vocabulary</option>
+            <option value="kanji">Kanji</option>
+            <option value="reading">Reading</option>
+            <option value="listening">Listening</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="md:col-span-2">
+          <label class="block text-secondary mb-2 text-lg">Description</label>
+          <textarea id="documentDescription" class="w-full form-control" placeholder="Enter document description" rows="3"></textarea>
+        </div>
+        
+        <div class="md:col-span-2">
+          <label class="block text-secondary mb-2 text-lg">Upload File</label>
+          <input type="file" id="documentFile" class="w-full form-control" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <p class="text-secondary text-sm mt-2">Supported formats: PDF, JPG, PNG, DOC, DOCX</p>
+        </div>
+      </div>
+      
+      <div class="flex justify-end gap-4">
+        <button onclick="hideUploadDocumentForm()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, #6b7280, #4b5563);">
+          Cancel
+        </button>
+        <button onclick="uploadDocument()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, var(--success), #4361ee);">
+          <i class="fas fa-upload mr-2"></i>Upload Document
+        </button>
+      </div>
+    </div>
+
+    <!-- Document Preview Modal -->
+    <div id="documentPreviewModal" class="hidden document-modal">
+      <div class="document-modal-content card-3d">
+        <button onclick="hideDocumentPreview()" class="document-modal-close">
+          <i class="fas fa-times"></i>
+        </button>
+        <h3 class="text-xl font-bold mb-4" id="documentPreviewTitle"></h3>
+        <div class="document-preview" id="documentPreview">
+          <!-- Document preview will be displayed here -->
+        </div>
+        <div class="document-preview-controls">
+          <button id="zoomInBtn" title="Zoom In">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button id="zoomOutBtn" title="Zoom Out">
+            <i class="fas fa-search-minus"></i>
+          </button>
+          <button id="fullViewBtn" title="Full View">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+          <div class="text-secondary" id="documentPreviewInfo"></div>
+          <button onclick="removeDocument()" class="btn-3d btn-glow" style="background: linear-gradient(145deg, var(--error), #4361ee);">
+            <i class="fas fa-trash mr-2"></i>Remove
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Audio Elements -->
   <audio id="correctSound" src="https://www.soundjay.com/buttons/sounds/button-3.mp3"></audio>
   <audio id="wrongSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
   <audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-28.mp3"></audio>
+  
+  <!-- Background Music -->
+  <audio id="studyMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="gameMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="flashcardMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg">
+  </audio>
 
   <script>
     // === Constants and Data ===
@@ -972,791 +1595,79 @@
 
     // Vocabulary data for different lessons
     const vocabData = {
-      1: [
-        
-  { ja: "ひと", romaji: "hito", en: "person", bn: "মানুষ" },
-  { ja: "かぞく", romaji: "kazoku", en: "family", bn: "পরিবার" },
-  { ja: "りょうしん", romaji: "ryoushin", en: "parents", bn: "মাতা-পিতা" },
-  { ja: "ちち", romaji: "chichi", en: "my father", bn: "আমার বাবা" },
-  { ja: "はは", romaji: "haha", en: "my mother", bn: "আমার মা" },
-  { ja: "おとうさん", romaji: "otousan", en: "father (someone else's)", bn: "বাবা (অন্যের)" },
-  { ja: "おかあさん", romaji: "okaasan", en: "mother (someone else's)", bn: "মা (অন্যের)" },
-  { ja: "あに", romaji: "ani", en: "my older brother", bn: "আমার বড় ভাই" },
-  { ja: "あね", romaji: "ane", en: "my older sister", bn: "আমার বড় বোন" },
-  { ja: "おにいさん", romaji: "oniisan", en: "older brother (someone else's)", bn: "ভাই (অন্যের)" },
-  { ja: "おねえさん", romaji: "oneesan", en: "older sister (someone else's)", bn: "বোন (অন্যের)" },
-  { ja: "おとうと", romaji: "otouto", en: "younger brother", bn: "ছোট ভাই" },
-  { ja: "いもうと", romaji: "imouto", en: "younger sister", bn: "ছোট বোন" },
-  { ja: "こども", romaji: "kodomo", en: "child / children", bn: "সন্তান / শিশু" },
-  { ja: "おっと", romaji: "otto", en: "my husband", bn: "আমার স্বামী" },
-  { ja: "つま", romaji: "tsuma", en: "my wife", bn: "আমার স্ত্রী" },
-  { ja: "ごしゅじん", romaji: "goshujin", en: "husband (someone else's)", bn: "স্বামী (অন্যের)" },
-  { ja: "おくさん", romaji: "okusan", en: "wife (someone else's)", bn: "স্ত্রী (অন্যের)" },
-  { ja: "ともだち", romaji: "tomodachi", en: "friend", bn: "বন্ধু" },
-  { ja: "せんせい", romaji: "sensei", en: "teacher / instructor", bn: "শিক্ষক" },
-  { ja: "がくせい", romaji: "gakusei", en: "student", bn: "ছাত্র" },
-  { ja: "せいと", romaji: "seito", en: "pupil / student", bn: "ছাত্রছাত্রী" },
-  { ja: "しゃいん", romaji: "shain", en: "company employee", bn: "কর্মচারী" },
-  { ja: "かいしゃいん", romaji: "kaishain", en: "office worker", bn: "অফিস কর্মচারী" },
-  { ja: "いしゃ", romaji: "isha", en: "doctor", bn: "ডাক্তার" },
-  { ja: "かんごし", romaji: "kangoshi", en: "nurse", bn: "নার্স" },
-  { ja: "エンジニア", romaji: "enjiniya", en: "engineer", bn: "ইঞ্জিনিয়ার" },
-  { ja: "けいさつかん", romaji: "keisatsukan", en: "police officer", bn: "পুলিশ কর্মকর্তা" },
-  { ja: "ともだち", romaji: "tomodachi", en: "friend", bn: "বন্ধু" },
-  { ja: "となりのひと", romaji: "tonari no hito", en: "neighbor", bn: "পাশের মানুষ / প্রতিবেশী" },
-],
-      2: [
+      minna: {
+        1: [
+          { ja: "わたし", romaji: "watashi", en: "I, me", bn: "আমি" },
+          { ja: "あなた", romaji: "anata", en: "you", bn: "আপনি" },
+          { ja: "ひと", romaji: "hito", en: "person", bn: "মানুষ" },
+          { ja: "せんせい", romaji: "sensei", en: "teacher", bn: "শিক্ষক" },
+          { ja: "がくせい", romaji: "gakusei", en: "student", bn: "ছাত্র" },
+          { ja: "かいしゃいん", romaji: "kaishain", en: "company employee", bn: "কোম্পানির কর্মচারী" },
+          { ja: "いしゃ", romaji: "isha", en: "doctor", bn: "ডাক্তার" },
+          { ja: "だいがく", romaji: "daigaku", en: "university", bn: "বিশ্ববিদ্যালয়" },
+          { ja: "びょういん", romaji: "byouin", en: "hospital", bn: "হাসপাতাল" },
+          { ja: "れすとらん", romaji: "resutoran", en: "restaurant", bn: "রেস্টুরেন্ট" }
+        ],
+        2: [
+          { ja: "これ", romaji: "kore", en: "this (thing here)", bn: "এটি (এখানে)" },
+          { ja: "それ", romaji: "sore", en: "that (thing there)", bn: "সেটি (সেখানে)" },
+          { ja: "あれ", romaji: "are", en: "that (thing over there)", bn: "ওটি (ওখানে)" },
+          { ja: "ほん", romaji: "hon", en: "book", bn: "বই" },
+          { ja: "じしょ", romaji: "jisho", en: "dictionary", bn: "অভিধান" },
+          { ja: "ざっし", romaji: "zasshi", en: "magazine", bn: "ম্যাগাজিন" },
+          { ja: "しんぶん", romaji: "shinbun", en: "newspaper", bn: "সংবাদপত্র" },
+          { ja: "ノート", romaji: "nooto", en: "notebook", bn: "নোটবুক" },
+          { ja: "てちょう", romaji: "techou", en: "pocket notebook", bn: "পকেট নোটবুক" },
+          { ja: "めいし", romaji: "meishi", en: "business card", bn: "বিজনেস কার্ড" }
+        ]
+      },
+      category: {
+        1: { name: "People & Family", words: [
+          { ja: "ひと", romaji: "hito", en: "person", bn: "মানুষ" },
+          { ja: "かぞく", romaji: "kazoku", en: "family", bn: "পরিবার" },
+          { ja: "ちち", romaji: "chichi", en: "my father", bn: "আমার বাবা" },
+          { ja: "はは", romaji: "haha", en: "my mother", bn: "আমার মা" },
+          { ja: "あに", romaji: "ani", en: "my older brother", bn: "আমার বড় ভাই" },
+          { ja: "あね", romaji: "ane", en: "my older sister", bn: "আমার বড় বোন" }
+        ]},
+        2: { name: "Places & Locations", words: [
+          { ja: "がっこう", romaji: "gakkou", en: "school", bn: "স্কুল" },
+          { ja: "だいがく", romaji: "daigaku", en: "university", bn: "বিশ্ববিদ্যালয়" },
+          { ja: "びょういん", romaji: "byouin", en: "hospital", bn: "হাসপাতাল" },
+          { ja: "ゆうびんきょく", romaji: "yuubinkyoku", en: "post office", bn: "ডাকঘর" },
+          { ja: "ぎんこう", romaji: "ginkou", en: "bank", bn: "ব্যাংক" },
+          { ja: "えき", romaji: "eki", en: "station", bn: "রেলস্টেশন" }
+        ]}
+      },
+      custom: []
+    };
 
-  { ja: "がっこう", romaji: "gakkou", en: "school", bn: "স্কুল" },
-  { ja: "だいがく", romaji: "daigaku", en: "university", bn: "বিশ্ববিদ্যালয়" },
-  { ja: "しょうがっこう", romaji: "shougakkou", en: "elementary school", bn: "প্রাথমিক বিদ্যালয়" },
-  { ja: "ちゅうがっこう", romaji: "chuugakkou", en: "junior high school", bn: "মাধ্যমিক বিদ্যালয়" },
-  { ja: "こうこう", romaji: "koukou", en: "high school", bn: "উচ্চ বিদ্যালয়" },
-  { ja: "びょういん", romaji: "byouin", en: "hospital", bn: "হাসপাতাল" },
-  { ja: "びょうきん", romaji: "byoukin", en: "clinic", bn: "ক্লিনিক" },
-  { ja: "ゆうびんきょく", romaji: "yuubinkyoku", en: "post office", bn: "ডাকঘর" },
-  { ja: "ぎんこう", romaji: "ginkou", en: "bank", bn: "ব্যাংক" },
-  { ja: "えき", romaji: "eki", en: "station", bn: "রেলস্টেশন" },
-  { ja: "バスてい", romaji: "basutei", en: "bus stop", bn: "বাসস্টপ" },
-  { ja: "くうこう", romaji: "kuukou", en: "airport", bn: "বিমানবন্দর" },
-  { ja: "ホテル", romaji: "hoteru", en: "hotel", bn: "হোটেল" },
-  { ja: "レストラン", romaji: "resutoran", en: "restaurant", bn: "রেস্টুরেন্ট" },
-  { ja: "デパート", romaji: "depaato", en: "department store", bn: "ডিপার্টমেন্ট স্টোর" },
-  { ja: "スーパー", romaji: "suupaa", en: "supermarket", bn: "সুপারমার্কেট" },
-  { ja: "コンビニ", romaji: "konbini", en: "convenience store", bn: "কনভিনিয়েন্স স্টোর" },
-  { ja: "みせ", romaji: "mise", en: "shop / store", bn: "দোকান" },
-  { ja: "ほんや", romaji: "honya", en: "bookstore", bn: "বইয়ের দোকান" },
-  { ja: "パンや", romaji: "panya", en: "bakery", bn: "বেকারি" },
-  { ja: "レコードや", romaji: "rekoodoya", en: "music store", bn: "সংগীতের দোকান" },
-  { ja: "きっさてん", romaji: "kissaten", en: "coffee shop", bn: "কফি শপ" },
-  { ja: "えいがかん", romaji: "eigakan", en: "cinema / movie theater", bn: "সিনেমা হল" },
-  { ja: "としょかん", romaji: "toshokan", en: "library", bn: "গ্রন্থাগার" },
-  { ja: "こうえん", romaji: "kouen", en: "park", bn: "পার্ক" },
-  { ja: "うみ", romaji: "umi", en: "sea", bn: "সমুদ্র" },
-  { ja: "やま", romaji: "yama", en: "mountain", bn: "পাহাড়" },
-  { ja: "かわ", romaji: "kawa", en: "river", bn: "নদী" },
-  { ja: "まち", romaji: "machi", en: "town / city", bn: "শহর" },
-  { ja: "いえ", romaji: "ie", en: "house", bn: "বাড়ি" },
-  { ja: "うち", romaji: "uchi", en: "home / my house", bn: "আমার বাড়ি" },
-  { ja: "へや", romaji: "heya", en: "room", bn: "ঘর" },
-  { ja: "トイレ", romaji: "toire", en: "toilet", bn: "টয়লেট" },
-  { ja: "おふろ", romaji: "ofuro", en: "bath", bn: "গোসলখানা" },
-  { ja: "きょうしつ", romaji: "kyoushitsu", en: "classroom", bn: "ক্লাসরুম" },
-  { ja: "じむしょ", romaji: "jimusho", en: "office", bn: "অফিস" },
-  { ja: "かいしゃ", romaji: "kaisha", en: "company", bn: "কোম্পানি" },
-  { ja: "こうじょう", romaji: "koujou", en: "factory", bn: "কারখানা" },
-  { ja: "びじゅつかん", romaji: "bijutsukan", en: "art museum", bn: "শিল্প জাদুঘর" },
-  { ja: "じんじゃ", romaji: "jinja", en: "Shinto shrine", bn: "শিন্তো মন্দির" },
-  { ja: "おてら", romaji: "otera", en: "Buddhist temple", bn: "বৌদ্ধ মন্দির" },
-  { ja: "きょうかい", romaji: "kyoukai", en: "church", bn: "গির্জা" },
-  { ja: "たてもの", romaji: "tatemono", en: "building", bn: "ভবন" },
-],
-
-      3: [
-
-  { ja: "いま", romaji: "ima", en: "now", bn: "এখন" },
-  { ja: "きょう", romaji: "kyou", en: "today", bn: "আজ" },
-  { ja: "きのう", romaji: "kinou", en: "yesterday", bn: "গতকাল" },
-  { ja: "おととい", romaji: "ototoi", en: "the day before yesterday", bn: "পরশু" },
-  { ja: "あした", romaji: "ashita", en: "tomorrow", bn: "আগামীকাল" },
-  { ja: "あさって", romaji: "asatte", en: "the day after tomorrow", bn: "আগামিকালের পরের দিন" },
-  { ja: "こんばん", romaji: "konban", en: "this evening / tonight", bn: "আজ সন্ধ্যা / আজ রাত" },
-  { ja: "ゆうべ", romaji: "yuube", en: "last night", bn: "গত রাত" },
-  { ja: "ごぜん", romaji: "gozen", en: "a.m.", bn: "প্রাতঃকাল / পূর্বাহ্ন" },
-  { ja: "ごご", romaji: "gogo", en: "p.m.", bn: "অপরাহ্ন" },
-  { ja: "とき", romaji: "toki", en: "time / moment", bn: "সময় / মুহূর্ত" },
-  { ja: "じかん", romaji: "jikan", en: "hour / time", bn: "ঘণ্টা / সময়" },
-  { ja: "ふん / ぶん", romaji: "fun / bun", en: "minute", bn: "মিনিট" },
-  { ja: "びょう", romaji: "byou", en: "second", bn: "সেকেন্ড" },
-  { ja: "にちようび", romaji: "nichiyoubi", en: "Sunday", bn: "রবিবার" },
-  { ja: "げつようび", romaji: "getsuyoubi", en: "Monday", bn: "সোমবার" },
-  { ja: "かようび", romaji: "kayoubi", en: "Tuesday", bn: "মঙ্গলবার" },
-  { ja: "すいようび", romaji: "suiyoubi", en: "Wednesday", bn: "বুধবার" },
-  { ja: "もくようび", romaji: "mokuyoubi", en: "Thursday", bn: "বৃহস্পতিবার" },
-  { ja: "きんようび", romaji: "kinyoubi", en: "Friday", bn: "শুক্রবার" },
-  { ja: "どようび", romaji: "doyoubi", en: "Saturday", bn: "শনিবার" },
-  { ja: "なんじ", romaji: "nanji", en: "what time?", bn: "কতটা সময়?" },
-  { ja: "なんようび", romaji: "nanyoubi", en: "what day?", bn: "কোন দিন?" },
-  { ja: "まいにち", romaji: "mainichi", en: "every day", bn: "প্রতিদিন" },
-  { ja: "まいしゅう", romaji: "maishuu", en: "every week", bn: "প্রতিসপ্তাহ" },
-  { ja: "まいげつ / まいつき", romaji: "maigetsu / maitsuki", en: "every month", bn: "প্রতিমাস" },
-  { ja: "まいとし / まいねん", romaji: "maitoshi / mainen", en: "every year", bn: "প্রতিবছর" },
-  { ja: "せんしゅう", romaji: "senshuu", en: "last week", bn: "গত সপ্তাহ" },
-  { ja: "せんげつ", romaji: "sengetsu", en: "last month", bn: "গত মাস" },
-  { ja: "きょねん", romaji: "kyonen", en: "last year", bn: "গত বছর" },
-  { ja: "らいしゅう", romaji: "raishuu", en: "next week", bn: "আগামী সপ্তাহ" },
-  { ja: "らいげつ", romaji: "raigetsu", en: "next month", bn: "আগামী মাস" },
-  { ja: "らいねん", romaji: "rainen", en: "next year", bn: "আগামী বছর" },
-],
-      4: [
-
-  { ja: "ほん", romaji: "hon", en: "book", bn: "বই" },
-  { ja: "ざっし", romaji: "zasshi", en: "magazine", bn: "ম্যাগাজিন" },
-  { ja: "しんぶん", romaji: "shinbun", en: "newspaper", bn: "সংবাদপত্র" },
-  { ja: "てちょう", romaji: "techou", en: "planner / notebook", bn: "নোটবই" },
-  { ja: "ノート", romaji: "nooto", en: "notebook", bn: "নোটবুক" },
-  { ja: "えんぴつ", romaji: "enpitsu", en: "pencil", bn: "পেন্সিল" },
-  { ja: "ボールペン", romaji: "boorupen", en: "ballpoint pen", bn: "বলপয়েন্ট কলম" },
-  { ja: "シャープペンシル", romaji: "shaapu penshiru", en: "mechanical pencil", bn: "যান্ত্রিক পেন্সিল" },
-  { ja: "かぎ", romaji: "kagi", en: "key", bn: "চাবি" },
-  { ja: "かさ", romaji: "kasa", en: "umbrella", bn: "ছাতা" },
-  { ja: "くつ", romaji: "kutsu", en: "shoes", bn: "জুতো" },
-  { ja: "くつした", romaji: "kutsushita", en: "socks", bn: "মোজা" },
-  { ja: "くるま", romaji: "kuruma", en: "car", bn: "গাড়ি" },
-  { ja: "じてんしゃ", romaji: "jitensha", en: "bicycle", bn: "সাইকেল" },
-  { ja: "でんわ", romaji: "denwa", en: "telephone", bn: "টেলিফোন" },
-  { ja: "カメラ", romaji: "kamera", en: "camera", bn: "ক্যামেরা" },
-  { ja: "ノートパソコン", romaji: "nooto pasokon", en: "laptop", bn: "ল্যাপটপ" },
-  { ja: "テレビ", romaji: "terebi", en: "television", bn: "টেলিভিশন" },
-  { ja: "ラジオ", romaji: "rajio", en: "radio", bn: "রেডিও" },
-  { ja: "じしょ", romaji: "jisho", en: "dictionary", bn: "অভিধান" },
-  { ja: "え", romaji: "e", en: "picture / painting", bn: "ছবি / চিত্র" },
-  { ja: "しゃしん", romaji: "shashin", en: "photograph", bn: "ফটো" },
-  { ja: "バッグ", romaji: "baggu", en: "bag", bn: "ব্যাগ" },
-  { ja: "て", romaji: "te", en: "hand", bn: "হাত" },
-  { ja: "かみ", romaji: "kami", en: "paper / hair", bn: "কাগজ / চুল" },
-  { ja: "ほんだな", romaji: "hondana", en: "bookshelf", bn: "বইয়ের তাক" },
-  { ja: "テーブル", romaji: "teeburu", en: "table", bn: "টেবিল" },
-  { ja: "いす", romaji: "isu", en: "chair", bn: "কुর্সি" },
-  { ja: "ベッド", romaji: "beddo", en: "bed", bn: "বিছানা" },
-  { ja: "まど", romaji: "mado", en: "window", bn: "জানালা" },
-  { ja: "ドア", romaji: "doa", en: "door", bn: "দরজা" },
-  { ja: "かがみ", romaji: "kagami", en: "mirror", bn: "আয়না" },
-  { ja: "じゅぎょうしょ", romaji: "jugyousho", en: "textbook / class material", bn: "পাঠ্যপুস্তক / ক্লাস উপকরণ" },
-  { ja: "れいぞうこ", romaji: "reizouko", en: "refrigerator", bn: "ফ্রিজ" },
-  { ja: "でんき", romaji: "denki", en: "electricity / light", bn: "বিদ্যুৎ / বাতি" },
-],
-      5: [
-        
-  { ja: "みず", romaji: "mizu", en: "water", bn: "পানি" },
-  { ja: "おちゃ", romaji: "ocha", en: "tea", bn: "চা" },
-  { ja: "こうちゃ", romaji: "koucha", en: "black tea", bn: "কালো চা" },
-  { ja: "ぎゅうにゅう", romaji: "gyuunyuu", en: "milk", bn: "দুধ" },
-  { ja: "ジュース", romaji: "juusu", en: "juice", bn: "রস / জুস" },
-  { ja: "コーヒー", romaji: "koohii", en: "coffee", bn: "কফি" },
-  { ja: "ビール", romaji: "biiru", en: "beer", bn: "বিয়ার" },
-  { ja: "さけ", romaji: "sake", en: "Japanese alcohol / sake", bn: "সাকি / মদ" },
-  { ja: "ごはん", romaji: "gohan", en: "cooked rice / meal", bn: "ভাত / খাবার" },
-  { ja: "パン", romaji: "pan", en: "bread", bn: "রুটি / পাউরুটি" },
-  { ja: "たまご", romaji: "tamago", en: "egg", bn: "ডিম" },
-  { ja: "にく", romaji: "niku", en: "meat", bn: "মাংস" },
-  { ja: "さかな", romaji: "sakana", en: "fish", bn: "মাছ" },
-  { ja: "やさい", romaji: "yasai", en: "vegetables", bn: "সবজি" },
-  { ja: "くだもの", romaji: "kudamono", en: "fruit", bn: "ফল" },
-  { ja: "てんぷら", romaji: "tenpura", en: "tempura", bn: "টেম্পুরা" },
-  { ja: "すし", romaji: "sushi", en: "sushi", bn: "সুশি" },
-  { ja: "ラーメン", romaji: "raamen", en: "ramen / noodles", bn: "রামেন / নুডলস" },
-  { ja: "スパゲッティ", romaji: "supagetti", en: "spaghetti", bn: "স্প্যাগেটি" },
-  { ja: "サラダ", romaji: "sarada", en: "salad", bn: "সালাদ" },
-  { ja: "アイスクリーム", romaji: "aisukuriimu", en: "ice cream", bn: "আইসক্রিম" },
-  { ja: "ケーキ", romaji: "keeki", en: "cake", bn: "কেক" },
-  { ja: "チョコレート", romaji: "chokoreeto", en: "chocolate", bn: "চকোলেট" },
-  { ja: "しお", romaji: "shio", en: "salt", bn: "লবণ" },
-  { ja: "さとう", romaji: "satou", en: "sugar", bn: "চিনি" },
-  { ja: "こしょう", romaji: "koshou", en: "pepper", bn: "মরিচ / গোলমরিচ" },
-  { ja: "さかなや", romaji: "sakanaya", en: "fish shop", bn: "মাছের দোকান" },
-  { ja: "にくや", romaji: "nikuya", en: "butcher / meat shop", bn: "মাংসের দোকান" },
-  { ja: "やおや", romaji: "yaoya", en: "vegetable shop", bn: "সবজির দোকান" },
-  { ja: "くだものや", romaji: "kudamonoya", en: "fruit shop", bn: "ফলের দোকান" },
-],
-    6: [
-      
-  { ja: "シャツ", romaji: "shatsu", en: "shirt", bn: "শার্ট" },
-  { ja: "Tシャツ", romaji: "tii shatsu", en: "T-shirt", bn: "টি-শার্ট" },
-  { ja: "ブラウス", romaji: "burausu", en: "blouse", bn: "ব্লাউজ" },
-  { ja: "セーター", romaji: "seetaa", en: "sweater", bn: "সুয়েটার" },
-  { ja: "ジャケット", romaji: "jaketto", en: "jacket", bn: "জ্যাকেট" },
-  { ja: "コート", romaji: "kooto", en: "coat", bn: "কোট" },
-  { ja: "ズボン", romaji: "zubon", en: "trousers / pants", bn: "প্যান্ট" },
-  { ja: "スカート", romaji: "sukaato", en: "skirt", bn: "স্কার্ট" },
-  { ja: "くつ", romaji: "kutsu", en: "shoes", bn: "জুতো" },
-  { ja: "くつした", romaji: "kutsushita", en: "socks", bn: "মোজা" },
-  { ja: "ぼうし", romaji: "boushi", en: "hat / cap", bn: "টুপি / হ্যাট" },
-  { ja: "ネクタイ", romaji: "nekutai", en: "necktie", bn: "টাই" },
-  { ja: "スーツ", romaji: "suutsu", en: "suit", bn: "স্যুট" },
-  { ja: "パジャマ", romaji: "pajama", en: "pajamas", bn: "পাজামা" },
-  { ja: "ふく", romaji: "fuku", en: "clothes", bn: "কাপড় / পোশাক" },
-  { ja: "ベルト", romaji: "beruto", en: "belt", bn: "বেল্ট" },
-  { ja: "マフラー", romaji: "mafuraa", en: "scarf", bn: "মাফলার / স্কার্ফ" },
-  { ja: "てぶくろ", romaji: "tebukuro", en: "gloves", bn: "হাতমোজা" },
-  { ja: "サンダル", romaji: "sandaru", en: "sandals", bn: "স্যান্ডেল" },
-],
-    7: [
-
-  { ja: "あか", romaji: "aka", en: "red", bn: "লাল" },
-  { ja: "あお", romaji: "ao", en: "blue", bn: "নীল" },
-  { ja: "きいろ", romaji: "kiiro", en: "yellow", bn: "হলুদ" },
-  { ja: "しろ", romaji: "shiro", en: "white", bn: "সাদা" },
-  { ja: "くろ", romaji: "kuro", en: "black", bn: "কালো" },
-  { ja: "ちゃいろ", romaji: "chairo", en: "brown", bn: "বাদামী" },
-  { ja: "みどり", romaji: "midori", en: "green", bn: "সবুজ" },
-  { ja: "むらさき", romaji: "murasaki", en: "purple", bn: "বেগুনি" },
-  { ja: "ピンク", romaji: "pinku", en: "pink", bn: "গোলাপী" },
-  { ja: "グレー", romaji: "guree", en: "gray", bn: "ধূসর" },
-  { ja: "オレンジ", romaji: "orenji", en: "orange", bn: "কমলা" },
-  { ja: "きんいろ", romaji: "kin'iro", en: "gold color", bn: "সোনালী" },
-  { ja: "ぎんいろ", romaji: "gin'iro", en: "silver color", bn: "রূপালী" },
-],
-    8: [
-
-  { ja: "なに / なん", romaji: "nani / nan", en: "what", bn: "কি" },
-  { ja: "どこ", romaji: "doko", en: "where", bn: "কোথায়" },
-  { ja: "だれ", romaji: "dare", en: "who", bn: "কে" },
-  { ja: "どなた", romaji: "donata", en: "who (polite)", bn: "কে (শ্রদ্ধাপূর্ণ)" },
-  { ja: "いつ", romaji: "itsu", en: "when", bn: "কখন" },
-  { ja: "どの", romaji: "dono", en: "which (one)", bn: "কোনটি" },
-  { ja: "いくつ", romaji: "ikutsu", en: "how many / how old", bn: "কতগুলো / বয়স কত" },
-  { ja: "いくら", romaji: "ikura", en: "how much", bn: "কত দাম" },
-  { ja: "どうして", romaji: "doushite", en: "why", bn: "কেন" },
-  { ja: "どう", romaji: "dou", en: "how", bn: "কীভাবে" },
-  { ja: "どのくらい / どれくらい", romaji: "dono kurai / dore kurai", en: "how long / how much", bn: "কতদূর / কত" },
-  { ja: "どれ", romaji: "dore", en: "which (one) among three or more", bn: "কোনটি" },
-  { ja: "どちら", romaji: "dochira", en: "which way / which one (polite)", bn: "কোনটি / কোন দিকে" },
-],
-    9: [
-
-  { ja: "みぎ", romaji: "migi", en: "right", bn: "ডান" },
-  { ja: "ひだり", romaji: "hidari", en: "left", bn: "বাম" },
-  { ja: "まえ", romaji: "mae", en: "front", bn: "সামনে" },
-  { ja: "うしろ", romaji: "ushiro", en: "back / behind", bn: "পেছনে" },
-  { ja: "なか", romaji: "naka", en: "inside", bn: "ভেতরে" },
-  { ja: "そと", romaji: "soto", en: "outside", bn: "বাহিরে" },
-  { ja: "うえ", romaji: "ue", en: "on / above / over", bn: "উপরে" },
-  { ja: "した", romaji: "shita", en: "under / below", bn: "নিচে" },
-  { ja: "ひだりがわ", romaji: "hidarigawa", en: "left side", bn: "বাম দিকে" },
-  { ja: "みぎがわ", romaji: "migigawa", en: "right side", bn: "ডান দিকে" },
-  { ja: "まんなか", romaji: "mannaka", en: "center / middle", bn: "মধ্য / মাঝ" },
-  { ja: "となり", romaji: "tonari", en: "next to / neighboring", bn: "পাশে / প্রতিবেশী" },
-  { ja: "あいだ", romaji: "aida", en: "between", bn: "মধ্যবর্তী / মাঝে" },
-  { ja: "ちかく", romaji: "chikaku", en: "near / nearby", bn: "কাছাকাছি" },
-  { ja: "そば", romaji: "soba", en: "near / beside", bn: "পাশে" },
-  { ja: "むこう", romaji: "mukou", en: "over there / opposite side", bn: "সেখানে / বিপরীতে" },
-  { ja: "よこ", romaji: "yoko", en: "side / next to", bn: "পার্শ্ব / পাশে" },
-  { ja: "ちかい", romaji: "chikai", en: "close / near", bn: "কাছ" },
-  { ja: "とおい", romaji: "tooi", en: "far", bn: "দূরে" },
-],
-    10:[
-    
-  { ja: "いぬ", romaji: "inu", en: "dog", bn: "কুকুর" },
-  { ja: "ねこ", romaji: "neko", en: "cat", bn: "বিড়াল" },
-  { ja: "とり", romaji: "tori", en: "bird", bn: "পাখি" },
-  { ja: "さかな", romaji: "sakana", en: "fish", bn: "মাছ" },
-  { ja: "うま", romaji: "uma", en: "horse", bn: "ঘোড়া" },
-  { ja: "うし", romaji: "ushi", en: "cow", bn: "গাই" },
-  { ja: "ぶた", romaji: "buta", en: "pig", bn: "শূকর" },
-  { ja: "ひつじ", romaji: "hitsuji", en: "sheep", bn: "ভেড়া" },
-  { ja: "とら", romaji: "tora", en: "tiger", bn: "বাঘ" },
-  { ja: "さる", romaji: "saru", en: "monkey", bn: "বানর" },
-  { ja: "きんぎょ", romaji: "kingyo", en: "goldfish", bn: "সোনার মাছ" },
-  { ja: "かめ", romaji: "kame", en: "turtle", bn: "কচ্ছপ" },
-  { ja: "へび", romaji: "hebi", en: "snake", bn: "সাপ" },
-  { ja: "とりにく", romaji: "toriniku", en: "chicken meat", bn: "মুরগির মাংস" },
-  { ja: "あひる", romaji: "ahiru", en: "duck", bn: "হাঁস" },
-],
-    11:[
-  
-  { ja: "せんせい", romaji: "sensei", en: "teacher / instructor", bn: "শিক্ষক" },
-  { ja: "がくせい", romaji: "gakusei", en: "student", bn: "ছাত্র / ছাত্রী" },
-  { ja: "かいしゃいん", romaji: "kaishain", en: "company employee", bn: "কোম্পানির কর্মচারী" },
-  { ja: "しゃいん", romaji: "shain", en: "employee (of a company)", bn: "কর্মচারী" },
-  { ja: "いしゃ", romaji: "isha", en: "doctor", bn: "ডাক্তার" },
-  { ja: "かんごし", romaji: "kangoshi", en: "nurse", bn: "নার্স" },
-  { ja: "エンジニア", romaji: "enjiniya", en: "engineer", bn: "ইঞ্জিনিয়ার" },
-  { ja: "けいさつかん", romaji: "keisatsukan", en: "police officer", bn: "পুলিশ কর্মকর্তা" },
-  { ja: "しょうぼうし", romaji: "shouboushi", en: "firefighter", bn: "ফায়ারফাইটার / দমকলকর্মী" },
-  { ja: "べんごし", romaji: "bengoshi", en: "lawyer", bn: "আইনজীবী" },
-  { ja: "しょくにん", romaji: "shokunin", en: "craftsman / worker", bn: "কারিগর / কর্মী" },
-  { ja: "てんいん", romaji: "ten’in", en: "shop assistant / clerk", bn: "দোকানদার / কর্মী" },
-  { ja: "うんてんしゅ", romaji: "untenshu", en: "driver", bn: "ড্রাইভার" },
-  { ja: "のうか", romaji: "nouka", en: "farmer", bn: "কৃষক" },
-],
-    12:[
-     
-  { ja: "しずか（な）", romaji: "shizuka (na)", en: "quiet / peaceful", bn: "নীরব / শান্ত" },
-  { ja: "にぎやか（な）", romaji: "nigiyaka (na)", en: "lively / bustling", bn: "জীবন্ত / ব্যস্ত" },
-  { ja: "ゆうめい（な）", romaji: "yuumei (na)", en: "famous", bn: "খ্যাত / প্রসিদ্ধ" },
-  { ja: "きれい（な）", romaji: "kirei (na)", en: "beautiful / clean", bn: "সুন্দর / পরিষ্কার" },
-  { ja: "しんせつ（な）", romaji: "shinsetsu (na)", en: "kind / helpful", bn: "দয়ালু / সহায়ক" },
-  { ja: "げんき（な）", romaji: "genki (na)", en: "healthy / energetic", bn: "সুস্থ / প্রাণবন্ত" },
-  { ja: "べんり（な）", romaji: "benri (na)", en: "convenient", bn: "সুবিধাজনক" },
-  { ja: "すてき（な）", romaji: "suteki (na)", en: "nice / lovely", bn: "চমৎকার / সুন্দর" },
-  { ja: "たいへん（な）", romaji: "taihen (na)", en: "tough / difficult", bn: "কঠিন / কষ্টকর" },
-  { ja: "だいじょうぶ（な）", romaji: "daijoubu (na)", en: "all right / okay", bn: "ঠিক আছে / সমস্যা নেই" },
-  { ja: "しあわせ（な）", romaji: "shiawase (na)", en: "happy", bn: "সুখী" },
-  { ja: "ゆうじょう（な）", romaji: "yuujou (na)", en: "friendly / kind", bn: "সৌহার্দ্যপূর্ণ / বন্ধুত্বপূর্ণ" },
-  { ja: "じょうず（な）", romaji: "jouzu (na)", en: "skillful / good at", bn: "দক্ষ / ভালো" },
-  { ja: "へた（な）", romaji: "heta (na)", en: "unskillful / bad at", bn: "অদক্ষ / খারাপ" },
-  { ja: "しんぱい（な）", romaji: "shinpai (na)", en: "worried / anxious", bn: "চিন্তিত / উদ্বিগ্ন" },
-  { ja: "べんきょう（な）", romaji: "benkyou (na)", en: "studious", bn: "পড়াশোনায় ভালো / অধ্যয়নশীল" },
-  { ja: "すき（な）", romaji: "suki (na)", en: "liked / favorite", bn: "পছন্দ / প্রিয়" },
-  { ja: "きらい（な）", romaji: "kirai (na)", en: "disliked / hate", bn: "অপছন্দ / ঘৃণা" },
-  { ja: "だいすき（な）", romaji: "daisuki (na)", en: "love / really like", bn: "ভালোবাসা / খুব পছন্দ" },
-  { ja: "だいきらい（な）", romaji: "daikirai (na)", en: "hate / really dislike", bn: "অত্যন্ত অপছন্দ / ঘৃণা" },
-],
-
-    13:[
-      
-  { ja: "あつい", romaji: "atsui", en: "hot (weather / thing)", bn: "গরম" },
-  { ja: "さむい", romaji: "samui", en: "cold (weather)", bn: "ঠান্ডা" },
-  { ja: "あたたかい", romaji: "atatakai", en: "warm", bn: "গরম / উষ্ণ" },
-  { ja: "すずしい", romaji: "suzushii", en: "cool (weather)", bn: "শীতল" },
-  { ja: "あまい", romaji: "amai", en: "sweet", bn: "মিষ্টি" },
-  { ja: "からい", romaji: "karai", en: "spicy", bn: "মশলাদার / ঝাল" },
-  { ja: "おいしい", romaji: "oishii", en: "delicious", bn: "সুস্বাদু" },
-  { ja: "たかい", romaji: "takai", en: "high / expensive", bn: "উচ্চ / দামী" },
-  { ja: "やすい", romaji: "yasui", en: "cheap", bn: "সস্তা" },
-  { ja: "ひくい", romaji: "hikui", en: "low", bn: "নিম্ন / নিচু" },
-  { ja: "おもしろい", romaji: "omoshiroi", en: "interesting / funny", bn: "মজার / আকর্ষণীয়" },
-  { ja: "つまらない", romaji: "tsumaranai", en: "boring", bn: "বিরক্তিকর / বোরিং" },
-  { ja: "はやい", romaji: "hayai", en: "fast / early", bn: "দ্রুত / আগেই" },
-  { ja: "おそい", romaji: "osoi", en: "slow / late", bn: "ধীর / দেরী" },
-  { ja: "あかるい", romaji: "akarui", en: "bright / cheerful", bn: "উজ্জ্বল / হাসিখুশি" },
-  { ja: "くらい", romaji: "kurai", en: "dark", bn: "অন্ধকার" },
-  { ja: "ながい", romaji: "nagai", en: "long", bn: "লম্বা" },
-  { ja: "みじかい", romaji: "mijikai", en: "short", bn: "ছোট / সংক্ষিপ্ত" },
-  { ja: "おおきい", romaji: "ookii", en: "big", bn: "বড়" },
-  { ja: "ちいさい", romaji: "chiisai", en: "small", bn: "ছোট" },
-  { ja: "あたらしい", romaji: "atarashii", en: "new", bn: "নতুন" },
-  { ja: "ふるい", romaji: "furui", en: "old (thing)", bn: "পুরানো" },
-  { ja: "いい / よい", romaji: "ii / yoi", en: "good", bn: "ভালো" },
-  { ja: "わるい", romaji: "warui", en: "bad", bn: "খারাপ" },
-  { ja: "おおい", romaji: "ooi", en: "many / much", bn: "অনেক / প্রচুর" },
-  { ja: "すくない", romaji: "sukunai", en: "few / little", bn: "কিছুটা / কম" },
-  { ja: "たのしい", romaji: "tanoshii", en: "fun / enjoyable", bn: "আনন্দদায়ক / মজার" },
-  { ja: "かなしい", romaji: "kanashii", en: "sad", bn: "দুঃখিত / দুঃখজনক" },
-  { ja: "うれしい", romaji: "ureshii", en: "happy / glad", bn: "খুশি / আনন্দিত" },
-  { ja: "いそがしい", romaji: "isogashii", en: "busy", bn: "ব্যস্ত" },
-  { ja: "ひま", romaji: "hima", en: "free / not busy", bn: "ফাঁকা / অব্যস্ত" }, // note: often な-adj but N5
-  { ja: "さびしい", romaji: "sabishii", en: "lonely", bn: "একাকী / নির্জন" },
-],
-    14:[
-      
-  { ja: "いきます", romaji: "ikimasu", en: "to go", bn: "যাওয়া" },
-  { ja: "きます", romaji: "kimasu", en: "to come", bn: "আসা" },
-  { ja: "かえります", romaji: "kaerimasu", en: "to return / go home", bn: "ফিরে যাওয়া" },
-  { ja: "たべます", romaji: "tabemasu", en: "to eat", bn: "খাওয়া" },
-  { ja: "のみます", romaji: "nomimasu", en: "to drink", bn: "পান করা" },
-  { ja: "みます", romaji: "mimasu", en: "to see / watch", bn: "দেখা" },
-  { ja: "ききます", romaji: "kikimasu", en: "to listen / ask", bn: "শোনা / জিজ্ঞেস করা" },
-  { ja: "よみます", romaji: "yomimasu", en: "to read", bn: "পড়া" },
-  { ja: "かきます", romaji: "kakimasu", en: "to write", bn: "লেখা" },
-  { ja: "かいます", romaji: "kaimasu", en: "to buy", bn: "কেনা" },
-  { ja: "とります", romaji: "torimasu", en: "to take (photo)", bn: "ছবি তোলা" },
-  { ja: "します", romaji: "shimasu", en: "to do", bn: "করা" },
-  { ja: "あいます", romaji: "aimasu", en: "to meet", bn: "দেখা করা" },
-  { ja: "はたらきます", romaji: "hatarakimasu", en: "to work", bn: "কাজ করা" },
-  { ja: "やすみます", romaji: "yasumimasu", en: "to rest / be absent", bn: "বিশ্রাম নেওয়া / অনুপস্থিত থাকা" },
-  { ja: "べんきょうします", romaji: "benkyou shimasu", en: "to study", bn: "পড়াশোনা করা" },
-  { ja: "おきます", romaji: "okimasu", en: "to get up", bn: "ওঠা" },
-  { ja: "ねます", romaji: "nemasu", en: "to sleep", bn: "ঘুমানো" },
-  { ja: "わかります", romaji: "wakarimasu", en: "to understand", bn: "বোঝা" },
-  { ja: "あります", romaji: "arimasu", en: "to be (inanimate)", bn: "থাকা (জিনিসের জন্য)" },
-  { ja: "います", romaji: "imasu", en: "to be (animate)", bn: "থাকা (মানুষ/প্রাণী)" },
-  { ja: "かします", romaji: "kashimasu", en: "to lend", bn: "ধার দেওয়া" },
-  { ja: "かります", romaji: "karimasu", en: "to borrow", bn: "ধার নেওয়া" },
-  { ja: "おしえます", romaji: "oshiemasu", en: "to teach / tell", bn: "শেখানো / বলা" },
-  { ja: "ならいます", romaji: "naraimasu", en: "to learn", bn: "শেখা" },
-  { ja: "おくります", romaji: "okurimasu", en: "to send", bn: "পাঠানো" },
-  { ja: "きります", romaji: "kirimasu", en: "to cut", bn: "কাটা" },
-  { ja: "つくります", romaji: "tsukurimasu", en: "to make", bn: "তৈরি করা" },
-  { ja: "おきます", romaji: "okimasu", en: "to put / place", bn: "রাখা" },
-  { ja: "つかいます", romaji: "tsukaimasu", en: "to use", bn: "ব্যবহার করা" },
-  { ja: "けします", romaji: "keshimasu", en: "to turn off / erase", bn: "নিভানো / মুছে ফেলা" },
-  { ja: "つけます", romaji: "tsukemasu", en: "to turn on", bn: "চালু করা" },
-  { ja: "あけます", romaji: "akemasu", en: "to open", bn: "খোলা" },
-  { ja: "しめます", romaji: "shimemasu", en: "to close", bn: "বন্ধ করা" },
-  { ja: "いそぎます", romaji: "isogimasu", en: "to hurry", bn: "তাড়াহুড়ো করা" },
-  { ja: "まちます", romaji: "machimasu", en: "to wait", bn: "অপেক্ষা করা" },
-  { ja: "とめます", romaji: "tomemasu", en: "to stop", bn: "থামানো" },
-  { ja: "もちます", romaji: "mochimasu", en: "to hold", bn: "ধরা / রাখা" },
-  { ja: "よびます", romaji: "yobimasu", en: "to call", bn: "ডাক দেওয়া" },
-  { ja: "はなします", romaji: "hanashimasu", en: "to speak", bn: "কথা বলা" },
-  { ja: "みせます", romaji: "misemasu", en: "to show", bn: "দেখানো" },
-  { ja: "おります", romaji: "orimasu", en: "to get off", bn: "নামা" },
-  { ja: "のります", romaji: "norimasu", en: "to ride / get on", bn: "উঠা (যানবাহনে)" },
-  { ja: "はいります", romaji: "hairimasu", en: "to enter", bn: "প্রবেশ করা" },
-  { ja: "でます", romaji: "demasu", en: "to go out", bn: "বের হওয়া" },
-  { ja: "すわります", romaji: "suwarimasu", en: "to sit", bn: "বসা" },
-  { ja: "たちます", romaji: "tachimasu", en: "to stand", bn: "দাঁড়ানো" },
-  { ja: "はじめます", romaji: "hajimemasu", en: "to start", bn: "শুরু করা" },
-  { ja: "おわります", romaji: "owarimasu", en: "to finish", bn: "শেষ হওয়া" },
-  { ja: "あらいます", romaji: "araimasu", en: "to wash", bn: "ধোয়া" },
-  { ja: "うたいます", romaji: "utaimasu", en: "to sing", bn: "গান গাওয়া" },
-  { ja: "ひきます", romaji: "hikimasu", en: "to play (instrument)", bn: "বাদ্যযন্ত্র বাজানো" },
-  { ja: "のりかえます", romaji: "norikaemasu", en: "to transfer (train, bus)", bn: "বদলানো (ট্রেন/বাস)" },
-  { ja: "おします", romaji: "oshimasu", en: "to push", bn: "চাপ দেওয়া" },
-  { ja: "すみます", romaji: "sumimasu", en: "to live / reside", bn: "বসবাস করা" },
-  { ja: "おもいだします", romaji: "omoidasimasu", en: "to remember", bn: "মনে পড়া" },
-  { ja: "しります", romaji: "shirimasu", en: "to know", bn: "জানা" },
-  { ja: "なおします", romaji: "naoshimasu", en: "to repair", bn: "মেরামত করা" },
-  { ja: "のぼります", romaji: "noborimasu", en: "to climb", bn: "উঠা (পাহাড়ে)" },
-  { ja: "とまります", romaji: "tomarimasu", en: "to stay (hotel)", bn: "থাকা (অস্থায়ীভাবে)" },
-  { ja: "そうじします", romaji: "souji shimasu", en: "to clean", bn: "পরিষ্কার করা" },
-  { ja: "せんたくします", romaji: "sentaku shimasu", en: "to wash (clothes)", bn: "কাপড় ধোয়া" },
-  { ja: "つれていきます", romaji: "tsurete ikimasu", en: "to take (someone)", bn: "কাউকে নিয়ে যাওয়া" },
-  { ja: "つれてきます", romaji: "tsurete kimasu", en: "to bring (someone)", bn: "কাউকে নিয়ে আসা" },
-  { ja: "あんないします", romaji: "annai shimasu", en: "to guide / show around", bn: "দিক নির্দেশ করা" },
-  { ja: "せつめいします", romaji: "setsumei shimasu", en: "to explain", bn: "ব্যাখ্যা করা" },
-  { ja: "かんがえます", romaji: "kangaemasu", en: "to think", bn: "চিন্তা করা" },
-  { ja: "きます", romaji: "kimasu", en: "to wear (upper body)", bn: "পরা (উপরের পোশাক)" },
-  { ja: "はきます", romaji: "hakimasu", en: "to wear (lower body)", bn: "পরা (নিচের পোশাক)" },
-  { ja: "かぶります", romaji: "kaburimasu", en: "to wear (hat)", bn: "টুপি পরা" },
-  { ja: "かけます", romaji: "kakemasu", en: "to wear (glasses)", bn: "চশমা পরা" },
-  { ja: "うまれます", romaji: "umaremasu", en: "to be born", bn: "জন্ম নেওয়া" },
-  { ja: "しゅうりします", romaji: "shuuri shimasu", en: "to repair", bn: "মেরামত করা" },
-  { ja: "かちます", romaji: "kachimasu", en: "to win", bn: "জয়ী হওয়া" },
-  { ja: "まけます", romaji: "makemasu", en: "to lose", bn: "হারানো / হারা" },
-  { ja: "いります", romaji: "irimasu", en: "to need", bn: "প্রয়োজন হওয়া" },
-],
-    15:[
-      
-  { ja: "よく", romaji: "yoku", en: "often / well", bn: "প্রায়ই / ভালোভাবে" },
-  { ja: "たくさん", romaji: "takusan", en: "many / a lot", bn: "অনেক / প্রচুর" },
-  { ja: "とても", romaji: "totemo", en: "very", bn: "খুব" },
-  { ja: "いつも", romaji: "itsumo", en: "always", bn: "সদা / সবসময়" },
-  { ja: "いっしょに", romaji: "issho ni", en: "together", bn: "একসাথে" },
-  { ja: "ゆっくり", romaji: "yukkuri", en: "slowly / leisurely", bn: "ধীরে / আরামে" },
-  { ja: "はやく", romaji: "hayaku", en: "quickly / early", bn: "দ্রুত / আগেই" },
-  { ja: "もう", romaji: "mou", en: "already / soon", bn: "ইতিমধ্যে / শীঘ্রই" },
-  { ja: "まだ", romaji: "mada", en: "still / yet", bn: "এখনো / এখনও" },
-  { ja: "たいへん", romaji: "taihen", en: "very / serious / hard", bn: "খুব / কঠিন / গুরুতর" },
-],
-    16:[
-
-  { ja: "ぜんぜん", romaji: "zenzen", en: "not at all (with negative verb)", bn: "একদম না" },
-  { ja: "あまり", romaji: "amari", en: "not much / not very (with negative verb)", bn: "বেশি নয় / খুব নয়" },
-],
-    17:[
-    
-  { ja: "は", romaji: "wa", en: "topic marker", bn: "বিষয়সূচক কণা" },
-  { ja: "が", romaji: "ga", en: "subject marker", bn: "বিষয় / কৃৎকর্মসূচক কণা" },
-  { ja: "を", romaji: "wo / o", en: "object marker", bn: "কর্মসূচক কণা" },
-  { ja: "に", romaji: "ni", en: "time / place marker / direction", bn: "সময় / স্থান / দিক নির্দেশক" },
-  { ja: "へ", romaji: "e", en: "direction / to", bn: "দিকে / প্রতি" },
-  { ja: "で", romaji: "de", en: "place of action / means", bn: "ক্রিয়াকলাপের স্থান / মাধ্যম" },
-  { ja: "と", romaji: "to", en: "and / with / quoting", bn: "এবং / সঙ্গে / উদ্ধৃতির জন্য" },
-  { ja: "や", romaji: "ya", en: "and (among others)", bn: "এবং (অন্যান্য মধ্যে)" },
-  { ja: "から", romaji: "kara", en: "from / because", bn: "থেকে / কারণ" },
-  { ja: "まで", romaji: "made", en: "until / up to", bn: "পর্যন্ত" },
-  { ja: "も", romaji: "mo", en: "also / too", bn: "ও / এছাড়াও" },
-  { ja: "の", romaji: "no", en: "possessive / descriptive", bn: "অধিকার / বর্ণনামূলক" },
-  { ja: "ね", romaji: "ne", en: "isn't it? / right?", bn: "না কি? / ঠিক?" },
-  { ja: "よ", romaji: "yo", en: "emphasis / assertion", bn: "জোর / নিশ্চয়তা" },
-  { ja: "か", romaji: "ka", en: "question marker", bn: "প্রশ্নসূচক কণা" },
-],
-
-    18:[
-      
-  { ja: "てんき", romaji: "tenki", en: "weather", bn: "আবহাওয়া" },
-  { ja: "はれ", romaji: "hare", en: "sunny", bn: "রোদ" },
-  { ja: "くもり", romaji: "kumori", en: "cloudy", bn: "মেঘলা" },
-  { ja: "あめ", romaji: "ame", en: "rain / rainy", bn: "বৃষ্টি / বর্ষা" },
-  { ja: "ゆき", romaji: "yuki", en: "snow / snowy", bn: "তুষার / তুষারপাত" },
-  { ja: "かぜ", romaji: "kaze", en: "wind / windy", bn: "হাওয়া / বাতাস" },
-  { ja: "あつい", romaji: "atsui", en: "hot (weather)", bn: "গরম" },
-  { ja: "さむい", romaji: "samui", en: "cold (weather)", bn: "ঠান্ডা" },
-  { ja: "すずしい", romaji: "suzushii", en: "cool (weather)", bn: "শীতল" },
-  { ja: "あたたかい", romaji: "atatakai", en: "warm", bn: "গরম / উষ্ণ" },
-  { ja: "じめじめ", romaji: "jimejime", en: "humid / damp", bn: "আর্দ্র / চ্যাপ্টা" },
-  { ja: "からから", romaji: "karakara", en: "dry / parched", bn: "শুকনো" },
-],
-    19:[
-      
-  { ja: "でんしゃ", romaji: "densha", en: "train", bn: "রেলগাড়ি / ট্রেন" },
-  { ja: "ちかてつ", romaji: "chikatetsu", en: "subway / underground train", bn: "মেট্রো / সাবওয়ে" },
-  { ja: "バス", romaji: "basu", en: "bus", bn: "বাস" },
-  { ja: "タクシー", romaji: "takushii", en: "taxi", bn: "ট্যাক্সি" },
-  { ja: "くるま", romaji: "kuruma", en: "car", bn: "গাড়ি" },
-  { ja: "じてんしゃ", romaji: "jitensha", en: "bicycle", bn: "সাইকেল" },
-  { ja: "ふね", romaji: "fune", en: "ship / boat", bn: "জাহাজ / নৌকা" },
-  { ja: "ひこうき", romaji: "hikouki", en: "airplane", bn: "বিমান" },
-  { ja: "バイク", romaji: "baiku", en: "motorbike / motorcycle", bn: "মোটরসাইকেল" },
-  { ja: "でんわ", romaji: "denwa", en: "telephone (sometimes transport-related for calling taxis)", bn: "টেলিফোন" },
-],
-
-      20:[
-  
-  // Numbers 0-10
-  { ja: "ゼロ", romaji: "zero", en: "0", bn: "শূন্য" },
-  { ja: "いち", romaji: "ichi", en: "1", bn: "এক" },
-  { ja: "に", romaji: "ni", en: "2", bn: "দুই" },
-  { ja: "さん", romaji: "san", en: "3", bn: "তিন" },
-  { ja: "し / よん", romaji: "shi / yon", en: "4", bn: "চার" },
-  { ja: "ご", romaji: "go", en: "5", bn: "পাঁচ" },
-  { ja: "ろく", romaji: "roku", en: "6", bn: "ছয়" },
-  { ja: "しち / なな", romaji: "shichi / nana", en: "7", bn: "সাত" },
-  { ja: "はち", romaji: "hachi", en: "8", bn: "আট" },
-  { ja: "きゅう / く", romaji: "kyuu / ku", en: "9", bn: "নয়" },
-  { ja: "じゅう", romaji: "juu", en: "10", bn: "দশ" },
-
-  // Counters
-  { ja: "つ", romaji: "tsu", en: "general counter (for things)", bn: "জিনিসের জন্য সাধারণ সংখ্যা" },
-  { ja: "ひとつ", romaji: "hitotsu", en: "one thing", bn: "একটি জিনিস" },
-  { ja: "ふたつ", romaji: "futatsu", en: "two things", bn: "দুটি জিনিস" },
-  { ja: "みっつ", romaji: "mittsu", en: "three things", bn: "তিনটি জিনিস" },
-  { ja: "よっつ", romaji: "yottsu", en: "four things", bn: "চারটি জিনিস" },
-  { ja: "いつつ", romaji: "itsutsu", en: "five things", bn: "পাঁচটি জিনিস" },
-  { ja: "むっつ", romaji: "muttsu", en: "six things", bn: "ছয়টি জিনিস" },
-  { ja: "ななつ", romaji: "nanatsu", en: "seven things", bn: "সাতটি জিনিস" },
-  { ja: "やっつ", romaji: "yattsu", en: "eight things", bn: "আটটি জিনিস" },
-  { ja: "ここのつ", romaji: "kokonotsu", en: "nine things", bn: "নয়টি জিনিস" },
-  { ja: "とお", romaji: "too", en: "ten things", bn: "দশটি জিনিস" },
-
-  // Age
-  { ja: "さい", romaji: "sai", en: "years old", bn: "বয়স" },
-  { ja: "いっさい", romaji: "issai", en: "1 year old", bn: "১ বছর" },
-  { ja: "にさい", romaji: "nisai", en: "2 years old", bn: "২ বছর" },
-
-  // People
-  { ja: "にん", romaji: "nin", en: "counter for people", bn: "জনের জন্য গণনা" },
-  { ja: "ひとり", romaji: "hitori", en: "one person", bn: "একজন মানুষ" },
-  { ja: "ふたり", romaji: "futari", en: "two people", bn: "দুইজন মানুষ" },
-
-  // Long objects
-  { ja: "ほん / ぼん / ぽん", romaji: "hon / bon / pon", en: "counter for long cylindrical objects", bn: "দীর্ঘনলাকার জিনিসের জন্য গণনা" },
-
-  // Small animals
-  { ja: "ひき / びき / ぴき", romaji: "hiki / biki / piki", en: "counter for small animals", bn: "ছোট প্রাণীর জন্য গণনা" },
-
-  // Flat objects
-  { ja: "まい", romaji: "mai", en: "counter for flat objects (paper, plates, etc.)", bn: "পতাকা/প্লেটের মতো ফ্ল্যাট জিনিসের জন্য" },
-
-  // General purpose
-  { ja: "だい", romaji: "dai", en: "counter for machines / vehicles", bn: "যন্ত্র / যানবাহনের জন্য গণনা" },
-],
-
-    21:[
-      
-  // Days of the week
-  { ja: "にちようび", romaji: "nichiyoubi", en: "Sunday", bn: "রবিবার" },
-  { ja: "げつようび", romaji: "getsuyoubi", en: "Monday", bn: "সোমবার" },
-  { ja: "かようび", romaji: "kayoubi", en: "Tuesday", bn: "মঙ্গলবার" },
-  { ja: "すいようび", romaji: "suiyoubi", en: "Wednesday", bn: "বুধবার" },
-  { ja: "もくようび", romaji: "mokuyoubi", en: "Thursday", bn: "বৃহস্পতিবার" },
-  { ja: "きんようび", romaji: "kinyoubi", en: "Friday", bn: "শুক্রবার" },
-  { ja: "どようび", romaji: "doyoubi", en: "Saturday", bn: "শনিবার" },
-
-  // Months
-  { ja: "いちがつ", romaji: "ichigatsu", en: "January", bn: "জানুয়ারি" },
-  { ja: "にがつ", romaji: "nigatsu", en: "February", bn: "ফেব্রুয়ারি" },
-  { ja: "さんがつ", romaji: "sangatsu", en: "March", bn: "মার্চ" },
-  { ja: "しがつ", romaji: "shigatsu", en: "April", bn: "এপ্রিল" },
-  { ja: "ごがつ", romaji: "gogatsu", en: "May", bn: "মে" },
-  { ja: "ろくがつ", romaji: "rokugatsu", en: "June", bn: "জুন" },
-  { ja: "しちがつ", romaji: "shichigatsu", en: "July", bn: "জুলাই" },
-  { ja: "はちがつ", romaji: "hachigatsu", en: "August", bn: "আগস্ট" },
-  { ja: "くがつ", romaji: "kugatsu", en: "September", bn: "সেপ্টেম্বর" },
-  { ja: "じゅうがつ", romaji: "juugatsu", en: "October", bn: "অক্টোবর" },
-  { ja: "じゅういちがつ", romaji: "juuichigatsu", en: "November", bn: "নভেম্বর" },
-  { ja: "じゅうにがつ", romaji: "juunigatsu", en: "December", bn: "ডিসেম্বর" },
-
-  // Seasons
-  { ja: "はる", romaji: "haru", en: "spring", bn: "বসন্ত" },
-  { ja: "なつ", romaji: "natsu", en: "summer", bn: "গ্রীষ্ম" },
-  { ja: "あき", romaji: "aki", en: "autumn / fall", bn: "শরৎ / শরৎকাল" },
-  { ja: "ふゆ", romaji: "fuyu", en: "winter", bn: "শীত" },
-
-  // Time expressions
-  { ja: "いま", romaji: "ima", en: "now", bn: "এখন" },
-  { ja: "きょう", romaji: "kyou", en: "today", bn: "আজ" },
-  { ja: "きのう", romaji: "kinou", en: "yesterday", bn: "গতকাল" },
-  { ja: "あした", romaji: "ashita", en: "tomorrow", bn: "আগামীকাল" },
-  { ja: "あさ", romaji: "asa", en: "morning", bn: "সকাল" },
-  { ja: "ひる", romaji: "hiru", en: "noon / daytime", bn: "দুপুর / দিনের বেলা" },
-  { ja: "ばん / よる", romaji: "ban / yoru", en: "evening / night", bn: "সন্ধ্যা / রাত" },
-  { ja: "まいあさ", romaji: "maiasa", en: "every morning", bn: "প্রতি সকাল" },
-  { ja: "まいばん", romaji: "maiban", en: "every night", bn: "প্রতি রাত" },
-  { ja: "まいにち", romaji: "mainichi", en: "every day", bn: "প্রতিদিন" },
-  { ja: "こんばん", romaji: "konban", en: "tonight", bn: "আজ রাত" },
-],
-    22:[
-      
-  { ja: "にほん", romaji: "Nihon / Nippon", en: "Japan", bn: "জাপান" },
-  { ja: "アメリカ", romaji: "Amerika", en: "America / USA", bn: "আমেরিকা / যুক্তরাষ্ট্র" },
-  { ja: "イギリス", romaji: "Igirisu", en: "United Kingdom / Britain", bn: "যুক্তরাজ্য / ব্রিটেন" },
-  { ja: "フランス", romaji: "Furansu", en: "France", bn: "ফ্রান্স" },
-  { ja: "ドイツ", romaji: "Doitsu", en: "Germany", bn: "জার্মানি" },
-  { ja: "イタリア", romaji: "Italia", en: "Italy", bn: "ইটালি" },
-  { ja: "スペイン", romaji: "Supein", en: "Spain", bn: "স্পেন" },
-  { ja: "ロシア", romaji: "Roshia", en: "Russia", bn: "রাশিয়া" },
-  { ja: "ちゅうごく", romaji: "Chuugoku", en: "China", bn: "চীন" },
-  { ja: "かんこく", romaji: "Kankoku", en: "Korea / South Korea", bn: "দক্ষিণ কোরিয়া" },
-  { ja: "オーストラリア", romaji: "Oosutoraria", en: "Australia", bn: "অস্ট্রেলিয়া" },
-  { ja: "ブラジル", romaji: "Burajiru", en: "Brazil", bn: "ব্রাজিল" },
-  { ja: "インド", romaji: "Indo", en: "India", bn: "ভারত" },
-  { ja: "カナダ", romaji: "Kanada", en: "Canada", bn: "কানাডা" },
-],
-    23:[
-      
-  { ja: "あたま", romaji: "atama", en: "head", bn: "মাথা" },
-  { ja: "かみ", romaji: "kami", en: "hair", bn: "চুল" },
-  { ja: "め", romaji: "me", en: "eye", bn: "চোখ" },
-  { ja: "みみ", romaji: "mimi", en: "ear", bn: "কান" },
-  { ja: "はな", romaji: "hana", en: "nose", bn: "নাক" },
-  { ja: "くち", romaji: "kuchi", en: "mouth", bn: "মুখ" },
-  { ja: "は", romaji: "ha", en: "tooth / teeth", bn: "দাঁত" },
-  { ja: "くび", romaji: "kubi", en: "neck", bn: "ঘাড়" },
-  { ja: "かた", romaji: "kata", en: "shoulder", bn: "কাঁধ" },
-  { ja: "て", romaji: "te", en: "hand / arm", bn: "হাত / বাহু" },
-  { ja: "ゆび", romaji: "yubi", en: "finger / toe", bn: "আঙুল" },
-  { ja: "むね", romaji: "mune", en: "chest", bn: "বক্ষ" },
-  { ja: "おなか", romaji: "onaka", en: "stomach / belly", bn: "পেট" },
-  { ja: "せなか", romaji: "senaka", en: "back", bn: "পিঠ" },
-  { ja: "あし", romaji: "ashi", en: "leg / foot", bn: "পা" },
-  { ja: "ひざ", romaji: "hiza", en: "knee", bn: "ঘুঁটি" },
-  { ja: "ふとい", romaji: "futoi", en: "fat / thick", bn: "মোটা / পুরু" },
-  { ja: "ほそい", romaji: "hosoi", en: "thin / slender", bn: "পাতলা / লম্বা" },
-],
-    24:[
-     
-  { ja: "グラム", romaji: "guramu", en: "gram", bn: "গ্রাম" },
-  { ja: "キログラム", romaji: "kiro guramu", en: "kilogram", bn: "কিলোগ্রাম" },
-  { ja: "メートル", romaji: "meetoru", en: "meter", bn: "মিটার" },
-  { ja: "センチメートル", romaji: "senchi meetoru", en: "centimeter", bn: "সেন্টিমিটার" },
-  { ja: "ミリメートル", romaji: "mirimeetoru", en: "millimeter", bn: "মিলিমিটার" },
-  { ja: "キロ", romaji: "kiro", en: "kilometer", bn: "কিলোমিটার" },
-  { ja: "リットル", romaji: "rittoru", en: "liter", bn: "লিটার" },
-  { ja: "ミリリットル", romaji: "miririttoru", en: "milliliter", bn: "মিলিলিটার" },
-  { ja: "はい", romaji: "hai", en: "cup / glass (counter for liquid)", bn: "কাপ / গ্লাস (দ্রবণের জন্য)" },
-  { ja: "ほん / ぼん / ぽん", romaji: "hon / bon / pon", en: "counter for long cylindrical objects", bn: "দীর্ঘনলাকার জিনিসের জন্য গণনা" },
-  { ja: "こ", romaji: "ko", en: "counter for small things", bn: "ছোট জিনিসের জন্য গণনা" },
-  { ja: "さつ", romaji: "satsu", en: "counter for books / notebooks", bn: "বই / নোটবুকের জন্য গণনা" },
-  { ja: "ひき / びき / ぴき", romaji: "hiki / biki / piki", en: "counter for small animals", bn: "ছোট প্রাণীর জন্য গণনা" },
-  { ja: "だい", romaji: "dai", en: "counter for machines / vehicles", bn: "যন্ত্র / যানবাহনের জন্য গণনা" },
-],
-    25:[
-      
-  { ja: "サッカー", romaji: "sakkaa", en: "soccer / football", bn: "ফুটবল" },
-  { ja: "やきゅう", romaji: "yakyuu", en: "baseball", bn: "বেসবল" },
-  { ja: "テニス", romaji: "tenisu", en: "tennis", bn: "টেনিস" },
-  { ja: "バスケットボール", romaji: "basukettobooru", en: "basketball", bn: "বেসবল / বাস্কেটবল" },
-  { ja: "スイミング", romaji: "suimingu", en: "swimming", bn: "সাঁতার" },
-  { ja: "ゴルフ", romaji: "gorufu", en: "golf", bn: "গলফ" },
-  { ja: "ジョギング", romaji: "jogingu", en: "jogging", bn: "জগিং" },
-  { ja: "テーブルテニス", romaji: "teeburu tenisu", en: "table tennis / ping pong", bn: "টেবিল টেনিস / পিং-পং" },
-  { ja: "バレーボール", romaji: "bareebooru", en: "volleyball", bn: "ভলিবল" },
-  { ja: "ラグビー", romaji: "ragubii", en: "rugby", bn: "রাগবি" },
-],
-
-
-    26:[
-  // 🕒 Time & Date
-  { ja: '土曜日', romaji: 'どようび', en: 'Saturday', bn: 'শনিবার' },
-  { ja: '木曜日', romaji: 'もくようび', en: 'Thursday', bn: 'বৃহস্পতিবার' },
-  { ja: '火曜日', romaji: 'かようび', en: 'Tuesday', bn: 'মঙ্গলবার' },
-  { ja: '金曜日', romaji: 'きんようび', en: 'Friday', bn: 'শুক্রবার' },
-  { ja: '月曜日', romaji: 'げつようび', en: 'Monday', bn: 'সোমবার' },
-  { ja: '今月', romaji: 'こんげつ', en: 'This month', bn: 'এই মাস' },
-  { ja: '四月', romaji: 'しがつ', en: 'April', bn: 'এপ্রিল' },
-  { ja: '七月', romaji: 'しちがつ', en: 'July', bn: 'জুলাই' },
-  { ja: '十二月', romaji: 'じゅうにがつ', en: 'December', bn: 'ডিসেম্বর' },
-  { ja: '一週間', romaji: 'いっしゅうかん', en: 'One week', bn: 'এক সপ্তাহ' },
-  { ja: '来週', romaji: 'らいしゅう', en: 'Next week', bn: 'আগামী সপ্তাহ' },
-  { ja: '時間', romaji: 'じかん', en: 'Time / Hour', bn: 'সময় / ঘণ্টা' },
-  { ja: '二時間半', romaji: 'にじかんはん', en: 'Two and a half hours', bn: 'আড়াই ঘণ্টা' },
-  { ja: '午前', romaji: 'ごぜん', en: 'Morning (A.M.)', bn: 'সকাল' },
-  { ja: '午後', romaji: 'ごご', en: 'Afternoon (P.M.)', bn: 'বিকেল' },
-  { ja: '毎日', romaji: 'まいにち', en: 'Every day', bn: 'প্রতিদিন' },
-  { ja: '毎朝', romaji: 'まいあさ', en: 'Every morning', bn: 'প্রতিদিন সকালে' },
-  { ja: '休み', romaji: 'やすみ', en: 'Holiday / Rest', bn: 'ছুটি / বিশ্রাম' },
-  { ja: '冬', romaji: 'ふゆ', en: 'Winter', bn: 'শীতকাল' },
-  { ja: '夏', romaji: 'なつ', en: 'Summer', bn: 'গ্রীষ্মকাল' },
-  { ja: '何年', romaji: 'なんねん', en: 'What year', bn: 'কত বছর' },
-
-  // 🔢 Numbers & Quantity
-  { ja: '千', romaji: 'せん', en: 'Thousand', bn: 'হাজার' },
-  { ja: '百', romaji: 'ひゃく', en: 'Hundred', bn: 'শত' },
-  { ja: '二百', romaji: 'にひゃく', en: 'Two hundred', bn: 'দুই শত' },
-  { ja: '三万円', romaji: 'さんまんえん', en: 'Thirty thousand yen', bn: 'ত্রিশ হাজার ইয়েন' },
-  { ja: '五万', romaji: 'ごまん', en: 'Fifty thousand', bn: 'পঞ্চাশ হাজার' },
-  { ja: '三本', romaji: 'さんぼん', en: 'Three (long objects)', bn: 'তিনটি (লম্বা জিনিস)' },
-  { ja: '百本', romaji: 'ひゃっぽん', en: 'Hundred (long objects)', bn: 'একশো (লম্বা জিনিস)' },
-  { ja: '一人', romaji: 'ひとり', en: 'One person', bn: 'একজন' },
-  { ja: '半分', romaji: 'はんぶん', en: 'Half', bn: 'অর্ধেক' },
-  { ja: '少ない', romaji: 'すくない', en: 'Few / Little', bn: 'কম / অল্প' },
-
-  // 📍 Location & Direction
-  { ja: '右', romaji: 'みぎ', en: 'Right', bn: 'ডান' },
-  { ja: '左', romaji: 'ひだり', en: 'Left', bn: 'বাম' },
-  { ja: '北', romaji: 'きた', en: 'North', bn: 'উত্তর' },
-  { ja: '上', romaji: 'うえ', en: 'Above / Up', bn: 'উপরে' },
-  { ja: '下', romaji: 'した', en: 'Below / Down', bn: 'নিচে' },
-  { ja: '後ろ', romaji: 'うしろ', en: 'Behind', bn: 'পিছনে' },
-  { ja: '中', romaji: 'なか', en: 'Inside / Middle', bn: 'ভিতরে / মাঝখানে' },
-  { ja: '入り口', romaji: 'いりぐち', en: 'Entrance', bn: 'প্রবেশপথ' },
-  { ja: '先', romaji: 'さき', en: 'Before / Ahead', bn: 'আগে / সামনে' },
-
-  // 🏫 Buildings & Places
-  { ja: '家', romaji: 'いえ', en: 'House', bn: 'বাড়ি' },
-  { ja: '駅', romaji: 'えき', en: 'Station', bn: 'স্টেশন' },
-  { ja: '会社', romaji: 'かいしゃ', en: 'Company', bn: 'কোম্পানি' },
-  { ja: '外国', romaji: 'がいこく', en: 'Foreign country', bn: 'বিদেশ' },
-  { ja: '国', romaji: 'くに', en: 'Country', bn: 'দেশ' },
-  { ja: '町', romaji: 'まち', en: 'Town / City', bn: 'শহর / পল্লী' },
-  { ja: '中学校', romaji: 'ちゅうがっこう', en: 'Middle school', bn: 'মাধ্যমিক বিদ্যালয়' },
-  { ja: '学校', romaji: 'がっこう', en: 'School', bn: 'স্কুল' },
-  { ja: '食堂', romaji: 'しょくどう', en: 'Cafeteria', bn: 'খাবারের হল' },
-  { ja: '銀行', romaji: 'ぎんこう', en: 'Bank', bn: 'ব্যাংক' },
-  { ja: '道', romaji: 'みち', en: 'Street / Way', bn: 'রাস্তা' },
-
-  // 👨‍👩‍👧 People & Relationships
-  { ja: '人', romaji: 'ひと', en: 'Person', bn: 'মানুষ' },
-  { ja: '友達', romaji: 'ともだち', en: 'Friend', bn: 'বন্ধু' },
-  { ja: '父', romaji: 'ちち', en: '(My) father', bn: 'বাবা (নিজের)' },
-  { ja: 'お父さん', romaji: 'おとうさん', en: 'Father (respectful)', bn: 'বাবা' },
-  { ja: '母', romaji: 'はは', en: '(My) mother', bn: 'মা (নিজের)' },
-  { ja: '先生', romaji: 'せんせい', en: 'Teacher', bn: 'শিক্ষক' },
-  { ja: '弟', romaji: 'おとうと', en: 'Younger brother', bn: 'ছোট ভাই' },
-  { ja: '男', romaji: 'おとこ', en: 'Man / Male', bn: 'পুরুষ' },
-  { ja: '女', romaji: 'おんな', en: 'Woman / Female', bn: 'মহিলা' },
-
-  // 🌳 Nature & Environment
-  { ja: '天気', romaji: 'てんき', en: 'Weather', bn: 'আবহাওয়া' },
-  { ja: '雨', romaji: 'あめ', en: 'Rain', bn: 'বৃষ্টি' },
-  { ja: '雲', romaji: 'くも', en: 'Cloud', bn: 'মেঘ' },
-  { ja: '山', romaji: 'やま', en: 'Mountain', bn: 'পর্বত' },
-  { ja: '川', romaji: 'かわ', en: 'River', bn: 'নদী' },
-  { ja: '水', romaji: 'みず', en: 'Water', bn: 'জল' },
-  { ja: '花', romaji: 'はな', en: 'Flower', bn: 'ফুল' },
-  { ja: '木', romaji: 'き', en: 'Tree', bn: 'গাছ' },
-  { ja: '魚', romaji: 'さかな', en: 'Fish', bn: 'মাছ' },
-
-  // ⚙️ Actions & Verbs
-  { ja: '飲む', romaji: 'のむ', en: 'To drink', bn: 'পান করা' },
-  { ja: '読む', romaji: 'よむ', en: 'To read', bn: 'পড়া' },
-  { ja: '見る', romaji: 'みる', en: 'To see / watch', bn: 'দেখা' },
-  { ja: '入る', romaji: 'はいる', en: 'To enter', bn: 'প্রবেশ করা' },
-  { ja: '働く', romaji: 'はたらく', en: 'To work', bn: 'কাজ করা' },
-  { ja: '立つ', romaji: 'たつ', en: 'To stand', bn: 'দাঁড়ানো' },
-  { ja: '出る', romaji: 'でる', en: 'To go out', bn: 'বাইরে যাওয়া' },
-  { ja: '帰る', romaji: 'かえる', en: 'To return', bn: 'ফিরে আসা' },
-  { ja: '生まれる', romaji: 'うまれる', en: 'To be born', bn: 'জন্ম নেওয়া' },
-
-  // 💰 Objects
-  { ja: 'お金', romaji: 'おかね', en: 'Money', bn: 'টাকা' },
-  { ja: '電話', romaji: 'でんわ', en: 'Telephone', bn: 'টেলিফোন' },
-  { ja: '傘', romaji: 'かさ', en: 'Umbrella', bn: 'ছাতা' },
-  { ja: '手紙', romaji: 'てがみ', en: 'Letter', bn: 'চিঠি' },
-  { ja: '車', romaji: 'くるま', en: 'Car', bn: 'গাড়ি' },
-  { ja: '電車', romaji: 'でんしゃ', en: 'Train', bn: 'ট্রেন' },
-
-  // 🧍‍♂️ Body Parts
-  { ja: '耳', romaji: 'みみ', en: 'Ear', bn: 'কান' },
-  { ja: '手', romaji: 'て', en: 'Hand', bn: 'হাত' },
-  { ja: '目', romaji: 'め', en: 'Eye', bn: 'চোখ' },
-  { ja: '背', romaji: 'せ', en: 'Back / Height', bn: 'উচ্চতা / পিঠ' },
-
-  // 🎨 Attributes & Adjectives
-  { ja: '大きい', romaji: 'おおきい', en: 'Big', bn: 'বড়' },
-  { ja: '小さい', romaji: 'ちいさい', en: 'Small', bn: 'ছোট' },
-  { ja: '高い', romaji: 'たかい', en: 'Tall / Expensive', bn: 'উঁচু / দামি' },
-  { ja: '安い', romaji: 'やすい', en: 'Cheap', bn: 'সস্তা' },
-  { ja: '古い', romaji: 'ふるい', en: 'Old', bn: 'পুরানো' },
-  { ja: '白い', romaji: 'しろい', en: 'White', bn: 'সাদা' },
-  { ja: '長い', romaji: 'ながい', en: 'Long', bn: 'লম্বা' },
-  { ja: '広い', romaji: 'ひろい', en: 'Wide / Spacious', bn: 'প্রশস্ত / চওড়া' },
-  ],
-     
+    // Kanji data
+    const kanjiData = {
+      n5: [
+        { kanji: "日", onyomi: "ニチ, ジツ", kunyomi: "ひ, か", en: "day, sun", bn: "দিন, সূর্য" },
+        { kanji: "月", onyomi: "ゲツ, ガツ", kunyomi: "つき", en: "moon, month", bn: "চাঁদ, মাস" },
+        { kanji: "火", onyomi: "カ", kunyomi: "ひ", en: "fire", bn: "আগুন" },
+        { kanji: "水", onyomi: "スイ", kunyomi: "みず", en: "water", bn: "পানি" },
+        { kanji: "木", onyomi: "モク, ボク", kunyomi: "き", en: "tree", bn: "গাছ" },
+        { kanji: "金", onyomi: "キン, コン", kunyomi: "かね", en: "gold, money", bn: "সোনা, টাকা" },
+        { kanji: "土", onyomi: "ド, ト", kunyomi: "つち", en: "earth, soil", bn: "মাটি" },
+        { kanji: "人", onyomi: "ジン, ニン", kunyomi: "ひと", en: "person", bn: "মানুষ" },
+        { kanji: "山", onyomi: "サン", kunyomi: "やま", en: "mountain", bn: "পাহাড়" },
+        { kanji: "川", onyomi: "セン", kunyomi: "かわ", en: "river", bn: "নদী" }
+      ],
+      n4: [
+        { kanji: "食", onyomi: "ショク", kunyomi: "た.べる", en: "eat, food", bn: "খাওয়া, খাবার" },
+        { kanji: "飲", onyomi: "イン", kunyomi: "の.む", en: "drink", bn: "পান করা" },
+        { kanji: "行", onyomi: "コウ, ギョウ", kunyomi: "い.く, ゆ.く", en: "go", bn: "যাওয়া" },
+        { kanji: "来", onyomi: "ライ", kunyomi: "く.る", en: "come", bn: "আসা" },
+        { kanji: "見", onyomi: "ケン", kunyomi: "み.る", en: "see", bn: "দেখা" },
+        { kanji: "聞", onyomi: "ブン, モン", kunyomi: "き.く", en: "hear, ask", bn: "শোনা, জিজ্ঞাসা করা" },
+        { kanji: "読", onyomi: "ドク", kunyomi: "よ.む", en: "read", bn: "পড়া" },
+        { kanji: "書", onyomi: "ショ", kunyomi: "か.く", en: "write", bn: "লেখা" },
+        { kanji: "話", onyomi: "ワ", kunyomi: "はな.す", en: "talk, speak", bn: "কথা বলা" },
+        { kanji: "買", onyomi: "バイ", kunyomi: "か.う", en: "buy", bn: "কিনা" }
+      ],
       custom: []
     };
 
@@ -1768,42 +1679,87 @@
     
     let currentVocab = [], currentVocabIndex = 0;
     let savedVocab = JSON.parse(localStorage.getItem('savedVocab') || '[]');
-    let isStudyMode = true;
+    let currentVocabMode = 'study'; // 'study', 'flashcard', 'saved'
+    
+    let currentKanji = [], currentKanjiIndex = 0;
+    let savedKanji = JSON.parse(localStorage.getItem('savedKanji') || '[]');
+    let currentKanjiMode = 'study'; // 'study', 'flashcard'
 
     // Study Quiz variables
     let studyQuizActive = false;
     let studyQuizLives = 5;
     let studyQuizScore = 0;
-    let studyQuizTime = 10;
+    let studyQuizHighScore = 0;
+    let studyQuizTime = 15;
     let studyQuizTimer;
     let studyQuizQuestions = [];
     let currentStudyQuizIndex = 0;
 
     // Flashcard variables
     let isFlashcardFlipped = false;
+    let isKanjiFlashcardFlipped = false;
 
-    // Progress tracking
-    let userProgress = JSON.parse(localStorage.getItem('userProgress') || '{}');
-    if (!userProgress.stats) userProgress.stats = { correct: 0, incorrect: 0, kana: 0, vocab: 0, kanji: 0, days: 0 };
-    if (!userProgress.daily) userProgress.daily = {};
-    if (!userProgress.streak) userProgress.streak = { current: 0, lastDate: null };
+    // Documents variables
+    let userDocuments = JSON.parse(localStorage.getItem('userDocuments') || '[]');
+    let currentDocument = null;
+    let currentZoom = 1;
+    let isFullView = false;
+
+    // Music variables
+    let isMusicEnabled = true;
+    let currentMusic = null;
 
     // === DOM Elements ===
     const modeSelector = document.getElementById('modeSelector');
     const gameContainer = document.getElementById('gameContainer');
     const vocabContainer = document.getElementById('vocabContainer');
-    const savedVocabContainer = document.getElementById('savedVocabContainer');
-    const progressContainer = document.getElementById('progressContainer');
+    const kanjiContainer = document.getElementById('kanjiContainer');
+    const documentsContainer = document.getElementById('documentsContainer');
     const addVocabForm = document.getElementById('addVocabForm');
+    const addKanjiForm = document.getElementById('addKanjiForm');
+    const uploadDocumentForm = document.getElementById('uploadDocumentForm');
+    const documentPreviewModal = document.getElementById('documentPreviewModal');
     
     // Study mode elements
     const studyModeBtn = document.getElementById('studyModeBtn');
     const flashcardModeBtn = document.getElementById('flashcardModeBtn');
+    const savedModeBtn = document.getElementById('savedModeBtn');
     const studyMode = document.getElementById('studyMode');
     const flashcardMode = document.getElementById('flashcardMode');
+    const savedMode = document.getElementById('savedMode');
     const studyQuiz = document.getElementById('studyQuiz');
     const vocabGrid = document.getElementById('vocabGrid');
     const savedVocabGrid = document.getElementById('savedVocabGrid');
+    const vocabProgress = document.getElementById('vocabProgress');
+    const savedCount = document.getElementById('savedCount');
+    const documentsGrid = document.getElementById('documentsGrid');
+
+    // Kanji elements
+    const kanjiStudyModeBtn = document.getElementById('kanjiStudyModeBtn');
+    const kanjiFlashcardModeBtn = document.getElementById('kanjiFlashcardModeBtn');
+    const kanjiStudyMode = document.getElementById('kanjiStudyMode');
+    const kanjiFlashcardMode = document.getElementById('kanjiFlashcardMode');
+    const kanjiGrid = document.getElementById('kanjiGrid');
+    const kanjiProgress = document.getElementById('kanjiProgress');
+    const kanjiFlashcard = document.getElementById('kanjiFlashcard');
+    const kanjiFlashcardFront = document.getElementById('kanjiFlashcardFront');
+    const kanjiFlashcardBack = document.getElementById('kanjiFlashcardBack');
+    const kanjiFlashcardReading = document.getElementById('kanjiFlashcardReading');
+    const kanjiFlashcardProgress = document.getElementById('kanjiFlashcardProgress');
+    const saveKanjiBtn = document.getElementById('saveKanjiBtn');
+
+    // Course type and lesson selector
+    const courseType = document.getElementById('courseType');
+    const lessonSelector = document.getElementById('lessonSelector');
+
+    // Search elements
+    const vocabSearch = document.getElementById('vocabSearch');
+    const kanjiSearch = document.getElementById('kanjiSearch');
+    const jlptLevel = document.getElementById('jlptLevel');
+    const kanjiCategory = document.getElementById('kanjiCategory');
+    const documentSearch = document.getElementById('documentSearch');
+    const documentCategory = document.getElementById('documentCategory');
+    const documentType = document.getElementById('documentType');
 
     // Flashcard elements
     const flashcard = document.getElementById('flashcard');
@@ -1816,17 +1772,26 @@
     // Study Quiz elements
     const quizLives = document.getElementById('quizLives');
     const quizScore = document.getElementById('quizScore');
+    const quizHighScore = document.getElementById('quizHighScore');
     const quizTime = document.getElementById('quizTime');
     const quizProgress = document.getElementById('quizProgress');
     const quizQuestion = document.getElementById('quizQuestion');
     const quizOptions = document.getElementById('quizOptions');
     const quizResult = document.getElementById('quizResult');
 
-    // Progress elements
-    const progressCorrect = document.getElementById('progressCorrect');
-    const progressIncorrect = document.getElementById('progressIncorrect');
-    const progressAccuracy = document.getElementById('progressAccuracy');
-    const progressWords = document.getElementById('progressWords');
+    // Document form elements
+    const documentName = document.getElementById('documentName');
+    const documentCategorySelect = document.getElementById('documentCategorySelect');
+    const documentDescription = document.getElementById('documentDescription');
+    const documentFile = document.getElementById('documentFile');
+    const documentPreviewTitle = document.getElementById('documentPreviewTitle');
+    const documentPreview = document.getElementById('documentPreview');
+    const documentPreviewInfo = document.getElementById('documentPreviewInfo');
+
+    // Document preview controls
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const fullViewBtn = document.getElementById('fullViewBtn');
 
     // Other elements
     const kanaChar = document.getElementById('kanaChar');
@@ -1837,18 +1802,28 @@
     const timeDisplay = document.getElementById('time');
     const timeProgress = document.getElementById('timeProgress');
     const resultMsg = document.getElementById('resultMsg');
-    const lessonSelector = document.getElementById('lessonSelector');
-    const vocabSearch = document.getElementById('vocabSearch');
     
     const correctSound = document.getElementById('correctSound');
     const wrongSound = document.getElementById('wrongSound');
     const clickSound = document.getElementById('clickSound');
+
+    // Music elements
+    const studyMusic = document.getElementById('studyMusic');
+    const gameMusic = document.getElementById('gameMusic');
+    const flashcardMusic = document.getElementById('flashcardMusic');
+    const musicControl = document.getElementById('musicControl');
 
     // Form elements
     const newJapanese = document.getElementById('newJapanese');
     const newRomaji = document.getElementById('newRomaji');
     const newEnglish = document.getElementById('newEnglish');
     const newBengali = document.getElementById('newBengali');
+    const newKanji = document.getElementById('newKanji');
+    const newJlptLevel = document.getElementById('newJlptLevel');
+    const newOnyomi = document.getElementById('newOnyomi');
+    const newKunyomi = document.getElementById('newKunyomi');
+    const newKanjiEnglish = document.getElementById('newKanjiEnglish');
+    const newKanjiBengali = document.getElementById('newKanjiBengali');
 
     // === Utility Functions ===
     function shuffle(array) {
@@ -1860,6 +1835,7 @@
     }
 
     function playSound(el) {
+      if (!isMusicEnabled) return;
       el.currentTime = 0;
       el.play().catch(e => console.log("Audio play failed:", e));
     }
@@ -1868,156 +1844,42 @@
       return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    function updateProgressStats() {
-      // Update progress page
-      progressCorrect.textContent = userProgress.stats.correct;
-      progressIncorrect.textContent = userProgress.stats.incorrect;
-      
-      const total = userProgress.stats.correct + userProgress.stats.incorrect;
-      const accuracy = total > 0 ? Math.round((userProgress.stats.correct / total) * 100) : 0;
-      progressAccuracy.textContent = `${accuracy}%`;
-      progressWords.textContent = savedVocab.length;
-      
-      // Save to localStorage
-      localStorage.setItem('userProgress', JSON.stringify(userProgress));
-      
-      // Update streak
-      updateStreak();
-    }
-
-    function updateStreak() {
-      const today = new Date().toDateString();
-      if (userProgress.streak.lastDate !== today) {
-        const lastDate = userProgress.streak.lastDate ? new Date(userProgress.streak.lastDate) : null;
-        const todayObj = new Date();
-        
-        if (lastDate && (todayObj - lastDate) / (1000 * 60 * 60 * 24) === 1) {
-          // Consecutive day
-          userProgress.streak.current++;
-        } else if (lastDate && (todayObj - lastDate) / (1000 * 60 * 60 * 24) > 1) {
-          // Streak broken
-          userProgress.streak.current = 1;
-        } else if (!lastDate) {
-          // First time
-          userProgress.streak.current = 1;
+    // Music control functions
+    function toggleMusic() {
+      isMusicEnabled = !isMusicEnabled;
+      if (isMusicEnabled) {
+        musicControl.innerHTML = '<i class="fas fa-volume-up text-primary"></i>';
+        if (currentMusic) {
+          currentMusic.play().catch(e => console.log("Music play failed:", e));
         }
-        
-        userProgress.streak.lastDate = today;
-        localStorage.setItem('userProgress', JSON.stringify(userProgress));
+      } else {
+        musicControl.innerHTML = '<i class="fas fa-volume-mute text-secondary"></i>';
+        if (currentMusic) {
+          currentMusic.pause();
+        }
       }
     }
 
-    function recordAnswer(isCorrect, type) {
-      userProgress.stats.correct += isCorrect ? 1 : 0;
-      userProgress.stats.incorrect += isCorrect ? 0 : 1;
+    function playBackgroundMusic(music) {
+      if (!isMusicEnabled) return;
       
-      if (type === 'kana') userProgress.stats.kana++;
-      if (type === 'vocab') userProgress.stats.vocab++;
-      if (type === 'kanji') userProgress.stats.kanji++;
-      
-      // Record daily activity
-      const today = new Date().toDateString();
-      if (!userProgress.daily[today]) {
-        userProgress.daily[today] = { correct: 0, incorrect: 0 };
-        userProgress.stats.days++;
+      // Stop current music
+      if (currentMusic) {
+        currentMusic.pause();
+        currentMusic.currentTime = 0;
       }
       
-      userProgress.daily[today].correct += isCorrect ? 1 : 0;
-      userProgress.daily[today].incorrect += isCorrect ? 0 : 1;
-      
-      updateProgressStats();
+      // Play new music
+      currentMusic = music;
+      music.play().catch(e => console.log("Music play failed:", e));
     }
 
-    function renderProgressChart() {
-      const ctx = document.getElementById('progressChart').getContext('2d');
-      
-      // Get last 7 days of data
-      const dates = [];
-      const correctData = [];
-      const incorrectData = [];
-      
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const dateString = date.toDateString();
-        dates.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-        
-        if (userProgress.daily[dateString]) {
-          correctData.push(userProgress.daily[dateString].correct);
-          incorrectData.push(userProgress.daily[dateString].incorrect);
-        } else {
-          correctData.push(0);
-          incorrectData.push(0);
-        }
+    function stopBackgroundMusic() {
+      if (currentMusic) {
+        currentMusic.pause();
+        currentMusic.currentTime = 0;
+        currentMusic = null;
       }
-      
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: dates,
-          datasets: [
-            {
-              label: 'Correct Answers',
-              data: correctData,
-              borderColor: '#4caf50',
-              backgroundColor: 'rgba(76, 175, 80, 0.1)',
-              tension: 0.4,
-              fill: true,
-              borderWidth: 3
-            },
-            {
-              label: 'Incorrect Answers',
-              data: incorrectData,
-              borderColor: '#f44336',
-              backgroundColor: 'rgba(244, 67, 54, 0.1)',
-              tension: 0.4,
-              fill: true,
-              borderWidth: 3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                color: '#ffffff',
-                font: {
-                  size: 14
-                }
-              }
-            },
-            title: {
-              display: true,
-              text: 'Last 7 Days Performance',
-              color: '#ffffff',
-              font: {
-                size: 18
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                color: '#ffffff'
-              },
-              grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              }
-            },
-            x: {
-              ticks: {
-                color: '#ffffff'
-              },
-              grid: {
-                color: 'rgba(255, 255, 255, 0.1)'
-              }
-            }
-          }
-        }
-      });
     }
 
     // === Kana Game Functions ===
@@ -2039,6 +1901,8 @@
 
     function startGame(mode) {
       playSound(clickSound);
+      playBackgroundMusic(gameMusic);
+      
       currentGameMode = mode;
       kanaList = shuffle([...getKanaSet(mode)]);
       score = 0;
@@ -2065,12 +1929,15 @@
       if (studyQuizActive) {
         exitStudyQuiz();
       }
+      stopBackgroundMusic();
       playSound(clickSound);
       gameContainer.classList.add('hidden');
       vocabContainer.classList.add('hidden');
-      savedVocabContainer.classList.add('hidden');
-      progressContainer.classList.add('hidden');
+      kanjiContainer.classList.add('hidden');
+      documentsContainer.classList.add('hidden');
       addVocabForm.classList.add('hidden');
+      addKanjiForm.classList.add('hidden');
+      uploadDocumentForm.classList.add('hidden');
       modeSelector.classList.remove('hidden');
     }
 
@@ -2120,10 +1987,7 @@
       scoreDisplay.textContent = score;
       
       resultMsg.textContent = '✅ Correct!';
-      resultMsg.style.color = '#4caf50';
-      
-      // Record progress
-      recordAnswer(true, 'kana');
+      resultMsg.style.color = '#2ed573';
       
       await pause(1000);
       nextQuestion();
@@ -2140,10 +2004,7 @@
       livesDisplay.textContent = lives;
       
       resultMsg.textContent = `❌ Correct: ${currentKana[1]}`;
-      resultMsg.style.color = '#f44336';
-      
-      // Record progress
-      recordAnswer(false, 'kana');
+      resultMsg.style.color = '#ff4757';
       
       await pause(1200);
       
@@ -2170,21 +2031,48 @@
     // === Vocabulary Functions ===
     function showVocabMode() {
       playSound(clickSound);
+      playBackgroundMusic(studyMusic);
+      
       modeSelector.classList.add('hidden');
       vocabContainer.classList.remove('hidden');
+      updateLessonSelector();
       loadVocab();
     }
 
-    function showSavedVocab() {
-      playSound(clickSound);
-      modeSelector.classList.add('hidden');
-      savedVocabContainer.classList.remove('hidden');
-      updateSavedVocabGrid();
+    function updateLessonSelector() {
+      const type = courseType.value;
+      const lessonSelect = document.getElementById('lessonSelector');
+      lessonSelect.innerHTML = '';
+      
+      if (type === 'minna') {
+        // Add Minna no Nihongo lessons
+        for (let i = 1; i <= 5; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = `Lesson ${i}`;
+          lessonSelect.appendChild(option);
+        }
+      } else if (type === 'category') {
+        // Add categories
+        for (let i = 1; i <= 5; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = vocabData.category[i].name;
+          lessonSelect.appendChild(option);
+        }
+      }
     }
 
     function loadVocab() {
+      const type = courseType.value;
       const lesson = lessonSelector.value;
-      currentVocab = [...vocabData[lesson]];
+      
+      if (type === 'minna') {
+        currentVocab = [...vocabData.minna[lesson]];
+      } else if (type === 'category') {
+        currentVocab = [...vocabData.category[lesson].words];
+      }
+      
       currentVocabIndex = 0;
       updateVocabGrid();
       updateFlashcard();
@@ -2192,6 +2080,7 @@
 
     function updateVocabGrid() {
       vocabGrid.innerHTML = '';
+      vocabProgress.textContent = `${currentVocabIndex + 1} / ${currentVocab.length}`;
       
       if (currentVocab.length === 0) {
         vocabGrid.innerHTML = '<div class="text-secondary text-center py-4 col-span-full">No vocabulary found</div>';
@@ -2200,23 +2089,17 @@
       
       currentVocab.forEach((card, index) => {
         const vocabItem = document.createElement('div');
-        vocabItem.className = `vocab-card card-3d ${index === currentVocabIndex ? 'pulse' : ''}`;
+        vocabItem.className = `vocab-card card-3d card-glow ${index === currentVocabIndex ? 'pulse' : ''}`;
         vocabItem.innerHTML = `
           <div class="vocab-japanese japanese-font">${card.ja}</div>
           <div class="vocab-reading">${card.romaji}</div>
           <div class="vocab-meaning">${card.bn} (${card.en})</div>
-          ${lessonSelector.value === 'custom' ? `
-            <div class="mt-3 flex justify-end">
-              <button onclick="deleteCustomVocab(event, ${index})" class="text-secondary hover:text-error text-sm">
-                <i class="fas fa-trash-alt mr-1"></i> Delete
-              </button>
-            </div>
-          ` : ''}
         `;
         
         vocabItem.addEventListener('click', () => {
           currentVocabIndex = index;
           updateVocabGrid();
+          updateFlashcard();
         });
         
         vocabGrid.appendChild(vocabItem);
@@ -2225,6 +2108,7 @@
     
     function updateSavedVocabGrid() {
       savedVocabGrid.innerHTML = '';
+      savedCount.textContent = savedVocab.length;
       
       if (savedVocab.length === 0) {
         savedVocabGrid.innerHTML = '<div class="text-secondary text-center py-4 col-span-full">No saved vocabulary yet</div>';
@@ -2233,7 +2117,7 @@
       
       savedVocab.forEach((card, index) => {
         const vocabItem = document.createElement('div');
-        vocabItem.className = 'vocab-card card-3d';
+        vocabItem.className = 'vocab-card card-3d card-glow';
         vocabItem.innerHTML = `
           <div class="vocab-japanese japanese-font">${card.ja}</div>
           <div class="vocab-reading">${card.romaji}</div>
@@ -2249,52 +2133,47 @@
       });
     }
     
-    function deleteCustomVocab(event, index) {
-      event.stopPropagation();
-      if (confirm("Are you sure you want to delete this vocabulary?")) {
-        currentVocab.splice(index, 1);
-        vocabData.custom = currentVocab;
-        updateVocabGrid();
-        updateFlashcard();
-        playSound(clickSound);
-      }
-    }
-    
     function removeSavedVocab(event, index) {
       event.stopPropagation();
       savedVocab.splice(index, 1);
       localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
       updateSavedVocabGrid();
-      updateProgressStats();
       playSound(clickSound);
     }
     
-    function clearSavedVocab() {
-      if (confirm("Are you sure you want to clear all saved vocabulary?")) {
-        savedVocab = [];
-        localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
-        updateSavedVocabGrid();
-        updateProgressStats();
-        playSound(clickSound);
-      }
-    }
-
     function setStudyMode() {
-      isStudyMode = true;
+      currentVocabMode = 'study';
       studyModeBtn.classList.add('active');
       flashcardModeBtn.classList.remove('active');
+      savedModeBtn.classList.remove('active');
       studyMode.classList.remove('hidden');
       flashcardMode.classList.add('hidden');
+      savedMode.classList.add('hidden');
       playSound(clickSound);
     }
 
     function setFlashcardMode() {
-      isStudyMode = false;
+      currentVocabMode = 'flashcard';
       studyModeBtn.classList.remove('active');
       flashcardModeBtn.classList.add('active');
+      savedModeBtn.classList.remove('active');
       studyMode.classList.add('hidden');
       flashcardMode.classList.remove('hidden');
+      savedMode.classList.add('hidden');
+      playBackgroundMusic(flashcardMusic);
       updateFlashcard();
+      playSound(clickSound);
+    }
+
+    function setSavedMode() {
+      currentVocabMode = 'saved';
+      studyModeBtn.classList.remove('active');
+      flashcardModeBtn.classList.remove('active');
+      savedModeBtn.classList.add('active');
+      studyMode.classList.add('hidden');
+      flashcardMode.classList.add('hidden');
+      savedMode.classList.remove('hidden');
+      updateSavedVocabGrid();
       playSound(clickSound);
     }
 
@@ -2335,6 +2214,7 @@
       playSound(clickSound);
       if (currentVocab.length === 0) return;
       currentVocabIndex = (currentVocabIndex + 1) % currentVocab.length;
+      updateVocabGrid();
       updateFlashcard();
     }
 
@@ -2342,6 +2222,7 @@
       playSound(clickSound);
       if (currentVocab.length === 0) return;
       currentVocabIndex = (currentVocabIndex - 1 + currentVocab.length) % currentVocab.length;
+      updateVocabGrid();
       updateFlashcard();
     }
 
@@ -2349,6 +2230,7 @@
       playSound(clickSound);
       currentVocab = shuffle(currentVocab);
       currentVocabIndex = 0;
+      updateVocabGrid();
       updateFlashcard();
     }
 
@@ -2366,19 +2248,29 @@
       
       localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
       updateFlashcard();
-      updateProgressStats();
     }
 
     // Keyboard controls for flashcards
     document.addEventListener('keydown', function(e) {
       // Only handle keyboard events if we're in flashcard mode
-      if (!isStudyMode && vocabContainer.classList.contains('hidden') === false) {
+      if (currentVocabMode === 'flashcard' && vocabContainer.classList.contains('hidden') === false) {
         if (e.key === 'Enter') {
           flipFlashcard();
         } else if (e.key === 'ArrowRight') {
           nextFlashcard();
         } else if (e.key === 'ArrowLeft') {
           prevFlashcard();
+        }
+      }
+      
+      // Kanji flashcard controls
+      if (currentKanjiMode === 'flashcard' && kanjiContainer.classList.contains('hidden') === false) {
+        if (e.key === 'Enter') {
+          flipKanjiFlashcard();
+        } else if (e.key === 'ArrowRight') {
+          nextKanjiFlashcard();
+        } else if (e.key === 'ArrowLeft') {
+          prevKanjiFlashcard();
         }
       }
     });
@@ -2394,6 +2286,8 @@
       }
       
       playSound(clickSound);
+      playBackgroundMusic(gameMusic);
+      
       studyMode.classList.add('hidden');
       studyQuiz.classList.remove('hidden');
       studyQuizActive = true;
@@ -2459,11 +2353,13 @@
       
       studyQuizLives = 5;
       studyQuizScore = 0;
-      studyQuizTime = 10;
+      studyQuizHighScore = parseInt(localStorage.getItem('vocabHighScore') || '0');
+      studyQuizTime = 15;
       currentStudyQuizIndex = 0;
       
       quizLives.textContent = studyQuizLives;
       quizScore.textContent = studyQuizScore;
+      quizHighScore.textContent = studyQuizHighScore;
       quizTime.textContent = studyQuizTime;
       quizProgress.style.width = '0%';
       
@@ -2478,7 +2374,9 @@
       }
       
       playSound(clickSound);
-      savedVocabContainer.classList.add('hidden');
+      playBackgroundMusic(gameMusic);
+      
+      savedMode.classList.add('hidden');
       studyQuiz.classList.remove('hidden');
       studyQuizActive = true;
       
@@ -2543,11 +2441,13 @@
       
       studyQuizLives = 5;
       studyQuizScore = 0;
-      studyQuizTime = 10;
+      studyQuizHighScore = parseInt(localStorage.getItem('vocabHighScore') || '0');
+      studyQuizTime = 15;
       currentStudyQuizIndex = 0;
       
       quizLives.textContent = studyQuizLives;
       quizScore.textContent = studyQuizScore;
+      quizHighScore.textContent = studyQuizHighScore;
       quizTime.textContent = studyQuizTime;
       quizProgress.style.width = '0%';
       
@@ -2556,9 +2456,15 @@
     }
 
     function showStudyQuizQuestion() {
-      if (currentStudyQuizIndex >= studyQuizQuestions.length || studyQuizLives <= 0) {
+      if (studyQuizLives <= 0) {
         endStudyQuiz();
         return;
+      }
+      
+      // If we've gone through all questions, reshuffle and start over
+      if (currentStudyQuizIndex >= studyQuizQuestions.length) {
+        studyQuizQuestions = shuffle(studyQuizQuestions);
+        currentStudyQuizIndex = 0;
       }
       
       const question = studyQuizQuestions[currentStudyQuizIndex];
@@ -2579,7 +2485,7 @@
       // Create new options
       question.options.forEach((option, index) => {
         const optionElement = document.createElement('div');
-        optionElement.className = 'quiz-option card-3d';
+        optionElement.className = 'quiz-option card-3d card-glow';
         
         // Apply Japanese font if the options are in Japanese
         if (question.type === 'bn-to-ja') {
@@ -2592,8 +2498,11 @@
       });
       
       quizResult.textContent = '';
-      studyQuizTime = 10;
+      studyQuizTime = 15;
       quizTime.textContent = studyQuizTime;
+      
+      // Start the timer for this question
+      startStudyQuizTimer();
     }
 
     function selectStudyQuizOption(optionIndex, isCorrect) {
@@ -2607,8 +2516,14 @@
         studyQuizScore++;
         quizScore.textContent = studyQuizScore;
         quizResult.textContent = '✅ Correct!';
-        quizResult.style.color = '#4caf50';
-        recordAnswer(true, 'vocab');
+        quizResult.style.color = '#2ed573';
+        
+        // Update high score if needed
+        if (studyQuizScore > studyQuizHighScore) {
+          studyQuizHighScore = studyQuizScore;
+          quizHighScore.textContent = studyQuizHighScore;
+          localStorage.setItem('vocabHighScore', studyQuizHighScore);
+        }
         
         setTimeout(() => {
           currentStudyQuizIndex++;
@@ -2619,15 +2534,13 @@
         studyQuizLives--;
         quizLives.textContent = studyQuizLives;
         quizResult.textContent = `❌ Correct: ${studyQuizQuestions[currentStudyQuizIndex].correctAnswer}`;
-        quizResult.style.color = '#f44336';
-        recordAnswer(false, 'vocab');
+        quizResult.style.color = '#ff4757';
         
         // Save the vocabulary that was answered incorrectly
         const word = studyQuizQuestions[currentStudyQuizIndex].word;
         if (!savedVocab.some(v => v.ja === word.ja)) {
           savedVocab.push(word);
           localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
-          updateProgressStats();
         }
         
         setTimeout(() => {
@@ -2645,6 +2558,10 @@
     }
 
     function startStudyQuizTimer() {
+      clearInterval(studyQuizTimer);
+      studyQuizTime = 15;
+      quizTime.textContent = studyQuizTime;
+      
       studyQuizTimer = setInterval(() => {
         if (studyQuizActive) {
           studyQuizTime--;
@@ -2656,22 +2573,19 @@
             studyQuizLives--;
             quizLives.textContent = studyQuizLives;
             quizResult.textContent = `⏰ Time's up! Correct: ${studyQuizQuestions[currentStudyQuizIndex].correctAnswer}`;
-            quizResult.style.color = '#f44336';
-            recordAnswer(false, 'vocab');
+            quizResult.style.color = '#ff4757';
             
             // Save the vocabulary that was answered incorrectly
             const word = studyQuizQuestions[currentStudyQuizIndex].word;
             if (!savedVocab.some(v => v.ja === word.ja)) {
               savedVocab.push(word);
               localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
-              updateProgressStats();
             }
             
             setTimeout(() => {
               if (studyQuizLives > 0) {
                 currentStudyQuizIndex++;
                 showStudyQuizQuestion();
-                startStudyQuizTimer();
               } else {
                 endStudyQuiz();
               }
@@ -2693,8 +2607,8 @@
       else if (percentage >= 50) message = 'Good effort! 💪';
       else message = 'Keep practicing! 📚';
       
-      quizResult.textContent = `${message} Score: ${studyQuizScore}/${currentStudyQuizIndex + 1} (${percentage}%)`;
-      quizResult.style.color = '#e91e63';
+      quizResult.textContent = `${message} Final Score: ${studyQuizScore} (${percentage}%)`;
+      quizResult.style.color = '#3a86ff';
       
       setTimeout(() => {
         exitStudyQuiz();
@@ -2705,12 +2619,13 @@
       studyQuizActive = false;
       clearInterval(studyQuizTimer);
       studyQuiz.classList.add('hidden');
+      playBackgroundMusic(studyMusic);
       
       // Return to the appropriate screen
-      if (savedVocabContainer.classList.contains('hidden')) {
+      if (savedMode.classList.contains('hidden')) {
         studyMode.classList.remove('hidden');
       } else {
-        savedVocabContainer.classList.remove('hidden');
+        savedMode.classList.remove('hidden');
       }
       
       playSound(clickSound);
@@ -2719,8 +2634,15 @@
     // === Search Functionality ===
     function filterVocab() {
       const term = vocabSearch.value.trim().toLowerCase();
+      const type = courseType.value;
       const lesson = lessonSelector.value;
-      const originalVocab = vocabData[lesson];
+      
+      let originalVocab = [];
+      if (type === 'minna') {
+        originalVocab = [...vocabData.minna[lesson]];
+      } else if (type === 'category') {
+        originalVocab = [...vocabData.category[lesson].words];
+      }
       
       if (!term) {
         currentVocab = [...originalVocab];
@@ -2738,12 +2660,407 @@
       updateFlashcard();
     }
 
-    // === Progress Functions ===
-    function showProgressMode() {
+    // === Kanji Functions ===
+    function showKanjiMode() {
       playSound(clickSound);
+      playBackgroundMusic(studyMusic);
+      
       modeSelector.classList.add('hidden');
-      progressContainer.classList.remove('hidden');
-      renderProgressChart();
+      kanjiContainer.classList.remove('hidden');
+      loadKanji();
+    }
+
+    function loadKanji() {
+      const level = jlptLevel.value;
+      
+      if (level === 'all') {
+        currentKanji = [...kanjiData.n5, ...kanjiData.n4];
+      } else {
+        currentKanji = [...kanjiData[level]];
+      }
+      
+      currentKanjiIndex = 0;
+      updateKanjiGrid();
+      updateKanjiFlashcard();
+    }
+
+    function updateKanjiGrid() {
+      kanjiGrid.innerHTML = '';
+      kanjiProgress.textContent = `${currentKanjiIndex + 1} / ${currentKanji.length}`;
+      
+      if (currentKanji.length === 0) {
+        kanjiGrid.innerHTML = '<div class="text-secondary text-center py-4 col-span-full">No kanji found</div>';
+        return;
+      }
+      
+      currentKanji.forEach((kanji, index) => {
+        const kanjiItem = document.createElement('div');
+        kanjiItem.className = `kanji-card card-3d card-glow ${index === currentKanjiIndex ? 'pulse' : ''}`;
+        kanjiItem.innerHTML = `
+          <div class="kanji-character japanese-font">${kanji.kanji}</div>
+          <div class="kanji-reading">${kanji.onyomi} | ${kanji.kunyomi}</div>
+          <div class="kanji-meaning">${kanji.bn} (${kanji.en})</div>
+        `;
+        
+        kanjiItem.addEventListener('click', () => {
+          currentKanjiIndex = index;
+          updateKanjiGrid();
+          updateKanjiFlashcard();
+        });
+        
+        kanjiGrid.appendChild(kanjiItem);
+      });
+    }
+
+    function setKanjiStudyMode() {
+      currentKanjiMode = 'study';
+      kanjiStudyModeBtn.classList.add('active');
+      kanjiFlashcardModeBtn.classList.remove('active');
+      kanjiStudyMode.classList.remove('hidden');
+      kanjiFlashcardMode.classList.add('hidden');
+      playSound(clickSound);
+    }
+
+    function setKanjiFlashcardMode() {
+      currentKanjiMode = 'flashcard';
+      kanjiStudyModeBtn.classList.remove('active');
+      kanjiFlashcardModeBtn.classList.add('active');
+      kanjiStudyMode.classList.add('hidden');
+      kanjiFlashcardMode.classList.remove('hidden');
+      playBackgroundMusic(flashcardMusic);
+      updateKanjiFlashcard();
+      playSound(clickSound);
+    }
+
+    // === Kanji Flashcard Functions ===
+    function updateKanjiFlashcard() {
+      if (currentKanji.length === 0) {
+        kanjiFlashcardFront.textContent = 'No kanji found';
+        kanjiFlashcardBack.textContent = '';
+        kanjiFlashcardReading.textContent = '';
+        kanjiFlashcardProgress.textContent = '0 / 0';
+        return;
+      }
+      
+      const kanji = currentKanji[currentKanjiIndex];
+      kanjiFlashcardFront.textContent = kanji.kanji;
+      kanjiFlashcardBack.textContent = `${kanji.bn} (${kanji.en})`;
+      kanjiFlashcardReading.textContent = `Onyomi: ${kanji.onyomi} | Kunyomi: ${kanji.kunyomi}`;
+      kanjiFlashcardProgress.textContent = `${currentKanjiIndex + 1} / ${currentKanji.length}`;
+      
+      // Reset flashcard to front
+      kanjiFlashcard.classList.remove('flipped');
+      isKanjiFlashcardFlipped = false;
+      
+      // Update save button
+      const isSaved = savedKanji.some(k => k.kanji === kanji.kanji);
+      saveKanjiBtn.innerHTML = isSaved 
+        ? '<i class="fas fa-bookmark mr-1"></i> Saved' 
+        : '<i class="far fa-bookmark mr-1"></i> Save';
+    }
+
+    function flipKanjiFlashcard() {
+      playSound(clickSound);
+      kanjiFlashcard.classList.toggle('flipped');
+      isKanjiFlashcardFlipped = !isKanjiFlashcardFlipped;
+    }
+
+    function nextKanjiFlashcard() {
+      playSound(clickSound);
+      if (currentKanji.length === 0) return;
+      currentKanjiIndex = (currentKanjiIndex + 1) % currentKanji.length;
+      updateKanjiGrid();
+      updateKanjiFlashcard();
+    }
+
+    function prevKanjiFlashcard() {
+      playSound(clickSound);
+      if (currentKanji.length === 0) return;
+      currentKanjiIndex = (currentKanjiIndex - 1 + currentKanji.length) % currentKanji.length;
+      updateKanjiGrid();
+      updateKanjiFlashcard();
+    }
+
+    function shuffleKanjiFlashcards() {
+      playSound(clickSound);
+      currentKanji = shuffle(currentKanji);
+      currentKanjiIndex = 0;
+      updateKanjiGrid();
+      updateKanjiFlashcard();
+    }
+
+    function toggleSaveKanji() {
+      playSound(clickSound);
+      const kanji = currentKanji[currentKanjiIndex];
+      if (!kanji) return;
+      const index = savedKanji.findIndex(k => k.kanji === kanji.kanji);
+      
+      if (index >= 0) {
+        savedKanji.splice(index, 1);
+      } else {
+        savedKanji.push(kanji);
+      }
+      
+      localStorage.setItem('savedKanji', JSON.stringify(savedKanji));
+      updateKanjiFlashcard();
+    }
+
+    // Click to flip kanji flashcard
+    kanjiFlashcard.addEventListener('click', flipKanjiFlashcard);
+
+    // === Documents Functions ===
+    function showDocumentsMode() {
+      playSound(clickSound);
+      playBackgroundMusic(studyMusic);
+      
+      modeSelector.classList.add('hidden');
+      documentsContainer.classList.remove('hidden');
+      updateDocumentsGrid();
+    }
+
+    function showUploadDocumentForm() {
+      playSound(clickSound);
+      uploadDocumentForm.classList.remove('hidden');
+      // Clear form
+      documentName.value = '';
+      documentCategorySelect.value = 'grammar';
+      documentDescription.value = '';
+      documentFile.value = '';
+    }
+
+    function hideUploadDocumentForm() {
+      playSound(clickSound);
+      uploadDocumentForm.classList.add('hidden');
+    }
+
+    function uploadDocument() {
+      const name = documentName.value.trim();
+      const category = documentCategorySelect.value;
+      const description = documentDescription.value.trim();
+      const file = documentFile.files[0];
+      
+      if (!name || !file) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const newDocument = {
+          id: Date.now().toString(),
+          name: name,
+          category: category,
+          description: description,
+          type: file.type,
+          data: e.target.result,
+          uploadDate: new Date().toISOString()
+        };
+        
+        userDocuments.push(newDocument);
+        localStorage.setItem('userDocuments', JSON.stringify(userDocuments));
+        
+        hideUploadDocumentForm();
+        updateDocumentsGrid();
+        playSound(clickSound);
+        alert('Document uploaded successfully!');
+      };
+      
+      reader.readAsDataURL(file);
+    }
+
+    function updateDocumentsGrid() {
+      documentsGrid.innerHTML = '';
+      
+      if (userDocuments.length === 0) {
+        documentsGrid.innerHTML = '<div class="text-secondary text-center py-4 col-span-full">No documents uploaded yet</div>';
+        return;
+      }
+      
+      // Filter documents based on search and filters
+      const searchTerm = documentSearch.value.trim().toLowerCase();
+      const categoryFilter = documentCategory.value;
+      const typeFilter = documentType.value;
+      
+      const filteredDocuments = userDocuments.filter(doc => {
+        const matchesSearch = doc.name.toLowerCase().includes(searchTerm) || 
+                             doc.description.toLowerCase().includes(searchTerm);
+        const matchesCategory = categoryFilter === 'all' || doc.category === categoryFilter;
+        const matchesType = typeFilter === 'all' || 
+                           (typeFilter === 'pdf' && doc.type === 'application/pdf') ||
+                           (typeFilter === 'image' && doc.type.startsWith('image/')) ||
+                           (typeFilter === 'doc' && (doc.type.includes('document') || doc.type.includes('msword')));
+        
+        return matchesSearch && matchesCategory && matchesType;
+      });
+      
+      if (filteredDocuments.length === 0) {
+        documentsGrid.innerHTML = '<div class="text-secondary text-center py-4 col-span-full">No documents match your filters</div>';
+        return;
+      }
+      
+      filteredDocuments.forEach(doc => {
+        const documentItem = document.createElement('div');
+        documentItem.className = 'document-card card-3d card-glow';
+        
+        // Determine icon based on file type
+        let icon = 'fa-file';
+        if (doc.type === 'application/pdf') {
+          icon = 'fa-file-pdf';
+        } else if (doc.type.startsWith('image/')) {
+          icon = 'fa-file-image';
+        } else if (doc.type.includes('document') || doc.type.includes('msword')) {
+          icon = 'fa-file-word';
+        }
+        
+        documentItem.innerHTML = `
+          <div class="document-icon">
+            <i class="fas ${icon}"></i>
+          </div>
+          <div class="document-name">${doc.name}</div>
+          <div class="document-category">${doc.category.charAt(0).toUpperCase() + doc.category.slice(1)}</div>
+          <div class="document-description text-secondary text-sm">${doc.description || 'No description'}</div>
+          <div class="document-actions">
+            <button onclick="viewDocument('${doc.id}')" class="btn-3d btn-glow">
+              <i class="fas fa-eye mr-2"></i>View
+            </button>
+            <button onclick="removeDocument('${doc.id}')" class="btn-3d btn-glow" style="background: linear-gradient(145deg, var(--error), #4361ee);">
+              <i class="fas fa-trash mr-2"></i>Remove
+            </button>
+          </div>
+        `;
+        
+        documentsGrid.appendChild(documentItem);
+      });
+    }
+
+    function viewDocument(id) {
+      playSound(clickSound);
+      const doc = userDocuments.find(d => d.id === id);
+      if (!doc) return;
+      
+      currentDocument = doc;
+      documentPreviewTitle.textContent = doc.name;
+      documentPreviewInfo.textContent = `Category: ${doc.category.charAt(0).toUpperCase() + doc.category.slice(1)} | Uploaded: ${new Date(doc.uploadDate).toLocaleDateString()}`;
+      
+      // Clear previous preview
+      documentPreview.innerHTML = '';
+      
+      // Create appropriate preview based on file type
+      if (doc.type === 'application/pdf') {
+        const iframe = document.createElement('iframe');
+        iframe.src = doc.data;
+        iframe.id = 'previewIframe';
+        documentPreview.appendChild(iframe);
+      } else if (doc.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = doc.data;
+        img.id = 'previewImage';
+        documentPreview.appendChild(img);
+      } else if (doc.type.includes('document') || doc.type.includes('msword')) {
+        const message = document.createElement('div');
+        message.className = 'flex items-center justify-center h-full text-secondary';
+        message.innerHTML = `
+          <div class="text-center">
+            <i class="fas fa-file-word text-5xl mb-4"></i>
+            <p>Document preview not available for this file type.</p>
+            <p class="mt-2">Please download the file to view it.</p>
+          </div>
+        `;
+        documentPreview.appendChild(message);
+      } else {
+        const message = document.createElement('div');
+        message.className = 'flex items-center justify-center h-full text-secondary';
+        message.innerHTML = `
+          <div class="text-center">
+            <i class="fas fa-file text-5xl mb-4"></i>
+            <p>Preview not available for this file type.</p>
+          </div>
+        `;
+        documentPreview.appendChild(message);
+      }
+      
+      // Reset zoom and full view
+      currentZoom = 1;
+      isFullView = false;
+      applyZoom();
+      
+      documentPreviewModal.classList.remove('hidden');
+    }
+
+    function hideDocumentPreview() {
+      playSound(clickSound);
+      documentPreviewModal.classList.add('hidden');
+      currentDocument = null;
+      currentZoom = 1;
+      isFullView = false;
+    }
+
+    function removeDocument(id) {
+      playSound(clickSound);
+      if (confirm("Are you sure you want to remove this document?")) {
+        userDocuments = userDocuments.filter(d => d.id !== id);
+        localStorage.setItem('userDocuments', JSON.stringify(userDocuments));
+        
+        // If we're in the preview modal, close it
+        if (currentDocument && currentDocument.id === id) {
+          hideDocumentPreview();
+        }
+        
+        updateDocumentsGrid();
+      }
+    }
+
+    // Document Preview Controls
+    function zoomIn() {
+      if (currentZoom < 3) {
+        currentZoom += 0.1;
+        applyZoom();
+      }
+    }
+
+    function zoomOut() {
+      if (currentZoom > 0.5) {
+        currentZoom -= 0.1;
+        applyZoom();
+      }
+    }
+
+    function applyZoom() {
+      const iframe = document.getElementById('previewIframe');
+      const img = document.getElementById('previewImage');
+      
+      if (iframe) {
+        iframe.style.transform = `scale(${currentZoom})`;
+        iframe.style.transformOrigin = 'center center';
+      }
+      
+      if (img) {
+        img.style.transform = `scale(${currentZoom})`;
+        img.style.transformOrigin = 'center center';
+      }
+    }
+
+    function toggleFullView() {
+      const modalContent = document.querySelector('.document-modal-content');
+      const preview = document.getElementById('documentPreview');
+      
+      if (!isFullView) {
+        modalContent.style.width = '95%';
+        modalContent.style.maxWidth = '95%';
+        modalContent.style.height = '95%';
+        modalContent.style.maxHeight = '95%';
+        preview.style.height = 'calc(100% - 100px)';
+        isFullView = true;
+        fullViewBtn.innerHTML = '<i class="fas fa-compress"></i>';
+      } else {
+        modalContent.style.width = '90%';
+        modalContent.style.maxWidth = '800px';
+        modalContent.style.height = 'auto';
+        modalContent.style.maxHeight = '90%';
+        preview.style.height = '500px';
+        isFullView = false;
+        fullViewBtn.innerHTML = '<i class="fas fa-expand"></i>';
+      }
     }
 
     // === Add Vocabulary Functions ===
@@ -2784,7 +3101,8 @@
       vocabData.custom.push(newWord);
       
       // Switch to custom vocabulary
-      lessonSelector.value = 'custom';
+      courseType.value = 'custom';
+      updateLessonSelector();
       loadVocab();
       
       // Hide form
@@ -2794,32 +3112,92 @@
       alert('New vocabulary added successfully!');
     }
 
-    // === Cherry Blossom Animation ===
-    function createCherryBlossoms() {
-      const container = document.getElementById('cherryBlossomContainer');
-      const petalCount = 30;
+    // === Add Kanji Functions ===
+    function showAddKanjiForm() {
+      playSound(clickSound);
+      addKanjiForm.classList.remove('hidden');
+      // Clear form
+      newKanji.value = '';
+      newJlptLevel.value = 'n5';
+      newOnyomi.value = '';
+      newKunyomi.value = '';
+      newKanjiEnglish.value = '';
+      newKanjiBengali.value = '';
+    }
+
+    function hideAddKanjiForm() {
+      playSound(clickSound);
+      addKanjiForm.classList.add('hidden');
+    }
+
+    function addNewKanji() {
+      const kanji = newKanji.value.trim();
+      const jlptLevel = newJlptLevel.value;
+      const onyomi = newOnyomi.value.trim();
+      const kunyomi = newKunyomi.value.trim();
+      const english = newKanjiEnglish.value.trim();
+      const bengali = newKanjiBengali.value.trim();
       
-      for (let i = 0; i < petalCount; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
+      if (!kanji || !onyomi || !kunyomi || !english || !bengali) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      const newKanjiItem = {
+        kanji: kanji,
+        onyomi: onyomi,
+        kunyomi: kunyomi,
+        en: english,
+        bn: bengali
+      };
+      
+      // Add to custom kanji
+      kanjiData.custom.push(newKanjiItem);
+      
+      // Switch to custom kanji
+      jlptLevel.value = 'custom';
+      loadKanji();
+      
+      // Hide form
+      hideAddKanjiForm();
+      
+      playSound(clickSound);
+      alert('New kanji added successfully!');
+    }
+
+    // === Particle Animation ===
+    function createParticles() {
+      const container = document.getElementById('particlesContainer');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
         
         // Random size
-        const size = Math.random() * 15 + 5;
-        petal.style.width = `${size}px`;
-        petal.style.height = `${size}px`;
+        const size = Math.random() * 8 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
         
         // Random position
-        petal.style.left = `${Math.random() * 100}%`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
         
         // Random animation duration
         const duration = Math.random() * 10 + 5;
-        petal.style.animationDuration = `${duration}s`;
+        particle.style.animationDuration = `${duration}s`;
         
         // Random animation delay
         const delay = Math.random() * 5;
-        petal.style.animationDelay = `${delay}s`;
+        particle.style.animationDelay = `${delay}s`;
         
-        container.appendChild(petal);
+        // Random color (blue tones)
+        const hue = Math.random() * 60 + 200; // Blue to purple range
+        const saturation = Math.random() * 30 + 70;
+        const lightness = Math.random() * 20 + 60;
+        particle.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        
+        container.appendChild(particle);
       }
     }
 
@@ -2833,8 +3211,8 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       container.appendChild(renderer.domElement);
       
-      // Create cherry blossom particles
-      const particleCount = 100;
+      // Create geometric particles
+      const particleCount = 200;
       const particles = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
@@ -2845,9 +3223,10 @@
         positions[i3 + 1] = (Math.random() - 0.5) * 100;
         positions[i3 + 2] = (Math.random() - 0.5) * 50;
         
-        colors[i3] = 1.0; // R
-        colors[i3 + 1] = 0.7; // G
-        colors[i3 + 2] = 0.8; // B
+        // Blue to purple colors
+        colors[i3] = 0.2 + Math.random() * 0.3; // R
+        colors[i3 + 1] = 0.3 + Math.random() * 0.4; // G
+        colors[i3 + 2] = 0.8 + Math.random() * 0.2; // B
       }
       
       particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -2886,21 +3265,31 @@
     }
 
     // === Event Listeners ===
+    courseType.addEventListener('change', updateLessonSelector);
     lessonSelector.addEventListener('change', loadVocab);
     vocabSearch.addEventListener('input', filterVocab);
+    jlptLevel.addEventListener('change', loadKanji);
+    kanjiCategory.addEventListener('change', loadKanji);
+    documentSearch.addEventListener('input', updateDocumentsGrid);
+    documentCategory.addEventListener('change', updateDocumentsGrid);
+    documentType.addEventListener('change', updateDocumentsGrid);
+    musicControl.addEventListener('click', toggleMusic);
+    zoomInBtn.addEventListener('click', zoomIn);
+    zoomOutBtn.addEventListener('click', zoomOut);
+    fullViewBtn.addEventListener('click', toggleFullView);
 
     // Initialize the app
     document.addEventListener('DOMContentLoaded', () => {
       highScore = parseInt(localStorage.getItem('kanaHighScore') || '0');
       highScoreDisplay.textContent = highScore;
-      updateProgressStats();
-      createCherryBlossoms();
+      createParticles();
       initThreeJS();
     });
 
     window.addEventListener('beforeunload', () => {
       localStorage.setItem('kanaHighScore', highScore.toString());
       localStorage.setItem('customVocab', JSON.stringify(vocabData.custom));
+      localStorage.setItem('customKanji', JSON.stringify(kanjiData.custom));
     });
   </script>
 </body>
