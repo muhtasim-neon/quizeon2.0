@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SakuraLearn - Japanese Mastery</title>
+  <title>Quizeon 2.0</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -903,6 +903,12 @@
       margin-bottom: 1rem;
       text-align: center;
     }
+    
+    /* Kanji Quiz Styles */
+    .kanji-quiz-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
   </style>
 </head>
 <body>
@@ -924,8 +930,7 @@
     <!-- Main Mode Selector -->
     <div id="modeSelector" class="fade-in">
       <div class="header">
-        <h1 class="title">SakuraLearn</h1>
-        <p class="subtitle japanese-font">桜の学習 - Master Japanese with AI</p>
+        <h1 class="title">Quizeon n5</h1>
       </div>
       
       <div class="mode-grid">
@@ -1222,24 +1227,11 @@
       </div>
       
       <!-- Search and Filter Controls -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <!-- Search Kanji -->
         <div>
           <label for="kanjiSearch" class="text-secondary text-lg font-semibold">Search Kanji:</label>
-          <input id="kanjiSearch" type="text" placeholder="Search kanji..." class="w-full form-control mt-2">
-        </div>
-        
-        <!-- JLPT Level -->
-        <div>
-          <label for="jlptLevel" class="text-secondary text-lg font-semibold">JLPT Level:</label>
-          <select id="jlptLevel" class="w-full form-control mt-2">
-            <option value="all">All Levels</option>
-            <option value="n5">N5</option>
-            <option value="n4">N4</option>
-            <option value="n3">N3</option>
-            <option value="n2">N2</option>
-            <option value="n1">N1</option>
-          </select>
+          <input id="kanjiSearch" type="text" placeholder="Search kanji, hiragana, or meaning..." class="w-full form-control mt-2">
         </div>
         
         <!-- Select Category -->
@@ -1332,6 +1324,36 @@
             <i class="fas fa-random"></i>
             <span class="ml-2">Shuffle</span>
           </button>
+        </div>
+      </div>
+      
+      <!-- Kanji Quiz Game (Hidden by default) -->
+      <div id="kanjiQuiz" class="hidden">
+        <div class="kanji-quiz-container">
+          <div class="quiz-header">
+            <h2 class="text-2xl font-bold">Kanji Quiz</h2>
+            <div class="flex items-center gap-4">
+              <div class="text-lg">Score: <span id="kanjiQuizScore" class="font-bold text-primary">0</span></div>
+              <div class="text-lg">High Score: <span id="kanjiQuizHighScore" class="font-bold text-success">0</span></div>
+              <div class="text-lg">Lives: <span id="kanjiQuizLives" class="font-bold text-error">5</span></div>
+              <div class="text-lg">Time: <span id="kanjiQuizTime" class="font-bold">15</span>s</div>
+              <button onclick="exitKanjiQuiz()" class="btn-3d btn-glow">
+                <i class="fas fa-times mr-2"></i>Exit
+              </button>
+            </div>
+          </div>
+
+          <div class="progress-container">
+            <div id="kanjiQuizProgress" class="progress-bar" style="width: 0%"></div>
+          </div>
+
+          <div class="quiz-question japanese-font" id="kanjiQuizQuestion"></div>
+          
+          <div class="quiz-options" id="kanjiQuizOptions">
+            <!-- Options will be populated here -->
+          </div>
+
+          <div id="kanjiQuizResult" class="text-center text-xl font-semibold min-h-10"></div>
         </div>
       </div>
     </div>
@@ -1442,13 +1464,13 @@
         </div>
         
         <div>
-          <label class="block text-secondary mb-2 text-lg">JLPT Level</label>
-          <select id="newJlptLevel" class="w-full form-control">
-            <option value="n5">N5</option>
-            <option value="n4">N4</option>
-            <option value="n3">N3</option>
-            <option value="n2">N2</option>
-            <option value="n1">N1</option>
+          <label class="block text-secondary mb-2 text-lg">Category</label>
+          <select id="newKanjiCategory" class="w-full form-control">
+            <option value="numbers">Numbers</option>
+            <option value="time">Time</option>
+            <option value="nature">Nature</option>
+            <option value="people">People</option>
+            <option value="verbs">Verbs</option>
           </select>
         </div>
         
@@ -1642,31 +1664,67 @@
       custom: []
     };
 
-    // Kanji data
+    // Kanji data organized by category
     const kanjiData = {
-      n5: [
-        { kanji: "日", onyomi: "ニチ, ジツ", kunyomi: "ひ, か", en: "day, sun", bn: "দিন, সূর্য" },
-        { kanji: "月", onyomi: "ゲツ, ガツ", kunyomi: "つき", en: "moon, month", bn: "চাঁদ, মাস" },
-        { kanji: "火", onyomi: "カ", kunyomi: "ひ", en: "fire", bn: "আগুন" },
-        { kanji: "水", onyomi: "スイ", kunyomi: "みず", en: "water", bn: "পানি" },
-        { kanji: "木", onyomi: "モク, ボク", kunyomi: "き", en: "tree", bn: "গাছ" },
-        { kanji: "金", onyomi: "キン, コン", kunyomi: "かね", en: "gold, money", bn: "সোনা, টাকা" },
-        { kanji: "土", onyomi: "ド, ト", kunyomi: "つち", en: "earth, soil", bn: "মাটি" },
-        { kanji: "人", onyomi: "ジン, ニン", kunyomi: "ひと", en: "person", bn: "মানুষ" },
-        { kanji: "山", onyomi: "サン", kunyomi: "やま", en: "mountain", bn: "পাহাড়" },
-        { kanji: "川", onyomi: "セン", kunyomi: "かわ", en: "river", bn: "নদী" }
+      numbers: [
+        { kanji: "一", onyomi: "イチ", kunyomi: "ひと", en: "one", bn: "এক", romaji: "ichi" },
+        { kanji: "二", onyomi: "ニ", kunyomi: "ふた", en: "two", bn: "দুই", romaji: "ni" },
+        { kanji: "三", onyomi: "サン", kunyomi: "み", en: "three", bn: "তিন", romaji: "san" },
+        { kanji: "四", onyomi: "シ", kunyomi: "よん", en: "four", bn: "চার", romaji: "shi" },
+        { kanji: "五", onyomi: "ゴ", kunyomi: "いつ", en: "five", bn: "পাঁচ", romaji: "go" },
+        { kanji: "六", onyomi: "ロク", kunyomi: "む", en: "six", bn: "ছয়", romaji: "roku" },
+        { kanji: "七", onyomi: "シチ", kunyomi: "なな", en: "seven", bn: "সাত", romaji: "shichi" },
+        { kanji: "八", onyomi: "ハチ", kunyomi: "や", en: "eight", bn: "আট", romaji: "hachi" },
+        { kanji: "九", onyomi: "キュウ", kunyomi: "きゅう", en: "nine", bn: "নয়", romaji: "kyuu" },
+        { kanji: "十", onyomi: "ジュウ", kunyomi: "とお", en: "ten", bn: "দশ", romaji: "juu" }
       ],
-      n4: [
-        { kanji: "食", onyomi: "ショク", kunyomi: "た.べる", en: "eat, food", bn: "খাওয়া, খাবার" },
-        { kanji: "飲", onyomi: "イン", kunyomi: "の.む", en: "drink", bn: "পান করা" },
-        { kanji: "行", onyomi: "コウ, ギョウ", kunyomi: "い.く, ゆ.く", en: "go", bn: "যাওয়া" },
-        { kanji: "来", onyomi: "ライ", kunyomi: "く.る", en: "come", bn: "আসা" },
-        { kanji: "見", onyomi: "ケン", kunyomi: "み.る", en: "see", bn: "দেখা" },
-        { kanji: "聞", onyomi: "ブン, モン", kunyomi: "き.く", en: "hear, ask", bn: "শোনা, জিজ্ঞাসা করা" },
-        { kanji: "読", onyomi: "ドク", kunyomi: "よ.む", en: "read", bn: "পড়া" },
-        { kanji: "書", onyomi: "ショ", kunyomi: "か.く", en: "write", bn: "লেখা" },
-        { kanji: "話", onyomi: "ワ", kunyomi: "はな.す", en: "talk, speak", bn: "কথা বলা" },
-        { kanji: "買", onyomi: "バイ", kunyomi: "か.う", en: "buy", bn: "কিনা" }
+      time: [
+        { kanji: "日", onyomi: "ニチ", kunyomi: "ひ", en: "day, sun", bn: "দিন, সূর্য", romaji: "nichi" },
+        { kanji: "月", onyomi: "ゲツ", kunyomi: "つき", en: "moon, month", bn: "চাঁদ, মাস", romaji: "gatsu" },
+        { kanji: "火", onyomi: "カ", kunyomi: "ひ", en: "fire", bn: "আগুন", romaji: "ka" },
+        { kanji: "水", onyomi: "スイ", kunyomi: "みず", en: "water", bn: "পানি", romaji: "sui" },
+        { kanji: "木", onyomi: "モク", kunyomi: "き", en: "tree", bn: "গাছ", romaji: "moku" },
+        { kanji: "金", onyomi: "キン", kunyomi: "かね", en: "gold, money", bn: "সোনা, টাকা", romaji: "kin" },
+        { kanji: "土", onyomi: "ド", kunyomi: "つち", en: "earth, soil", bn: "মাটি", romaji: "do" },
+        { kanji: "時", onyomi: "ジ", kunyomi: "とき", en: "time", bn: "সময়", romaji: "ji" },
+        { kanji: "分", onyomi: "フン", kunyomi: "わ", en: "minute, part", bn: "মিনিট, অংশ", romaji: "fun" },
+        { kanji: "年", onyomi: "ネン", kunyomi: "とし", en: "year", bn: "বছর", romaji: "nen" }
+      ],
+      nature: [
+        { kanji: "山", onyomi: "サン", kunyomi: "やま", en: "mountain", bn: "পাহাড়", romaji: "san" },
+        { kanji: "川", onyomi: "セン", kunyomi: "かわ", en: "river", bn: "নদী", romaji: "sen" },
+        { kanji: "空", onyomi: "クウ", kunyomi: "そら", en: "sky", bn: "আকাশ", romaji: "kuu" },
+        { kanji: "海", onyomi: "カイ", kunyomi: "うみ", en: "sea", bn: "সমুদ্র", romaji: "kai" },
+        { kanji: "花", onyomi: "カ", kunyomi: "はな", en: "flower", bn: "ফুল", romaji: "ka" },
+        { kanji: "草", onyomi: "ソウ", kunyomi: "くさ", en: "grass", bn: "ঘাস", romaji: "sou" },
+        { kanji: "木", onyomi: "モク", kunyomi: "き", en: "tree", bn: "গাছ", romaji: "moku" },
+        { kanji: "林", onyomi: "リン", kunyomi: "はやし", en: "woods", bn: "বন", romaji: "rin" },
+        { kanji: "森", onyomi: "シン", kunyomi: "もり", en: "forest", bn: "জঙ্গল", romaji: "shin" },
+        { kanji: "石", onyomi: "セキ", kunyomi: "いし", en: "stone", bn: "পাথর", romaji: "seki" }
+      ],
+      people: [
+        { kanji: "人", onyomi: "ジン", kunyomi: "ひと", en: "person", bn: "মানুষ", romaji: "jin" },
+        { kanji: "男", onyomi: "ダン", kunyomi: "おとこ", en: "man", bn: "পুরুষ", romaji: "dan" },
+        { kanji: "女", onyomi: "ジョ", kunyomi: "おんな", en: "woman", bn: "মহিলা", romaji: "jo" },
+        { kanji: "子", onyomi: "シ", kunyomi: "こ", en: "child", bn: "শিশু", romaji: "shi" },
+        { kanji: "父", onyomi: "フ", kunyomi: "ちち", en: "father", bn: "বাবা", romaji: "fu" },
+        { kanji: "母", onyomi: "ボ", kunyomi: "はは", en: "mother", bn: "মা", romaji: "bo" },
+        { kanji: "友", onyomi: "ユウ", kunyomi: "とも", en: "friend", bn: "বন্ধু", romaji: "yuu" },
+        { kanji: "先生", onyomi: "センセイ", kunyomi: "", en: "teacher", bn: "শিক্ষক", romaji: "sensei" },
+        { kanji: "学生", onyomi: "ガクセイ", kunyomi: "", en: "student", bn: "ছাত্র", romaji: "gakusei" },
+        { kanji: "先生", onyomi: "センセイ", kunyomi: "", en: "teacher", bn: "শিক্ষক", romaji: "sensei" }
+      ],
+      verbs: [
+        { kanji: "見る", onyomi: "", kunyomi: "みる", en: "to see", bn: "দেখা", romaji: "miru" },
+        { kanji: "聞く", onyomi: "", kunyomi: "きく", en: "to hear", bn: "শোনা", romaji: "kiku" },
+        { kanji: "話す", onyomi: "", kunyomi: "はなす", en: "to speak", bn: "কথা বলা", romaji: "hanasu" },
+        { kanji: "読む", onyomi: "", kunyomi: "よむ", en: "to read", bn: "পড়া", romaji: "yomu" },
+        { kanji: "書く", onyomi: "", kunyomi: "かく", en: "to write", bn: "লেখা", romaji: "kaku" },
+        { kanji: "行く", onyomi: "", kunyomi: "いく", en: "to go", bn: "যাওয়া", romaji: "iku" },
+        { kanji: "来る", onyomi: "", kunyomi: "くる", en: "to come", bn: "আসা", romaji: "kuru" },
+        { kanji: "食べる", onyomi: "", kunyomi: "たべる", en: "to eat", bn: "খাওয়া", romaji: "taberu" },
+        { kanji: "飲む", onyomi: "", kunyomi: "のむ", en: "to drink", bn: "পান করা", romaji: "nomu" },
+        { kanji: "買う", onyomi: "", kunyomi: "かう", en: "to buy", bn: "কিনা", romaji: "kau" }
       ],
       custom: []
     };
@@ -1694,6 +1752,16 @@
     let studyQuizTimer;
     let studyQuizQuestions = [];
     let currentStudyQuizIndex = 0;
+
+    // Kanji Quiz variables
+    let kanjiQuizActive = false;
+    let kanjiQuizLives = 5;
+    let kanjiQuizScore = 0;
+    let kanjiQuizHighScore = 0;
+    let kanjiQuizTime = 15;
+    let kanjiQuizTimer;
+    let kanjiQuizQuestions = [];
+    let currentKanjiQuizIndex = 0;
 
     // Flashcard variables
     let isFlashcardFlipped = false;
@@ -1747,6 +1815,15 @@
     const kanjiFlashcardReading = document.getElementById('kanjiFlashcardReading');
     const kanjiFlashcardProgress = document.getElementById('kanjiFlashcardProgress');
     const saveKanjiBtn = document.getElementById('saveKanjiBtn');
+    const kanjiQuiz = document.getElementById('kanjiQuiz');
+    const kanjiQuizLivesDisplay = document.getElementById('kanjiQuizLives');
+    const kanjiQuizScoreDisplay = document.getElementById('kanjiQuizScore');
+    const kanjiQuizHighScoreDisplay = document.getElementById('kanjiQuizHighScore');
+    const kanjiQuizTimeDisplay = document.getElementById('kanjiQuizTime');
+    const kanjiQuizProgress = document.getElementById('kanjiQuizProgress');
+    const kanjiQuizQuestion = document.getElementById('kanjiQuizQuestion');
+    const kanjiQuizOptions = document.getElementById('kanjiQuizOptions');
+    const kanjiQuizResult = document.getElementById('kanjiQuizResult');
 
     // Course type and lesson selector
     const courseType = document.getElementById('courseType');
@@ -1755,7 +1832,6 @@
     // Search elements
     const vocabSearch = document.getElementById('vocabSearch');
     const kanjiSearch = document.getElementById('kanjiSearch');
-    const jlptLevel = document.getElementById('jlptLevel');
     const kanjiCategory = document.getElementById('kanjiCategory');
     const documentSearch = document.getElementById('documentSearch');
     const documentCategory = document.getElementById('documentCategory');
@@ -1819,7 +1895,7 @@
     const newEnglish = document.getElementById('newEnglish');
     const newBengali = document.getElementById('newBengali');
     const newKanji = document.getElementById('newKanji');
-    const newJlptLevel = document.getElementById('newJlptLevel');
+    const newKanjiCategory = document.getElementById('newKanjiCategory');
     const newOnyomi = document.getElementById('newOnyomi');
     const newKunyomi = document.getElementById('newKunyomi');
     const newKanjiEnglish = document.getElementById('newKanjiEnglish');
@@ -1928,6 +2004,9 @@
       clearInterval(timer);
       if (studyQuizActive) {
         exitStudyQuiz();
+      }
+      if (kanjiQuizActive) {
+        exitKanjiQuiz();
       }
       stopBackgroundMusic();
       playSound(clickSound);
@@ -2671,12 +2750,33 @@
     }
 
     function loadKanji() {
-      const level = jlptLevel.value;
+      const category = kanjiCategory.value;
       
-      if (level === 'all') {
-        currentKanji = [...kanjiData.n5, ...kanjiData.n4];
+      if (category === 'all') {
+        // Combine all categories
+        currentKanji = [];
+        for (const cat in kanjiData) {
+          if (cat !== 'custom') {
+            currentKanji = [...currentKanji, ...kanjiData[cat]];
+          }
+        }
+        // Add custom kanji
+        currentKanji = [...currentKanji, ...kanjiData.custom];
       } else {
-        currentKanji = [...kanjiData[level]];
+        currentKanji = [...kanjiData[category]];
+      }
+      
+      // Filter by search term if any
+      const searchTerm = kanjiSearch.value.trim().toLowerCase();
+      if (searchTerm) {
+        currentKanji = currentKanji.filter(kanji => {
+          return kanji.kanji.includes(searchTerm) || 
+                 kanji.onyomi.toLowerCase().includes(searchTerm) ||
+                 kanji.kunyomi.toLowerCase().includes(searchTerm) ||
+                 kanji.en.toLowerCase().includes(searchTerm) ||
+                 kanji.bn.includes(searchTerm) ||
+                 (kanji.romaji && kanji.romaji.toLowerCase().includes(searchTerm));
+        });
       }
       
       currentKanjiIndex = 0;
@@ -2807,6 +2907,268 @@
 
     // Click to flip kanji flashcard
     kanjiFlashcard.addEventListener('click', flipKanjiFlashcard);
+
+    // === Kanji Quiz Functions ===
+    function startKanjiQuiz() {
+      if (currentKanji.length < 4) {
+        alert("Need at least 4 kanji for a quiz");
+        return;
+      }
+      
+      playSound(clickSound);
+      playBackgroundMusic(gameMusic);
+      
+      kanjiStudyMode.classList.add('hidden');
+      kanjiQuiz.classList.remove('hidden');
+      kanjiQuizActive = true;
+      
+      // Prepare quiz questions
+      kanjiQuizQuestions = [];
+      const selectedKanji = shuffle([...currentKanji]);
+      
+      selectedKanji.forEach((kanji, index) => {
+        // Randomly decide question type: Kanji to Meaning or Meaning to Kanji
+        const questionType = Math.random() > 0.5 ? 'kanji-to-meaning' : 'meaning-to-kanji';
+        
+        if (questionType === 'kanji-to-meaning') {
+          // Kanji to Bengali meaning question
+          const wrongOptions = [];
+          const otherKanji = [...currentKanji].filter(k => k.kanji !== kanji.kanji);
+          shuffle(otherKanji);
+          
+          for (let i = 0; i < 3; i++) {
+            if (otherKanji[i]) {
+              wrongOptions.push(otherKanji[i].bn);
+            }
+          }
+          
+          // Ensure we have exactly 3 wrong options
+          while (wrongOptions.length < 3) {
+            wrongOptions.push("Unknown kanji");
+          }
+          
+          kanjiQuizQuestions.push({
+            type: 'kanji-to-meaning',
+            question: kanji.kanji,
+            correctAnswer: kanji.bn,
+            options: shuffle([kanji.bn, ...wrongOptions]),
+            kanji: kanji
+          });
+        } else {
+          // Bengali meaning to Kanji question
+          const wrongOptions = [];
+          const otherKanji = [...currentKanji].filter(k => k.kanji !== kanji.kanji);
+          shuffle(otherKanji);
+          
+          for (let i = 0; i < 3; i++) {
+            if (otherKanji[i]) {
+              wrongOptions.push(otherKanji[i].kanji);
+            }
+          }
+          
+          // Ensure we have exactly 3 wrong options
+          while (wrongOptions.length < 3) {
+            wrongOptions.push("?");
+          }
+          
+          kanjiQuizQuestions.push({
+            type: 'meaning-to-kanji',
+            question: kanji.bn,
+            correctAnswer: kanji.kanji,
+            options: shuffle([kanji.kanji, ...wrongOptions]),
+            kanji: kanji
+          });
+        }
+      });
+      
+      kanjiQuizLives = 5;
+      kanjiQuizScore = 0;
+      kanjiQuizHighScore = parseInt(localStorage.getItem('kanjiHighScore') || '0');
+      kanjiQuizTime = 15;
+      currentKanjiQuizIndex = 0;
+      
+      kanjiQuizLivesDisplay.textContent = kanjiQuizLives;
+      kanjiQuizScoreDisplay.textContent = kanjiQuizScore;
+      kanjiQuizHighScoreDisplay.textContent = kanjiQuizHighScore;
+      kanjiQuizTimeDisplay.textContent = kanjiQuizTime;
+      kanjiQuizProgress.style.width = '0%';
+      
+      showKanjiQuizQuestion();
+      startKanjiQuizTimer();
+    }
+
+    function showKanjiQuizQuestion() {
+      if (kanjiQuizLives <= 0) {
+        endKanjiQuiz();
+        return;
+      }
+      
+      // If we've gone through all questions, reshuffle and start over
+      if (currentKanjiQuizIndex >= kanjiQuizQuestions.length) {
+        kanjiQuizQuestions = shuffle(kanjiQuizQuestions);
+        currentKanjiQuizIndex = 0;
+      }
+      
+      const question = kanjiQuizQuestions[currentKanjiQuizIndex];
+      
+      kanjiQuizQuestion.textContent = question.question;
+      
+      // Set font class based on question type
+      if (question.type === 'kanji-to-meaning') {
+        kanjiQuizQuestion.className = 'quiz-question japanese-font';
+      } else {
+        kanjiQuizQuestion.className = 'quiz-question';
+      }
+      
+      kanjiQuizProgress.style.width = `${(currentKanjiQuizIndex / kanjiQuizQuestions.length) * 100}%`;
+      
+      // Clear previous options
+      kanjiQuizOptions.innerHTML = '';
+      
+      // Create new options
+      question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'quiz-option card-3d card-glow';
+        
+        // Apply Japanese font if the options are in Kanji
+        if (question.type === 'meaning-to-kanji') {
+          optionElement.classList.add('japanese-font');
+        }
+        
+        optionElement.textContent = option;
+        optionElement.addEventListener('click', () => selectKanjiQuizOption(index, option === question.correctAnswer));
+        kanjiQuizOptions.appendChild(optionElement);
+      });
+      
+      kanjiQuizResult.textContent = '';
+      kanjiQuizTime = 15;
+      kanjiQuizTimeDisplay.textContent = kanjiQuizTime;
+      
+      // Start the timer for this question
+      startKanjiQuizTimer();
+    }
+
+    function selectKanjiQuizOption(optionIndex, isCorrect) {
+      if (!kanjiQuizActive) return;
+      
+      const optionElements = kanjiQuizOptions.querySelectorAll('.quiz-option');
+      optionElements[optionIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+      
+      if (isCorrect) {
+        playSound(correctSound);
+        kanjiQuizScore++;
+        kanjiQuizScoreDisplay.textContent = kanjiQuizScore;
+        kanjiQuizResult.textContent = '✅ Correct!';
+        kanjiQuizResult.style.color = '#2ed573';
+        
+        // Update high score if needed
+        if (kanjiQuizScore > kanjiQuizHighScore) {
+          kanjiQuizHighScore = kanjiQuizScore;
+          kanjiQuizHighScoreDisplay.textContent = kanjiQuizHighScore;
+          localStorage.setItem('kanjiHighScore', kanjiQuizHighScore);
+        }
+        
+        setTimeout(() => {
+          currentKanjiQuizIndex++;
+          showKanjiQuizQuestion();
+        }, 1000);
+      } else {
+        playSound(wrongSound);
+        kanjiQuizLives--;
+        kanjiQuizLivesDisplay.textContent = kanjiQuizLives;
+        kanjiQuizResult.textContent = `❌ Correct: ${kanjiQuizQuestions[currentKanjiQuizIndex].correctAnswer}`;
+        kanjiQuizResult.style.color = '#ff4757';
+        
+        // Save the kanji that was answered incorrectly
+        const kanji = kanjiQuizQuestions[currentKanjiQuizIndex].kanji;
+        if (!savedKanji.some(k => k.kanji === kanji.kanji)) {
+          savedKanji.push(kanji);
+          localStorage.setItem('savedKanji', JSON.stringify(savedKanji));
+        }
+        
+        setTimeout(() => {
+          if (kanjiQuizLives > 0) {
+            currentKanjiQuizIndex++;
+            showKanjiQuizQuestion();
+          } else {
+            endKanjiQuiz();
+          }
+        }, 2000);
+      }
+      
+      // Stop the timer
+      clearInterval(kanjiQuizTimer);
+    }
+
+    function startKanjiQuizTimer() {
+      clearInterval(kanjiQuizTimer);
+      kanjiQuizTime = 15;
+      kanjiQuizTimeDisplay.textContent = kanjiQuizTime;
+      
+      kanjiQuizTimer = setInterval(() => {
+        if (kanjiQuizActive) {
+          kanjiQuizTime--;
+          kanjiQuizTimeDisplay.textContent = kanjiQuizTime;
+          
+          if (kanjiQuizTime <= 0) {
+            clearInterval(kanjiQuizTimer);
+            // Time's up - count as incorrect
+            kanjiQuizLives--;
+            kanjiQuizLivesDisplay.textContent = kanjiQuizLives;
+            kanjiQuizResult.textContent = `⏰ Time's up! Correct: ${kanjiQuizQuestions[currentKanjiQuizIndex].correctAnswer}`;
+            kanjiQuizResult.style.color = '#ff4757';
+            
+            // Save the kanji that was answered incorrectly
+            const kanji = kanjiQuizQuestions[currentKanjiQuizIndex].kanji;
+            if (!savedKanji.some(k => k.kanji === kanji.kanji)) {
+              savedKanji.push(kanji);
+              localStorage.setItem('savedKanji', JSON.stringify(savedKanji));
+            }
+            
+            setTimeout(() => {
+              if (kanjiQuizLives > 0) {
+                currentKanjiQuizIndex++;
+                showKanjiQuizQuestion();
+              } else {
+                endKanjiQuiz();
+              }
+            }, 2000);
+          }
+        }
+      }, 1000);
+    }
+
+    function endKanjiQuiz() {
+      kanjiQuizActive = false;
+      clearInterval(kanjiQuizTimer);
+      
+      const percentage = Math.round((kanjiQuizScore / (currentKanjiQuizIndex + 1)) * 100);
+      let message = '';
+      
+      if (percentage >= 90) message = 'Excellent! 🎉';
+      else if (percentage >= 70) message = 'Great job! 👍';
+      else if (percentage >= 50) message = 'Good effort! 💪';
+      else message = 'Keep practicing! 📚';
+      
+      kanjiQuizResult.textContent = `${message} Final Score: ${kanjiQuizScore} (${percentage}%)`;
+      kanjiQuizResult.style.color = '#3a86ff';
+      
+      setTimeout(() => {
+        exitKanjiQuiz();
+      }, 3000);
+    }
+
+    function exitKanjiQuiz() {
+      kanjiQuizActive = false;
+      clearInterval(kanjiQuizTimer);
+      kanjiQuiz.classList.add('hidden');
+      playBackgroundMusic(studyMusic);
+      
+      // Return to the kanji study mode
+      kanjiStudyMode.classList.remove('hidden');
+      
+      playSound(clickSound);
+    }
 
     // === Documents Functions ===
     function showDocumentsMode() {
@@ -3118,7 +3480,7 @@
       addKanjiForm.classList.remove('hidden');
       // Clear form
       newKanji.value = '';
-      newJlptLevel.value = 'n5';
+      newKanjiCategory.value = 'numbers';
       newOnyomi.value = '';
       newKunyomi.value = '';
       newKanjiEnglish.value = '';
@@ -3132,7 +3494,7 @@
 
     function addNewKanji() {
       const kanji = newKanji.value.trim();
-      const jlptLevel = newJlptLevel.value;
+      const category = newKanjiCategory.value;
       const onyomi = newOnyomi.value.trim();
       const kunyomi = newKunyomi.value.trim();
       const english = newKanjiEnglish.value.trim();
@@ -3148,14 +3510,15 @@
         onyomi: onyomi,
         kunyomi: kunyomi,
         en: english,
-        bn: bengali
+        bn: bengali,
+        romaji: onyomi.toLowerCase() // Use onyomi as romaji for search
       };
       
       // Add to custom kanji
       kanjiData.custom.push(newKanjiItem);
       
       // Switch to custom kanji
-      jlptLevel.value = 'custom';
+      kanjiCategory.value = 'custom';
       loadKanji();
       
       // Hide form
@@ -3268,7 +3631,7 @@
     courseType.addEventListener('change', updateLessonSelector);
     lessonSelector.addEventListener('change', loadVocab);
     vocabSearch.addEventListener('input', filterVocab);
-    jlptLevel.addEventListener('change', loadKanji);
+    kanjiSearch.addEventListener('input', loadKanji);
     kanjiCategory.addEventListener('change', loadKanji);
     documentSearch.addEventListener('input', updateDocumentsGrid);
     documentCategory.addEventListener('change', updateDocumentsGrid);
