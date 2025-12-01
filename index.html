@@ -3826,136 +3826,142 @@
 
     // Kanji data organized by category
     const kanjiData = {
-      nature_geography_elements: [
-  { "kanji": "一", "kunyomi": "", "en": "one", "bn": "এক", "romaji": "ichi" },
-  { "kanji": "山", "kunyomi": "やま", "en": "mountain", "bn": "পাহাড়, পর্বত", "romaji": "yama" },
-  { "kanji": "川", "kunyomi": "かわ", "en": "river", "bn": "নদী", "romaji": "kawa" },
-  { "kanji": "田", "kunyomi": "た", "en": "rice field", "bn": "ধান ক্ষেত", "romaji": "ta" },
-  { "kanji": "火", "kunyomi": "ひ", "en": "fire", "bn": "আগুন", "romaji": "hi" },
-  { "kanji": "水", "kunyomi": "みず", "en": "water", "bn": "পানি", "romaji": "mizu" },
-  { "kanji": "木", "kunyomi": "き", "en": "tree", "bn": "গাছ", "romaji": "ki" },
-  { "kanji": "土", "kunyomi": "つち", "en": "earth, soil", "bn": "মাটি, পৃথিবী", "romaji": "tsuchi" },
-  { "kanji": "雨", "kunyomi": "あめ", "en": "rain", "bn": "বৃষ্টি", "romaji": "ame" },
-  { "kanji": "天", "kunyomi": "てん", "en": "heaven, sky", "bn": "স্বর্গ, আকাশ", "romaji": "ten" },
-  { "kanji": "空", "kunyomi": "そら", "en": "sky, empty", "bn": "আকাশ, খালি", "romaji": "sora" }
-],
-      numbers: [
-    { "kanji": "一", "kunyomi": "ひとつ", "en": "one", "bn": "এক", "romaji": "ichi" },
-    { "kanji": "二", "kunyomi": "ふたつ, ふたり", "en": "two", "bn": "দুই", "romaji": "ni" },
-    { "kanji": "三", "kunyomi": "みっつ", "en": "three", "bn": "তিন", "romaji": "san" },
-    { "kanji": "四", "kunyomi": "よっつ", "en": "four", "bn": "চার", "romaji": "yon/shi" },
-    { "kanji": "五", "kunyomi": "いつつ", "en": "five", "bn": "পাঁচ", "romaji": "go" },
-    { "kanji": "六", "kunyomi": "むっつ", "en": "six", "bn": "ছয়", "romaji": "roku" },
-    { "kanji": "七", "kunyomi": "ななつ", "en": "seven", "bn": "সাত", "romaji": "shichi/nana" },
-    { "kanji": "八", "kunyomi": "やっつ", "en": "eight", "bn": "আট", "romaji": "hachi" },
-    { "kanji": "九", "kunyomi": "ここのつ", "en": "nine", "bn": "নয়", "romaji": "kyuu/ku" },
-    { "kanji": "十", "kunyomi": "とお", "en": "ten", "bn": "দশ", "romaji": "juu" },
-    { "kanji": "百", "kunyomi": "ひゃく", "en": "hundred", "bn": "শত, একশত", "romaji": "hyaku" },
-    { "kanji": "千", "kunyomi": "せん", "en": "thousand", "bn": "হাজার, এক হাজার", "romaji": "sen" },
-    { "kanji": "万", "kunyomi": "まん", "en": "ten thousand", "bn": "দশ হাজার", "romaji": "man" },
-    { "kanji": "円", "kunyomi": "まる", "en": "yen, circle", "bn": "ইয়েন, বৃত্ত", "romaji": "en/maru" },
-    { "kanji": "金", "kunyomi": "かね", "en": "money, gold", "bn": "টাকা, সোনা", "romaji": "kin/kane" }
-],
-      people_family_body: [
-    { "kanji": "人", "kunyomi": "ひと", "en": "person", "bn": "ব্যক্তি", "romaji": "hito" },
-    { "kanji": "子", "kunyomi": "こども", "en": "child", "bn": "শিশু", "romaji": "kodomo" },
-    { "kanji": "女", "kunyomi": "おんな", "en": "woman", "bn": "মহিলা, নারী", "romaji": "onna" },
-    { "kanji": "男", "kunyomi": "おとこ", "en": "man", "bn": "পুরুষ, মানুষ", "romaji": "otoko" },
-    { "kanji": "父", "kunyomi": "ちち, おとうさん", "en": "father", "bn": "বাবা", "romaji": "chichi, otousan" },
-    { "kanji": "母", "kunyomi": "はは, おかあさん", "en": "mother", "bn": "মা", "romaji": "haha, okaasan" },
-    { "kanji": "友", "kunyomi": "ともだち", "en": "friend", "bn": "বন্ধু", "romaji": "tomodachi" },
-    { "kanji": "目", "kunyomi": "め", "en": "eye", "bn": "চোখ", "romaji": "me" },
-    { "kanji": "口", "kunyomi": "くち", "en": "mouth", "bn": "মুখ, প্রবেশপথ", "romaji": "kuchi" },
-    { "kanji": "耳", "kunyomi": "みみ", "en": "ear", "bn": "কান", "romaji": "mimi" },
-    { "kanji": "手", "kunyomi": "て", "en": "hand", "bn": "হাত", "romaji": "te" },
-    { "kanji": "足", "kunyomi": "あし, たりる", "en": "leg, foot", "bn": "পা, যথেষ্ট", "romaji": "ashi, tariru" },
-    { "kanji": "力", "kunyomi": "ちから", "en": "power, strength", "bn": "শক্তি, ক্ষমতা", "romaji": "chikara" }
+      {
+  "nature_geography_elements": [
+    { "kanji": "一", "kunyomi": "", "onyomi": "イチ", "en": "one", "bn": "এক", "romaji": "ichi" },
+    { "kanji": "山", "kunyomi": "やま", "onyomi": "サン", "en": "mountain", "bn": "পাহাড়, পর্বত", "romaji": "yama" },
+    { "kanji": "川", "kunyomi": "かわ", "onyomi": "セン", "en": "river", "bn": "নদী", "romaji": "kawa" },
+    { "kanji": "田", "kunyomi": "た", "onyomi": "デン", "en": "rice field", "bn": "ধান ক্ষেত", "romaji": "ta" },
+    { "kanji": "火", "kunyomi": "ひ", "onyomi": "カ", "en": "fire", "bn": "আগুন", "romaji": "hi" },
+    { "kanji": "水", "kunyomi": "みず", "onyomi": "スイ", "en": "water", "bn": "পানি", "romaji": "mizu" },
+    { "kanji": "木", "kunyomi": "き", "onyomi": "ボク, モク", "en": "tree", "bn": "গাছ", "romaji": "ki" },
+    { "kanji": "土", "kunyomi": "つち", "onyomi": "ド, ト", "en": "earth, soil", "bn": "মাটি, পৃথিবী", "romaji": "tsuchi" },
+    { "kanji": "雨", "kunyomi": "あめ", "onyomi": "ウ", "en": "rain", "bn": "বৃষ্টি", "romaji": "ame" },
+    { "kanji": "天", "kunyomi": "あま", "onyomi": "テン", "en": "heaven, sky", "bn": "স্বর্গ, আকাশ", "romaji": "ten" },
+    { "kanji": "空", "kunyomi": "そら", "onyomi": "クウ", "en": "sky, empty", "bn": "আকাশ, খালি", "romaji": "sora" }
   ],
-      time_calendar_kanji = [
-    { kanji: "日", kunyomi: "ひ", en: "day, sun", bn: "দিন, সূর্য", romaji: "hi" },
-    { kanji: "月", kunyomi: "つき", en: "moon, month", bn: "চাঁদ, মাস", romaji: "tsuki" },
-    { kanji: "年", kunyomi: "とし", en: "year", bn: "বছর", romaji: "toshi" },
-    { kanji: "半", kunyomi: "はんぶん", en: "half", bn: "অর্ধেক", romaji: "hambun" },
-    { kanji: "分", kunyomi: "わける", en: "minute, part, understand", bn: "মিনিট, ভাগ, বোঝা", romaji: "wakeru" },
-    { kanji: "時", kunyomi: "とき", en: "time, hour", bn: "সময়, ঘন্টা", romaji: "toki" },
-    { kanji: "週", kunyomi: "しゅう", en: "week", bn: "সপ্তাহ", romaji: "shuu" },
-    { kanji: "今", kunyomi: "いま", en: "now", bn: "এখন", romaji: "ima" },
-    { kanji: "午", kunyomi: "ひる", en: "noon", bn: "দুপুর", romaji: "hiru" }
-],
-      locationDirection: [
-    { kanji: "上", kunyomi: "うえ, あがる", romaji: "ue, agaru", bn: "উপরে" },
-    { kanji: "下", kunyomi: "した, さがる", romaji: "shita, sagaru", bn: "নিচে" },
-    { kanji: "中", kunyomi: "なか", romaji: "naka", bn: "মধ্যে" },
-    { kanji: "前", kunyomi: "まえ", romaji: "mae", bn: "সামনে, আগে" },
-    { kanji: "後", kunyomi: "うしろ, あと", romaji: "ushiro, ato", bn: "পিছনে, পরে" },
-    { kanji: "外", kunyomi: "そと", romaji: "soto", bn: "বাইরে" },
-    { kanji: "左", kunyomi: "ひだり", romaji: "hidari", bn: "বাম" },
-    { kanji: "右", kunyomi: "みぎ", romaji: "migi", bn: "ডান" },
-    { kanji: "東", kunyomi: "ひがし", romaji: "higashi", bn: "পূর্ব" },
-    { kanji: "西", kunyomi: "にし", romaji: "nishi", bn: "পশ্চিম" },
-    { kanji: "南", kunyomi: "みなみ", romaji: "minami", bn: "দক্ষিণ" },
-    { kanji: "北", kunyomi: "きた", romaji: "kita", bn: "উত্তর" },
-    { kanji: "道", kunyomi: "みち", romaji: "michi", bn: "রাস্তা" }
-],
 
-      placesObjects: [
-    { kanji: "学", kunyomi: "がく", en: "study, learning", bn: "অধ্যায়ন" },
-    { kanji: "校", kunyomi: "がっこう", en: "school", bn: "বিদ্যালয়" },
-    { kanji: "本", kunyomi: "もと", en: "book, origin", bn: "বই, ভিত্তি, শিকড়" },
-    { kanji: "車", kunyomi: "くるま", en: "car, vehicle", bn: "গাড়ি, যানবাহন" },
-    { kanji: "門", kunyomi: "もん", en: "gate, entrance", bn: "দরজা, প্রবেশদ্বার" },
-    { kanji: "会", kunyomi: "あう", en: "meet, meeting", bn: "সাক্ষাৎ করা, সভা" },
-    { kanji: "社", kunyomi: "やしろ", en: "company, shrine", bn: "প্রতিষ্ঠান, কোম্পানি, মন্দির" },
-    { kanji: "店", kunyomi: "みせ", en: "shop, store", bn: "দোকান" },
-    { kanji: "駅", kunyomi: "えき", en: "station", bn: "স্টেশন" },
-    { kanji: "国", kunyomi: "くに", en: "country", bn: "দেশ" },
-    { kanji: "電", kunyomi: "でんき", en: "electricity", bn: "বিদ্যুৎ" }
-],
-
-      animalsPlantsFood: [
-  { kanji: "牛", kunyomi: "うし", en: "cow", bn: "গরু", romaji: "ushi" },
-  { kanji: "馬", kunyomi: "うま", en: "horse", bn: "ঘোড়া", romaji: "uma" },
-  { kanji: "魚", kunyomi: "さかな", en: "fish", bn: "মাছ", romaji: "sakana" },
-  { kanji: "貝", kunyomi: "かい", en: "shellfish", bn: "শেলফিশ, ঝিনুক", romaji: "kai" },
-  { kanji: "花", kunyomi: "はな", en: "flower", bn: "ফুল", romaji: "hana" },
-  { kanji: "食", kunyomi: "たべる", en: "to eat, food", bn: "খাওয়া, খাদ্য", romaji: "taberu" },
-  { kanji: "飲", kunyomi: "のむ", en: "to drink", bn: "পান করা", romaji: "nomu" }
-],
-
-      adjectivesAndAbstractConcepts: [
-    { kanji: "大", kunyomi: "おおきい, おとな", en: "big, large", bn: "বিশাল, বড়", romaji: "ookii, otona" },
-    { kanji: "小", kunyomi: "ちいさい", en: "small", bn: "ছোট", romaji: "chiisai" },
-    { kanji: "高", kunyomi: "たかい", en: "tall, expensive", bn: "উচ্চ, লম্বা, দামী", romaji: "takai" },
-    { kanji: "安", kunyomi: "やすい", en: "cheap, safe", bn: "সস্তা, নিরাপদ", romaji: "yasui" },
-    { kanji: "新", kunyomi: "あたらしい", en: "new", bn: "নতুন", romaji: "atarashii" },
-    { kanji: "古", kunyomi: "ふるい", en: "old", bn: "পুরাতন", romaji: "furui" },
-    { kanji: "長", kunyomi: "ながい", en: "long, chief", bn: "দীর্ঘ, প্রধান", romaji: "nagai" },
-    { kanji: "多", kunyomi: "おおい", en: "many", bn: "অনেক", romaji: "ooi" },
-    { kanji: "少", kunyomi: "すくない, すこし", en: "few, a little", bn: "কয়েকটি, অল্প", romaji: "sukunai, sukoshi" },
-    { kanji: "早", kunyomi: "はやい", en: "early, fast", bn: "তাড়াতাড়ি", romaji: "hayai" },
-    { kanji: "白", kunyomi: "しろ", en: "white", bn: "সাদা", romaji: "shiro" },
-    { kanji: "気", kunyomi: "き", en: "spirit, mood, feeling", bn: "আত্মা, মেজাজ, অনুভূতি", romaji: "ki" },
-    { kanji: "毎", kunyomi: "まい", en: "every", bn: "প্রতি", romaji: "mai" },
-    { kanji: "何", kunyomi: "なに", en: "what", bn: "কি", romaji: "nani" }
-],
-
-      verbs_and_communication: [
-    { "kanji": "行", "kunyomi": "いく", "bn": "যাওয়া, লাইন", "romaji": "iku" },
-    { "kanji": "来", "kunyomi": "くる", "bn": "আসছে", "romaji": "kuru" },
-    { "kanji": "見", "kunyomi": "みる, みせる", "bn": "দেখা, প্রদর্শন", "romaji": "miru, miseru" },
-    { "kanji": "入", "kunyomi": "はいる, いれる", "bn": "প্রবেশ, রাখা", "romaji": "hairu, ireru" },
-    { "kanji": "出", "kunyomi": "でる, だす", "bn": "বের হওয়া, বের করা", "romaji": "deru, dasu" },
-    { "kanji": "立", "kunyomi": "たつ", "bn": "দাঁড়ানো", "romaji": "tatsu" },
-    { "kanji": "書", "kunyomi": "かく", "bn": "লেখা", "romaji": "kaku" },
-    { "kanji": "言", "kunyomi": "いう", "bn": "বলা", "romaji": "iu" },
-    { "kanji": "話", "kunyomi": "はなす, はなし", "bn": "কথা বলা, গল্প", "romaji": "hanasu, hanashi" },
-    { "kanji": "読", "kunyomi": "よむ", "bn": "পড়া", "romaji": "yomu" },
-    { "kanji": "語", "kunyomi": "ことば", "bn": "শব্দ, ভাষা", "romaji": "kotoba" },
-    { "kanji": "間", "kunyomi": "あいだ", "bn": "মধ্য, ব্যবধান", "romaji": "aida" },
-    { "kanji": "聞", "kunyomi": "きく, きこえる", "bn": "শোনা, শুনতে পাওয়া", "romaji": "kiku, kikoeru" },
-    { "kanji": "買", "kunyomi": "かう", "bn": "কেনা, ক্রয় করা", "romaji": "kau" },
-    { "kanji": "休", "kunyomi": "やすむ, やすみ", "bn": "বিশ্রাম, ছুটি", "romaji": "yasumu, yasumi" }
+  "numbers": [
+    { "kanji": "一", "kunyomi": "ひとつ", "onyomi": "イチ", "en": "one", "bn": "এক", "romaji": "ichi" },
+    { "kanji": "二", "kunyomi": "ふたつ, ふたり", "onyomi": "ニ", "en": "two", "bn": "দুই", "romaji": "ni" },
+    { "kanji": "三", "kunyomi": "みっつ", "onyomi": "サン", "en": "three", "bn": "তিন", "romaji": "san" },
+    { "kanji": "四", "kunyomi": "よっつ", "onyomi": "シ", "en": "four", "bn": "চার", "romaji": "yon/shi" },
+    { "kanji": "五", "kunyomi": "いつつ", "onyomi": "ゴ", "en": "five", "bn": "পাঁচ", "romaji": "go" },
+    { "kanji": "六", "kunyomi": "むっつ", "onyomi": "ロク", "en": "six", "bn": "ছয়", "romaji": "roku" },
+    { "kanji": "七", "kunyomi": "ななつ", "onyomi": "シチ", "en": "seven", "bn": "সাত", "romaji": "shichi/nana" },
+    { "kanji": "八", "kunyomi": "やっつ", "onyomi": "ハチ", "en": "eight", "bn": "আট", "romaji": "hachi" },
+    { "kanji": "九", "kunyomi": "ここのつ", "onyomi": "キュウ, ク", "en": "nine", "bn": "নয়", "romaji": "kyuu/ku" },
+    { "kanji": "十", "kunyomi": "とお", "onyomi": "ジュウ", "en": "ten", "bn": "দশ", "romaji": "juu" },
+    { "kanji": "百", "kunyomi": "", "onyomi": "ヒャク", "en": "hundred", "bn": "শত, একশত", "romaji": "hyaku" },
+    { "kanji": "千", "kunyomi": "", "onyomi": "セン", "en": "thousand", "bn": "হাজার", "romaji": "sen" },
+    { "kanji": "万", "kunyomi": "", "onyomi": "マン", "en": "ten thousand", "bn": "দশ হাজার", "romaji": "man" },
+    { "kanji": "円", "kunyomi": "まる", "onyomi": "エン", "en": "yen, circle", "bn": "ইয়েন, বৃত্ত", "romaji": "en/maru" },
+    { "kanji": "金", "kunyomi": "かね", "onyomi": "キン, コン", "en": "money, gold", "bn": "টাকা, সোনা", "romaji": "kane/kin" }
   ],
+
+  "people_family_body": [
+    { "kanji": "人", "kunyomi": "ひと", "onyomi": "ジン, ニン", "en": "person", "bn": "ব্যক্তি", "romaji": "hito" },
+    { "kanji": "子", "kunyomi": "こ", "onyomi": "シ", "en": "child", "bn": "শিশু", "romaji": "ko" },
+    { "kanji": "女", "kunyomi": "おんな", "onyomi": "ジョ", "en": "woman", "bn": "মহিলা", "romaji": "onna" },
+    { "kanji": "男", "kunyomi": "おとこ", "onyomi": "ダン", "en": "man", "bn": "পুরুষ", "romaji": "otoko" },
+    { "kanji": "父", "kunyomi": "ちち, おとうさん", "onyomi": "フ", "en": "father", "bn": "বাবা", "romaji": "chichi" },
+    { "kanji": "母", "kunyomi": "はは, おかあさん", "onyomi": "ボ", "en": "mother", "bn": "মা", "romaji": "haha" },
+    { "kanji": "友", "kunyomi": "ともだち", "onyomi": "ユウ", "en": "friend", "bn": "বন্ধু", "romaji": "tomodachi" },
+    { "kanji": "目", "kunyomi": "め", "onyomi": "モク", "en": "eye", "bn": "চোখ", "romaji": "me" },
+    { "kanji": "口", "kunyomi": "くち", "onyomi": "コウ, ク", "en": "mouth", "bn": "মুখ", "romaji": "kuchi" },
+    { "kanji": "耳", "kunyomi": "みみ", "onyomi": "ジ", "en": "ear", "bn": "কান", "romaji": "mimi" },
+    { "kanji": "手", "kunyomi": "て", "onyomi": "シュ", "en": "hand", "bn": "হাত", "romaji": "te" },
+    { "kanji": "足", "kunyomi": "あし", "onyomi": "ソク", "en": "leg, foot", "bn": "পা", "romaji": "ashi" },
+    { "kanji": "力", "kunyomi": "ちから", "onyomi": "リョク, リキ", "en": "power", "bn": "শক্তি", "romaji": "chikara" }
+  ],
+
+  "time_calendar": [
+    { "kanji": "日", "kunyomi": "ひ", "onyomi": "ニチ, ジツ", "en": "day, sun", "bn": "দিন, সূর্য", "romaji": "hi" },
+    { "kanji": "月", "kunyomi": "つき", "onyomi": "ゲツ, ガツ", "en": "moon, month", "bn": "চাঁদ, মাস", "romaji": "tsuki" },
+    { "kanji": "年", "kunyomi": "とし", "onyomi": "ネン", "en": "year", "bn": "বছর", "romaji": "toshi" },
+    { "kanji": "半", "kunyomi": "はん", "onyomi": "ハン", "en": "half", "bn": "অর্ধেক", "romaji": "han" },
+    { "kanji": "分", "kunyomi": "わける", "onyomi": "ブン, フン", "en": "minute, part", "bn": "মিনিট, ভাগ", "romaji": "bakeru" },
+    { "kanji": "時", "kunyomi": "とき", "onyomi": "ジ", "en": "time, hour", "bn": "সময়, ঘন্টা", "romaji": "toki" },
+    { "kanji": "週", "kunyomi": "", "onyomi": "シュウ", "en": "week", "bn": "সপ্তাহ", "romaji": "shuu" },
+    { "kanji": "今", "kunyomi": "いま", "onyomi": "コン, キン", "en": "now", "bn": "এখন", "romaji": "ima" },
+    { "kanji": "午", "kunyomi": "ひる", "onyomi": "ゴ", "en": "noon", "bn": "দুপুর", "romaji": "hiru" }
+  ],
+
+  "location_direction": [
+    { "kanji": "上", "kunyomi": "うえ, あがる", "onyomi": "ジョウ", "bn": "উপরে", "romaji": "ue, agaru" },
+    { "kanji": "下", "kunyomi": "した, さがる", "onyomi": "カ, ゲ", "bn": "নিচে", "romaji": "shita, sagaru" },
+    { "kanji": "中", "kunyomi": "なか", "onyomi": "チュウ", "bn": "মধ্যে", "romaji": "naka" },
+    { "kanji": "前", "kunyomi": "まえ", "onyomi": "ゼン", "bn": "সামনে", "romaji": "mae" },
+    { "kanji": "後", "kunyomi": "うしろ, あと", "onyomi": "ゴ", "bn": "পিছনে", "romaji": "ushiro, ato" },
+    { "kanji": "外", "kunyomi": "そと", "onyomi": "ガイ", "bn": "বাইরে", "romaji": "soto" },
+    { "kanji": "左", "kunyomi": "ひだり", "onyomi": "サ", "bn": "বাম", "romaji": "hidari" },
+    { "kanji": "右", "kunyomi": "みぎ", "onyomi": "ウ, ユウ", "bn": "ডান", "romaji": "migi" },
+    { "kanji": "東", "kunyomi": "ひがし", "onyomi": "トウ", "bn": "পূর্ব", "romaji": "higashi" },
+    { "kanji": "西", "kunyomi": "にし", "onyomi": "セイ", "bn": "পশ্চিম", "romaji": "nishi" },
+    { "kanji": "南", "kunyomi": "みなみ", "onyomi": "ナン", "bn": "দক্ষিণ", "romaji": "minami" },
+    { "kanji": "北", "kunyomi": "きた", "onyomi": "ホク", "bn": "উত্তর", "romaji": "kita" },
+    { "kanji": "道", "kunyomi": "みち", "onyomi": "ドウ", "bn": "রাস্তা", "romaji": "michi" }
+  ],
+
+  "places_objects": [
+    { "kanji": "学", "kunyomi": "まなぶ", "onyomi": "ガク", "en": "study", "bn": "অধ্যয়ন", "romaji": "manabu" },
+    { "kanji": "校", "kunyomi": "", "onyomi": "コウ", "en": "school", "bn": "বিদ্যালয়", "romaji": "kou" },
+    { "kanji": "本", "kunyomi": "もと", "onyomi": "ホン", "en": "book", "bn": "বই", "romaji": "hon" },
+    { "kanji": "車", "kunyomi": "くるま", "onyomi": "シャ", "en": "car", "bn": "গাড়ি", "romaji": "kuruma" },
+    { "kanji": "門", "kunyomi": "かど", "onyomi": "モン", "en": "gate", "bn": "দরজা", "romaji": "kado" },
+    { "kanji": "会", "kunyomi": "あう", "onyomi": "カイ", "en": "meet", "bn": "সাক্ষাৎ", "romaji": "au" },
+    { "kanji": "社", "kunyomi": "やしろ", "onyomi": "シャ", "en": "company", "bn": "কোম্পানি", "romaji": "yashiro" },
+    { "kanji": "店", "kunyomi": "みせ", "onyomi": "テン", "en": "shop", "bn": "দোকান", "romaji": "mise" },
+    { "kanji": "駅", "kunyomi": "", "onyomi": "エキ", "en": "station", "bn": "স্টেশন", "romaji": "eki" },
+    { "kanji": "国", "kunyomi": "くに", "onyomi": "コク", "en": "country", "bn": "দেশ", "romaji": "kuni" },
+    { "kanji": "電", "kunyomi": "", "onyomi": "デン", "en": "electricity", "bn": "বিদ্যুৎ", "romaji": "den" }
+  ],
+
+  "animals_plants_food": [
+    { "kanji": "牛", "kunyomi": "うし", "onyomi": "ギュウ", "en": "cow", "bn": "গরু", "romaji": "ushi" },
+    { "kanji": "馬", "kunyomi": "うま", "onyomi": "バ", "en": "horse", "bn": "ঘোড়া", "romaji": "uma" },
+    { "kanji": "魚", "kunyomi": "さかな", "onyomi": "ギョ", "en": "fish", "bn": "মাছ", "romaji": "sakana" },
+    { "kanji": "貝", "kunyomi": "", "onyomi": "バイ", "en": "shellfish", "bn": "ঝিনুক", "romaji": "kai" },
+    { "kanji": "花", "kunyomi": "はな", "onyomi": "カ", "en": "flower", "bn": "ফুল", "romaji": "hana" },
+    { "kanji": "食", "kunyomi": "たべる", "onyomi": "ショク, ジキ", "en": "eat", "bn": "খাওয়া", "romaji": "taberu" },
+    { "kanji": "飲", "kunyomi": "のむ", "onyomi": "イン", "en": "drink", "bn": "পান করা", "romaji": "nomu" }
+  ],
+
+  "adjectives_abstract": [
+    { "kanji": "大", "kunyomi": "おおきい", "onyomi": "ダイ, タイ", "en": "big", "bn": "বড়", "romaji": "ookii" },
+    { "kanji": "小", "kunyomi": "ちいさい", "onyomi": "ショウ", "en": "small", "bn": "ছোট", "romaji": "chiisai" },
+    { "kanji": "高", "kunyomi": "たかい", "onyomi": "コウ", "en": "high, expensive", "bn": "উঁচু, দামি", "romaji": "takai" },
+    { "kanji": "安", "kunyomi": "やすい", "onyomi": "アン", "en": "cheap", "bn": "সস্তা", "romaji": "yasui" },
+    { "kanji": "新", "kunyomi": "あたらしい", "onyomi": "シン", "en": "new", "bn": "নতুন", "romaji": "atarashii" },
+    { "kanji": "古", "kunyomi": "ふるい", "onyomi": "コ", "en": "old", "bn": "পুরাতন", "romaji": "furui" },
+    { "kanji": "長", "kunyomi": "ながい", "onyomi": "チョウ", "en": "long", "bn": "দীর্ঘ", "romaji": "nagai" },
+    { "kanji": "多", "kunyomi": "おおい", "onyomi": "タ", "en": "many", "bn": "অনেক", "romaji": "ooi" },
+    { "kanji": "少", "kunyomi": "すくない", "onyomi": "ショウ", "en": "few", "bn": "অল্প", "romaji": "sukunai" },
+    { "kanji": "早", "kunyomi": "はやい", "onyomi": "ソウ", "en": "early, fast", "bn": "তাড়াতাড়ি", "romaji": "hayai" },
+    { "kanji": "白", "kunyomi": "しろい", "onyomi": "ハク", "en": "white", "bn": "সাদা", "romaji": "shiroi" },
+    { "kanji": "気", "kunyomi": "き", "onyomi": "キ", "en": "spirit", "bn": "মন, অনুভূতি", "romaji": "ki" },
+    { "kanji": "毎", "kunyomi": "", "onyomi": "マイ", "en": "every", "bn": "প্রতি", "romaji": "mai" },
+    { "kanji": "何", "kunyomi": "なに", "onyomi": "カ", "en": "what", "bn": "কি", "romaji": "nani" }
+  ],
+
+  "verbs_communication": [
+    { "kanji": "行", "kunyomi": "いく", "onyomi": "コウ, ギョウ", "bn": "যাওয়া", "romaji": "iku" },
+    { "kanji": "来", "kunyomi": "くる", "onyomi": "ライ", "bn": "আসা", "romaji": "kuru" },
+    { "kanji": "見", "kunyomi": "みる", "onyomi": "ケン", "bn": "দেখা", "romaji": "miru" },
+    { "kanji": "入", "kunyomi": "はいる", "onyomi": "ニュウ", "bn": "প্রবেশ", "romaji": "hairu" },
+    { "kanji": "出", "kunyomi": "でる", "onyomi": "シュツ", "bn": "বের হওয়া", "romaji": "deru" },
+    { "kanji": "立", "kunyomi": "たつ", "onyomi": "リツ", "bn": "দাঁড়ানো", "romaji": "tatsu" },
+    { "kanji": "書", "kunyomi": "かく", "onyomi": "ショ", "bn": "লেখা", "romaji": "kaku" },
+    { "kanji": "言", "kunyomi": "いう", "onyomi": "ゲン, ゴン", "bn": "বলা", "romaji": "iu" },
+    { "kanji": "話", "kunyomi": "はなす", "onyomi": "ワ", "bn": "কথা বলা", "romaji": "hanasu" },
+    { "kanji": "読", "kunyomi": "よむ", "onyomi": "ドク", "bn": "পড়া", "romaji": "yomu" },
+    { "kanji": "語", "kunyomi": "かたる", "onyomi": "ゴ", "bn": "ভাষা", "romaji": "kataru" },
+    { "kanji": "間", "kunyomi": "あいだ", "onyomi": "カン", "bn": "মধ্যে", "romaji": "aida" },
+    { "kanji": "聞", "kunyomi": "きく", "onyomi": "ブン", "bn": "শোনা", "romaji": "kiku" },
+    { "kanji": "買", "kunyomi": "かう", "onyomi": "バイ", "bn": "কেনা", "romaji": "kau" },
+    { "kanji": "休", "kunyomi": "やすむ", "onyomi": "キュウ", "bn": "বিশ্রাম", "romaji": "yasumu" }
+  ]
+},
       custom: []
     };
 
@@ -5742,7 +5748,7 @@
         kunyomi: kunyomi,
         en: english,
         bn: bengali,
-        romaji: kunyomi.toLowerCase() // Use kunyomi as romaji for search
+        romaji: onyomi.toLowerCase() // Use onyomi as romaji for search
       };
       
       // Add to custom kanji
