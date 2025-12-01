@@ -4239,7 +4239,8 @@
         exitKanjiQuiz();
       }
       stopBackgroundMusic();
-      playSound(clickSound);
+      playBackgroundMusic(studyMusic);
+      
       gameContainer.classList.add('hidden');
       vocabContainer.classList.add('hidden');
       kanjiContainer.classList.add('hidden');
@@ -4362,13 +4363,13 @@
           lessonSelect.appendChild(option);
         }
       } else if (type === 'category') {
-        // Add categories
-        for (let i = 1; i <= 40; i++) {
-          const option = document.createElement('option');
-          option.value = i;
-          option.textContent = vocabData.category[i].name;
-          lessonSelect.appendChild(option);
-        }
+        const numCategories = Object.keys(vocabData.category).length;
+      for (let i = 1; i <= numCategories; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = vocabData.category[i].name;
+        lessonSelect.appendChild(option);
+      }
       }
     }
 
@@ -5690,7 +5691,7 @@
       };
       
       // Add to custom vocabulary
-      vocabData.custom.push(newWord);
+      vocabData.custom = JSON.parse(localStorage.getItem('customVocab') || '[]');
       
       // Switch to custom vocabulary
       courseType.value = 'custom';
@@ -5737,6 +5738,7 @@
       
       const newKanjiItem = {
         kanji: kanji,
+        onyomi: onyomi;
         kunyomi: kunyomi,
         en: english,
         bn: bengali,
@@ -5744,7 +5746,7 @@
       };
       
       // Add to custom kanji
-      kanjiData.custom.push(newKanjiItem);
+    kanjiData.custom = JSON.parse(localStorage.getItem('customKanji') || '[]');
       
       // Switch to custom kanji
       kanjiCategory.value = 'custom';
