@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
   <style>
     :root {
       --primary: #3a86ff;
@@ -964,16 +965,87 @@
     .japanese-font {
       font-family: 'Noto Sans JP', sans-serif;
     }
+    
+    /* Background Loading Indicator */
+    .background-loading {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .background-loading .spinner {
+      width: 16px;
+      height: 16px;
+      border-width: 2px;
+      margin: 0;
+    }
+    
+    /* Error Message */
+    .error-message {
+      background: linear-gradient(145deg, #ff4757, #ff3838);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    
+    .warning-message {
+      background: linear-gradient(145deg, #ffa502, #ff7f00);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      text-align: center;
+    }
+    
+    /* Offline Indicator */
+    .offline-indicator {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: linear-gradient(145deg, #2ed573, #1dd1a1);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
   </style>
 </head>
 <body>
   <!-- Loading Spinner -->
   <div id="loadingSpinner" class="loading-spinner">
     <div class="spinner"></div>
-    <div class="loading-text" id="loadingText">Loading data...</div>
+    <div class="loading-text" id="loadingText">Loading essential data...</div>
     <div class="progress-bar-loader">
       <div class="progress-fill" id="loadingProgress"></div>
     </div>
+  </div>
+  
+  <!-- Background Loading Indicator -->
+  <div id="backgroundLoading" class="background-loading hidden">
+    <div class="spinner"></div>
+    <span id="backgroundLoadingText">Loading full data...</span>
+  </div>
+  
+  <!-- Offline Indicator -->
+  <div id="offlineIndicator" class="offline-indicator hidden">
+    <i class="fas fa-wifi-slash"></i>
+    <span>Offline Mode</span>
   </div>
   
   <!-- 3D Background -->
@@ -996,6 +1068,7 @@
       <div class="header">
         <h1 class="title">Quizeon N5</h1>
         <p class="subtitle">Japanese Learning Platform - Master Hiragana, Katakana, Vocabulary & Kanji</p>
+        <div id="dataStatus" class="text-secondary text-sm"></div>
       </div>
       
       <div class="mode-grid">
@@ -1069,6 +1142,25 @@
           </div>
           <div class="mode-title">Documents</div>
           <div class="mode-desc">Study materials</div>
+        </div>
+      </div>
+      
+      <div class="stats-grid mt-8">
+        <div class="stat-card card-3d">
+          <div class="stat-number" id="kanaHighScoreDisplay">0</div>
+          <div class="stat-label">Kana High Score</div>
+        </div>
+        <div class="stat-card card-3d">
+          <div class="stat-number" id="vocabHighScoreDisplay">0</div>
+          <div class="stat-label">Vocabulary High Score</div>
+        </div>
+        <div class="stat-card card-3d">
+          <div class="stat-number" id="kanjiHighScoreDisplay">0</div>
+          <div class="stat-label">Kanji High Score</div>
+        </div>
+        <div class="stat-card card-3d">
+          <div class="stat-number" id="savedWordsCount">0</div>
+          <div class="stat-label">Saved Words</div>
         </div>
       </div>
     </div>
@@ -1659,14 +1751,113 @@
   </audio>
 
   <script>
-    // === App Configuration ===
-    const CONFIG = {
-      DATA_VERSION: '1.0',
-      CACHE_EXPIRY: 24 * 60 * 60 * 1000, // 24 hours
-      DATA_FILE: 'data.json'
+    // === Embedded Minimal Fallback Data ===
+    const fallbackData = {
+      kana: {
+        hiraganaBasic: [
+          ["あ", "a"], ["い", "i"], ["う", "u"], ["え", "e"], ["お", "o"],
+          ["か", "ka"], ["き", "ki"], ["く", "ku"], ["け", "ke"], ["こ", "ko"],
+          ["さ", "sa"], ["し", "shi"], ["す", "su"], ["せ", "se"], ["そ", "so"],
+          ["た", "ta"], ["ち", "chi"], ["つ", "tsu"], ["て", "te"], ["と", "to"],
+          ["な", "na"], ["に", "ni"], ["ぬ", "nu"], ["ね", "ne"], ["の", "no"],
+          ["は", "ha"], ["ひ", "hi"], ["ふ", "fu"], ["へ", "he"], ["ほ", "ho"],
+          ["ま", "ma"], ["み", "mi"], ["む", "mu"], ["め", "me"], ["も", "mo"],
+          ["や", "ya"], ["ゆ", "yu"], ["よ", "yo"],
+          ["ら", "ra"], ["り", "ri"], ["る", "ru"], ["れ", "re"], ["ろ", "ro"],
+          ["わ", "wa"], ["を", "wo"], ["ん", "n"]
+        ],
+        hiraganaDakuten: [
+          ["が", "ga"], ["ぎ", "gi"], ["ぐ", "gu"], ["げ", "ge"], ["ご", "go"],
+          ["ざ", "za"], ["じ", "ji"], ["ず", "zu"], ["ぜ", "ze"], ["ぞ", "zo"],
+          ["だ", "da"], ["ぢ", "ji"], ["づ", "zu"], ["で", "de"], ["ど", "do"],
+          ["ば", "ba"], ["び", "bi"], ["ぶ", "bu"], ["べ", "be"], ["ぼ", "bo"],
+          ["ぱ", "pa"], ["ぴ", "pi"], ["ぷ", "pu"], ["ぺ", "pe"], ["ぽ", "po"]
+        ],
+        hiraganaYouon: [
+          ["きゃ", "kya"], ["きゅ", "kyu"], ["きょ", "kyo"],
+          ["しゃ", "sha"], ["しゅ", "shu"], ["しょ", "sho"],
+          ["ちゃ", "cha"], ["ちゅ", "chu"], ["ちょ", "cho"],
+          ["にゃ", "nya"], ["にゅ", "nyu"], ["にょ", "nyo"],
+          ["ひゃ", "hya"], ["ひゅ", "hyu"], ["ひょ", "hyo"],
+          ["みゃ", "mya"], ["みゅ", "myu"], ["みょ", "myo"],
+          ["りゃ", "rya"], ["りゅ", "ryu"], ["りょ", "ryo"],
+          ["ぎゃ", "gya"], ["ぎゅ", "gyu"], ["ぎょ", "gyo"],
+          ["じゃ", "ja"], ["じゅ", "ju"], ["じょ", "jo"],
+          ["びゃ", "bya"], ["びゅ", "byu"], ["びょ", "byo"],
+          ["ぴゃ", "pya"], ["ぴゅ", "pyu"], ["ぴょ", "pyo"]
+        ]
+      },
+      vocab: {
+        minna: {
+          "1": [
+            { "ja": "わたし", "romaji": "watashi", "en": "I", "bn": "আমি" },
+            { "ja": "あなた", "romaji": "anata", "en": "you", "bn": "আপনি" },
+            { "ja": "せんせい", "romaji": "sensei", "en": "teacher", "bn": "শিক্ষক" },
+            { "ja": "がくせい", "romaji": "gakusei", "en": "student", "bn": "ছাত্র" }
+          ],
+          "2": [
+            { "ja": "これ", "romaji": "kore", "en": "this (close to speaker)", "bn": "এটি" },
+            { "ja": "それ", "romaji": "sore", "en": "that (close to listener)", "bn": "সেটি" },
+            { "ja": "あれ", "romaji": "are", "en": "that (far from both)", "bn": "ওইটি" },
+            { "ja": "ほん", "romaji": "hon", "en": "book", "bn": "বই" }
+          ],
+          "3": [
+            { "ja": "ここ", "romaji": "koko", "en": "here", "bn": "এখানে" },
+            { "ja": "そこ", "romaji": "soko", "en": "there", "bn": "সেখানে" },
+            { "ja": "あそこ", "romaji": "asoko", "en": "over there", "bn": "ওখানে" },
+            { "ja": "きょうしつ", "romaji": "kyoushitsu", "en": "classroom", "bn": "ক্লাসরুম" }
+          ]
+        },
+        category: {
+          "family": {
+            "name": "Family",
+            "words": [
+              { "ja": "ちち", "romaji": "chichi", "en": "father", "bn": "বাবা" },
+              { "ja": "はは", "romaji": "haha", "en": "mother", "bn": "মা" },
+              { "ja": "あに", "romaji": "ani", "en": "older brother", "bn": "বড় ভাই" },
+              { "ja": "あね", "romaji": "ane", "en": "older sister", "bn": "বড় বোন" }
+            ]
+          },
+          "food": {
+            "name": "Food",
+            "words": [
+              { "ja": "ごはん", "romaji": "gohan", "en": "rice/meal", "bn": "ভাত/খাবার" },
+              { "ja": "みず", "romaji": "mizu", "en": "water", "bn": "পানি" },
+              { "ja": "さかな", "romaji": "sakana", "en": "fish", "bn": "মাছ" },
+              { "ja": "りんご", "romaji": "ringo", "en": "apple", "bn": "আপেল" }
+            ]
+          }
+        },
+        custom: []
+      },
+      kanji: {
+        numbers: [
+          { "kanji": "一", "onyomi": "いち", "kunyomi": "ひと", "en": "one", "bn": "এক" },
+          { "kanji": "二", "onyomi": "に", "kunyomi": "ふた", "en": "two", "bn": "দুই" },
+          { "kanji": "三", "onyomi": "さん", "kunyomi": "みっ", "en": "three", "bn": "তিন" },
+          { "kanji": "四", "onyomi": "し", "kunyomi": "よん", "en": "four", "bn": "চার" },
+          { "kanji": "五", "onyomi": "ご", "kunyomi": "いつ", "en": "five", "bn": "পাঁচ" }
+        ],
+        time_calendar_kanji: [
+          { "kanji": "日", "onyomi": "にち", "kunyomi": "ひ", "en": "day/sun", "bn": "দিন/সূর্য" },
+          { "kanji": "月", "onyomi": "げつ", "kunyomi": "つき", "en": "month/moon", "bn": "মাস/চাঁদ" },
+          { "kanji": "火", "onyomi": "か", "kunyomi": "ひ", "en": "fire", "bn": "আগুন" },
+          { "kanji": "水", "onyomi": "すい", "kunyomi": "みず", "en": "water", "bn": "পানি" }
+        ],
+        people_family_body: [
+          { "kanji": "人", "onyomi": "じん", "kunyomi": "ひと", "en": "person", "bn": "ব্যক্তি" },
+          { "kanji": "男", "onyomi": "だん", "kunyomi": "おとこ", "en": "man", "bn": "পুরুষ" },
+          { "kanji": "女", "onyomi": "じょ", "kunyomi": "おんな", "en": "woman", "bn": "নারী" },
+          { "kanji": "子", "onyomi": "し", "kunyomi": "こ", "en": "child", "bn": "শিশু" }
+        ],
+        custom: []
+      }
     };
 
-
+    // === Main App Data (will be updated) ===
+    let appData = { ...fallbackData };
+    let isFullDataLoaded = false;
+    let isOfflineMode = false;
     
     let currentGameMode = 0;
     let kanaList = [], currentKana;
@@ -1723,6 +1914,18 @@
     const addKanjiForm = document.getElementById('addKanjiForm');
     const uploadDocumentForm = document.getElementById('uploadDocumentForm');
     const documentPreviewModal = document.getElementById('documentPreviewModal');
+    
+    // Background loading elements
+    const backgroundLoading = document.getElementById('backgroundLoading');
+    const backgroundLoadingText = document.getElementById('backgroundLoadingText');
+    const offlineIndicator = document.getElementById('offlineIndicator');
+    const dataStatus = document.getElementById('dataStatus');
+    
+    // Stats elements
+    const kanaHighScoreDisplay = document.getElementById('kanaHighScoreDisplay');
+    const vocabHighScoreDisplay = document.getElementById('vocabHighScoreDisplay');
+    const kanjiHighScoreDisplay = document.getElementById('kanjiHighScoreDisplay');
+    const savedWordsCount = document.getElementById('savedWordsCount');
     
     // Study mode elements
     const studyModeBtn = document.getElementById('studyModeBtn');
@@ -1837,78 +2040,50 @@
     const newKanjiEnglish = document.getElementById('newKanjiEnglish');
     const newKanjiBengali = document.getElementById('newKanjiBengali');
 
-    // === Data Loading and Caching Functions ===
+    // === Utility Functions ===
     function updateLoadingProgress(percent, text) {
       loadingProgressBar.style.width = `${percent}%`;
       if (text) loadingText.textContent = text;
     }
 
-    async function fetchWithCache(url, cacheKey, useCache = true) {
-      // For this single-file solution, we'll use the embedded data
-      // but keep the function structure for compatibility
-      return appData;
+    function showBackgroundLoading(text) {
+      backgroundLoadingText.textContent = text;
+      backgroundLoading.classList.remove('hidden');
     }
 
-    async function loadAppData() {
-      updateLoadingProgress(10, 'Initializing app...');
+    function updateBackgroundLoading(text) {
+      backgroundLoadingText.textContent = text;
+    }
+
+    function hideBackgroundLoading() {
+      backgroundLoading.classList.add('hidden');
+    }
+
+    function showOfflineIndicator() {
+      offlineIndicator.classList.remove('hidden');
+      isOfflineMode = true;
+    }
+
+    function hideOfflineIndicator() {
+      offlineIndicator.classList.add('hidden');
+      isOfflineMode = false;
+    }
+
+    function updateDataStatus() {
+      if (!dataStatus) return;
       
-      try {
-        updateLoadingProgress(30, 'Loading kana data...');
-        // Data is already embedded in the appData object
-        
-        // Load custom data from localStorage
-        updateLoadingProgress(90, 'Loading user data...');
-        const customVocab = localStorage.getItem('customVocab');
-        const customKanji = localStorage.getItem('customKanji');
-        
-        if (customVocab) {
-          appData.vocab.custom = JSON.parse(customVocab);
-        }
-        
-        if (customKanji) {
-          appData.kanji.custom = JSON.parse(customKanji);
-        }
-        
-        updateLoadingProgress(100, 'App ready!');
-        
-        // Hide spinner after a short delay
-        setTimeout(() => {
-          loadingSpinner.classList.add('hidden');
-          modeSelector.classList.remove('hidden');
-          modeSelector.classList.add('fade-in');
-          
-          // Initialize high scores
-          highScore = parseInt(localStorage.getItem('kanaHighScore') || '0');
-          highScoreDisplay.textContent = highScore;
-          
-          // Initialize vocab high score
-          studyQuizHighScore = parseInt(localStorage.getItem('vocabHighScore') || '0');
-          
-          // Initialize kanji high score
-          kanjiQuizHighScore = parseInt(localStorage.getItem('kanjiHighScore') || '0');
-        }, 500);
-        
-        return true;
-      } catch (error) {
-        console.error('Failed to load app data:', error);
-        loadingText.textContent = 'Failed to load data. Please check your connection and refresh.';
-        loadingText.style.color = '#ff4757';
-        return false;
+      if (isOfflineMode) {
+        dataStatus.textContent = "⚡ Using offline data";
+        dataStatus.style.color = "#ffa502";
+      } else if (isFullDataLoaded) {
+        dataStatus.textContent = "✓ Full data loaded";
+        dataStatus.style.color = "#2ed573";
+      } else {
+        dataStatus.textContent = "⏳ Loading full data in background...";
+        dataStatus.style.color = "#3a86ff";
       }
     }
 
-    // Lazy loading for specific data sections
-    async function ensureVocabLoaded() {
-      // Data is already loaded
-      return true;
-    }
-
-    async function ensureKanjiLoaded() {
-      // Data is already loaded
-      return true;
-    }
-
-    // === Utility Functions ===
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -1963,6 +2138,222 @@
         currentMusic.currentTime = 0;
         currentMusic = null;
       }
+    }
+
+    // === Optimized Data Loading ===
+    async function loadAppData() {
+      updateLoadingProgress(10, 'Initializing app...');
+      
+      try {
+        updateLoadingProgress(30, 'Loading essential data...');
+        
+        // Use embedded fallback data immediately
+        appData = { ...fallbackData };
+        
+        // Load custom data from localStorage
+        updateLoadingProgress(60, 'Loading user data...');
+        const customVocab = localStorage.getItem('customVocab');
+        const customKanji = localStorage.getItem('customKanji');
+        
+        if (customVocab) {
+          try {
+            appData.vocab.custom = JSON.parse(customVocab);
+          } catch (e) {
+            console.error('Error parsing customVocab:', e);
+            appData.vocab.custom = [];
+          }
+        }
+        
+        if (customKanji) {
+          try {
+            appData.kanji.custom = JSON.parse(customKanji);
+          } catch (e) {
+            console.error('Error parsing customKanji:', e);
+            appData.kanji.custom = [];
+          }
+        }
+        
+        updateLoadingProgress(90, 'App is ready!');
+        
+        // Hide main spinner and show app
+        setTimeout(() => {
+          loadingSpinner.classList.add('hidden');
+          modeSelector.classList.remove('hidden');
+          modeSelector.classList.add('fade-in');
+          
+          // Initialize stats
+          initializeStats();
+          
+          // Update data status
+          updateDataStatus();
+        }, 500);
+        
+        // Start loading full data in background
+        setTimeout(() => loadFullDataInBackground(), 1000);
+        
+        return true;
+      } catch (error) {
+        console.error('Failed to load app data:', error);
+        loadingText.textContent = 'Error loading data. Using offline mode.';
+        loadingText.style.color = '#ffa502';
+        
+        setTimeout(() => {
+          loadingSpinner.classList.add('hidden');
+          modeSelector.classList.remove('hidden');
+          showOfflineIndicator();
+          updateDataStatus();
+          initializeStats();
+        }, 1000);
+        
+        return false;
+      }
+    }
+
+    async function loadFullDataInBackground() {
+      if (isOfflineMode) return;
+      
+      showBackgroundLoading('Loading full data...');
+      
+      try {
+        // Try to load compressed data first
+        const response = await fetchWithTimeout('data.json.gz', 5000);
+        
+        if (response.ok) {
+          updateBackgroundLoading('Decompressing data...');
+          const compressedData = await response.arrayBuffer();
+          
+          // Decompress using pako
+          const decompressedData = pako.inflate(new Uint8Array(compressedData), { to: 'string' });
+          const fullData = JSON.parse(decompressedData);
+          
+          // Merge with current data
+          appData = {
+            kana: { ...appData.kana, ...fullData.kana },
+            vocab: { ...appData.vocab, ...fullData.vocab },
+            kanji: { ...appData.kanji, ...fullData.kanji }
+          };
+          
+          isFullDataLoaded = true;
+          updateBackgroundLoading('Full data loaded!');
+          hideOfflineIndicator();
+          
+          setTimeout(() => {
+            hideBackgroundLoading();
+            updateDataStatus();
+            showNotification('Full data loaded successfully!', 'success');
+          }, 2000);
+          
+        } else {
+          // Try uncompressed data
+          await loadUncompressedData();
+        }
+        
+      } catch (error) {
+        console.log('Failed to load full data, using offline mode:', error);
+        showOfflineIndicator();
+        updateBackgroundLoading('Using offline data');
+        
+        setTimeout(() => {
+          hideBackgroundLoading();
+          updateDataStatus();
+          showNotification('Offline mode activated. Using local data.', 'warning');
+        }, 1000);
+      }
+    }
+
+    async function loadUncompressedData() {
+      try {
+        updateBackgroundLoading('Loading uncompressed data...');
+        const response = await fetchWithTimeout('data.json', 3000);
+        
+        if (response.ok) {
+          const fullData = await response.json();
+          
+          // Merge with current data
+          appData = {
+            kana: { ...appData.kana, ...fullData.kana },
+            vocab: { ...appData.vocab, ...fullData.vocab },
+            kanji: { ...appData.kanji, ...fullData.kanji }
+          };
+          
+          isFullDataLoaded = true;
+          hideOfflineIndicator();
+          
+          updateBackgroundLoading('Full data loaded!');
+          setTimeout(() => {
+            hideBackgroundLoading();
+            updateDataStatus();
+            showNotification('Full data loaded successfully!', 'success');
+          }, 2000);
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    async function fetchWithTimeout(url, timeout = 3000) {
+      const controller = new AbortController();
+      const id = setTimeout(() => controller.abort(), timeout);
+      
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(id);
+        return response;
+      } catch (error) {
+        clearTimeout(id);
+        throw error;
+      }
+    }
+
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-600' : 
+        type === 'warning' ? 'bg-yellow-600' : 
+        'bg-blue-600'
+      } text-white`;
+      notification.innerHTML = `
+        <div class="flex items-center gap-3">
+          <i class="fas ${
+            type === 'success' ? 'fa-check-circle' : 
+            type === 'warning' ? 'fa-exclamation-triangle' : 
+            'fa-info-circle'
+          }"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s';
+        setTimeout(() => document.body.removeChild(notification), 500);
+      }, 3000);
+    }
+
+    function initializeStats() {
+      // Load high scores
+      const kanaHighScore = parseInt(localStorage.getItem('kanaHighScore') || '0');
+      const vocabHighScore = parseInt(localStorage.getItem('vocabHighScore') || '0');
+      const kanjiHighScore = parseInt(localStorage.getItem('kanjiHighScore') || '0');
+      
+      kanaHighScoreDisplay.textContent = kanaHighScore;
+      vocabHighScoreDisplay.textContent = vocabHighScore;
+      kanjiHighScoreDisplay.textContent = kanjiHighScore;
+      savedWordsCount.textContent = savedVocab.length;
+      
+      // Update high score displays
+      highScore = kanaHighScore;
+      highScoreDisplay.textContent = highScore;
+      
+      studyQuizHighScore = vocabHighScore;
+      quizHighScore.textContent = studyQuizHighScore;
+      
+      kanjiQuizHighScore = kanjiHighScore;
+      kanjiQuizHighScoreDisplay.textContent = kanjiQuizHighScore;
     }
 
     // === Kana Game Functions ===
@@ -2047,6 +2438,9 @@
       addKanjiForm.classList.add('hidden');
       uploadDocumentForm.classList.add('hidden');
       modeSelector.classList.remove('hidden');
+      
+      // Update stats
+      initializeStats();
     }
 
     function restartGame() {
@@ -2090,6 +2484,7 @@
         highScore = score;
         highScoreDisplay.textContent = highScore;
         localStorage.setItem('kanaHighScore', highScore);
+        kanaHighScoreDisplay.textContent = highScore;
       }
       scoreDisplay.textContent = score;
       
@@ -2127,13 +2522,6 @@
     async function showVocabMode() {
       playSound(clickSound);
       
-      // Ensure vocabulary data is loaded
-      const vocabLoaded = await ensureVocabLoaded();
-      if (!vocabLoaded) {
-        alert('Failed to load vocabulary data. Please try again.');
-        return;
-      }
-      
       playBackgroundMusic(studyMusic);
       
       modeSelector.classList.add('hidden');
@@ -2164,17 +2552,20 @@
           lessonSelect.appendChild(option);
         });
       }
+      
+      // Trigger load
+      loadVocab();
     }
 
     function loadVocab() {
       const type = courseType.value;
       const lesson = lessonSelector.value;
       
-      if (type === 'minna') {
+      if (type === 'minna' && appData.vocab.minna[lesson]) {
         currentVocab = [...appData.vocab.minna[lesson]];
-      } else if (type === 'category') {
+      } else if (type === 'category' && appData.vocab.category[lesson]) {
         currentVocab = [...appData.vocab.category[lesson].words];
-      } else if (type === 'custom') {
+      } else {
         currentVocab = [...appData.vocab.custom];
       }
       
@@ -2214,6 +2605,7 @@
     function updateSavedVocabGrid() {
       savedVocabGrid.innerHTML = '';
       savedCount.textContent = savedVocab.length;
+      savedWordsCount.textContent = savedVocab.length;
       
       if (savedVocab.length === 0) {
         savedVocabGrid.innerHTML = '<div class="text-secondary text-center py-4 col-span-full">No saved vocabulary yet</div>';
@@ -2243,6 +2635,7 @@
       savedVocab.splice(index, 1);
       localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
       updateSavedVocabGrid();
+      savedWordsCount.textContent = savedVocab.length;
       playSound(clickSound);
     }
     
@@ -2352,6 +2745,7 @@
       }
       
       localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+      savedWordsCount.textContent = savedVocab.length;
       updateFlashcard();
     }
 
@@ -2371,7 +2765,7 @@
       
       // Prepare quiz questions
       studyQuizQuestions = [];
-      const selectedWords = shuffle([...currentVocab]);
+      const selectedWords = shuffle([...currentVocab]).slice(0, 10); // Limit to 10 questions
       
       selectedWords.forEach((word, index) => {
         const questionType = Math.random() > 0.5 ? 'ja-to-bn' : 'bn-to-ja';
@@ -2453,7 +2847,7 @@
       studyQuizActive = true;
       
       studyQuizQuestions = [];
-      const selectedWords = shuffle([...savedVocab]);
+      const selectedWords = shuffle([...savedVocab]).slice(0, 10);
       
       selectedWords.forEach((word, index) => {
         const questionType = Math.random() > 0.5 ? 'ja-to-bn' : 'bn-to-ja';
@@ -2528,8 +2922,8 @@
       }
       
       if (currentStudyQuizIndex >= studyQuizQuestions.length) {
-        studyQuizQuestions = shuffle(studyQuizQuestions);
-        currentStudyQuizIndex = 0;
+        endStudyQuiz();
+        return;
       }
       
       const question = studyQuizQuestions[currentStudyQuizIndex];
@@ -2583,6 +2977,7 @@
           studyQuizHighScore = studyQuizScore;
           quizHighScore.textContent = studyQuizHighScore;
           localStorage.setItem('vocabHighScore', studyQuizHighScore);
+          vocabHighScoreDisplay.textContent = studyQuizHighScore;
         }
         
         setTimeout(() => {
@@ -2600,6 +2995,7 @@
         if (!savedVocab.some(v => v.ja === word.ja)) {
           savedVocab.push(word);
           localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+          savedWordsCount.textContent = savedVocab.length;
         }
         
         setTimeout(() => {
@@ -2636,6 +3032,7 @@
             if (!savedVocab.some(v => v.ja === word.ja)) {
               savedVocab.push(word);
               localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+              savedWordsCount.textContent = savedVocab.length;
             }
             
             setTimeout(() => {
@@ -2693,10 +3090,12 @@
       const lesson = lessonSelector.value;
       
       let originalVocab = [];
-      if (type === 'minna') {
+      if (type === 'minna' && appData.vocab.minna[lesson]) {
         originalVocab = [...appData.vocab.minna[lesson]];
-      } else if (type === 'category') {
+      } else if (type === 'category' && appData.vocab.category[lesson]) {
         originalVocab = [...appData.vocab.category[lesson].words];
+      } else {
+        originalVocab = [...appData.vocab.custom];
       }
       
       if (!term) {
@@ -2704,9 +3103,9 @@
       } else {
         currentVocab = originalVocab.filter(card => 
           card.ja.includes(term) || 
-          card.romaji.toLowerCase().includes(term) || 
-          card.en.toLowerCase().includes(term) ||
-          card.bn.includes(term)
+          (card.romaji && card.romaji.toLowerCase().includes(term)) || 
+          (card.en && card.en.toLowerCase().includes(term)) ||
+          (card.bn && card.bn.includes(term))
         );
       }
       
@@ -2718,12 +3117,6 @@
     // === Kanji Functions ===
     async function showKanjiMode() {
       playSound(clickSound);
-      
-      const kanjiLoaded = await ensureKanjiLoaded();
-      if (!kanjiLoaded) {
-        alert('Failed to load kanji data. Please try again.');
-        return;
-      }
       
       playBackgroundMusic(studyMusic);
       
@@ -2743,18 +3136,20 @@
           }
         }
         currentKanji = [...currentKanji, ...appData.kanji.custom];
-      } else {
+      } else if (appData.kanji[category]) {
         currentKanji = [...appData.kanji[category]];
+      } else {
+        currentKanji = [...appData.kanji.custom];
       }
       
       const searchTerm = kanjiSearch.value.trim().toLowerCase();
       if (searchTerm) {
         currentKanji = currentKanji.filter(kanji => {
-          return kanji.kanji.includes(searchTerm) || 
-                 kanji.onyomi.toLowerCase().includes(searchTerm) ||
-                 kanji.kunyomi.toLowerCase().includes(searchTerm) ||
-                 kanji.en.toLowerCase().includes(searchTerm) ||
-                 kanji.bn.includes(searchTerm);
+          return (kanji.kanji && kanji.kanji.includes(searchTerm)) || 
+                 (kanji.onyomi && kanji.onyomi.toLowerCase().includes(searchTerm)) ||
+                 (kanji.kunyomi && kanji.kunyomi.toLowerCase().includes(searchTerm)) ||
+                 (kanji.en && kanji.en.toLowerCase().includes(searchTerm)) ||
+                 (kanji.bn && kanji.bn.includes(searchTerm));
         });
       }
       
@@ -2897,7 +3292,7 @@
       kanjiQuizActive = true;
       
       kanjiQuizQuestions = [];
-      const selectedKanji = shuffle([...currentKanji]);
+      const selectedKanji = shuffle([...currentKanji]).slice(0, 10);
       
       selectedKanji.forEach((kanji, index) => {
         const questionType = Math.random() > 0.5 ? 'kanji-to-meaning' : 'meaning-to-kanji';
@@ -2972,8 +3367,8 @@
       }
       
       if (currentKanjiQuizIndex >= kanjiQuizQuestions.length) {
-        kanjiQuizQuestions = shuffle(kanjiQuizQuestions);
-        currentKanjiQuizIndex = 0;
+        endKanjiQuiz();
+        return;
       }
       
       const question = kanjiQuizQuestions[currentKanjiQuizIndex];
@@ -3027,6 +3422,7 @@
           kanjiQuizHighScore = kanjiQuizScore;
           kanjiQuizHighScoreDisplay.textContent = kanjiQuizHighScore;
           localStorage.setItem('kanjiHighScore', kanjiQuizHighScore);
+          kanjiHighScoreDisplay.textContent = kanjiQuizHighScore;
         }
         
         setTimeout(() => {
@@ -3179,7 +3575,7 @@
         hideUploadDocumentForm();
         updateDocumentsGrid();
         playSound(clickSound);
-        alert('Document uploaded successfully!');
+        showNotification('Document uploaded successfully!', 'success');
       };
       
       reader.readAsDataURL(file);
@@ -3199,7 +3595,7 @@
       
       const filteredDocuments = userDocuments.filter(doc => {
         const matchesSearch = doc.name.toLowerCase().includes(searchTerm) || 
-                             doc.description.toLowerCase().includes(searchTerm);
+                             (doc.description && doc.description.toLowerCase().includes(searchTerm));
         const matchesCategory = categoryFilter === 'all' || doc.category === categoryFilter;
         const matchesType = typeFilter === 'all' || 
                            (typeFilter === 'pdf' && doc.type === 'application/pdf') ||
@@ -3318,6 +3714,7 @@
         }
         
         updateDocumentsGrid();
+        showNotification('Document removed successfully!', 'success');
       }
     }
 
@@ -3413,6 +3810,7 @@
       if (!savedVocab.some(v => v.ja === japanese)) {
         savedVocab.push(newWord);
         localStorage.setItem('savedVocab', JSON.stringify(savedVocab));
+        savedWordsCount.textContent = savedVocab.length;
       }
       
       courseType.value = 'minna';
@@ -3421,7 +3819,7 @@
       
       hideAddVocabForm();
       playSound(clickSound);
-      alert('New vocabulary added successfully!');
+      showNotification('New vocabulary added successfully!', 'success');
     }
 
     // === Add Kanji Functions ===
@@ -3465,7 +3863,7 @@
       if (category === 'custom') {
         appData.kanji.custom.push(newKanjiItem);
         localStorage.setItem('customKanji', JSON.stringify(appData.kanji.custom));
-      } else {
+      } else if (appData.kanji[category]) {
         appData.kanji[category].push(newKanjiItem);
         localStorage.setItem(`kanji_${category}`, JSON.stringify(appData.kanji[category]));
       }
@@ -3480,7 +3878,7 @@
       
       hideAddKanjiForm();
       playSound(clickSound);
-      alert('New kanji added successfully!');
+      showNotification('New kanji added successfully!', 'success');
     }
 
     // === Particle Animation ===
@@ -3511,69 +3909,6 @@
         particle.style.backgroundColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
         
         container.appendChild(particle);
-      }
-    }
-
-    // === 3D Background with Three.js ===
-    function initThreeJS() {
-      try {
-        const container = document.getElementById('three-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        container.appendChild(renderer.domElement);
-        
-        const particleCount = 200;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const colors = new Float32Array(particleCount * 3);
-        
-        for (let i = 0; i < particleCount; i++) {
-          const i3 = i * 3;
-          positions[i3] = (Math.random() - 0.5) * 100;
-          positions[i3 + 1] = (Math.random() - 0.5) * 100;
-          positions[i3 + 2] = (Math.random() - 0.5) * 50;
-          
-          colors[i3] = 0.2 + Math.random() * 0.3;
-          colors[i3 + 1] = 0.3 + Math.random() * 0.4;
-          colors[i3 + 2] = 0.8 + Math.random() * 0.2;
-        }
-        
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        
-        const particleMaterial = new THREE.PointsMaterial({
-          size: 0.5,
-          vertexColors: true,
-          transparent: true,
-          opacity: 0.6
-        });
-        
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-        
-        camera.position.z = 30;
-        
-        function animate() {
-          requestAnimationFrame(animate);
-          
-          particleSystem.rotation.y += 0.001;
-          particleSystem.rotation.x += 0.0005;
-          
-          renderer.render(scene, camera);
-        }
-        
-        animate();
-        
-        window.addEventListener('resize', () => {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-      } catch (error) {
-        console.log("Three.js initialization failed, continuing without 3D background:", error);
       }
     }
 
@@ -3638,55 +3973,29 @@
 
     // === Initialize App ===
     document.addEventListener('DOMContentLoaded', async () => {
-      // Initialize high scores
-      highScore = parseInt(localStorage.getItem('kanaHighScore') || '0');
-      highScoreDisplay.textContent = highScore;
-      
-      // Load custom data from localStorage
-      const customVocab = localStorage.getItem('customVocab');
-      const customKanji = localStorage.getItem('customKanji');
-      
-      if (customVocab) {
-        appData.vocab.custom = JSON.parse(customVocab);
-      }
-      
-      if (customKanji) {
-        appData.kanji.custom = JSON.parse(customKanji);
-      }
-      
       // Load app data
       await loadAppData();
       
       // Initialize visual effects
       createParticles();
-      initThreeJS();
       
-      // Set up event listeners for search and filters
-      setupEventListeners();
-    });
-
-    function setupEventListeners() {
-      // Add search functionality
-      vocabSearch.addEventListener('input', filterVocab);
-      kanjiSearch.addEventListener('input', loadKanji);
-      
-      // Add event listener for kana game input
-      userInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' && !gameOver) {
-          const userAnswer = this.value.trim().toLowerCase();
-          if (userAnswer === currentKana[1]) {
-            handleCorrect();
-          } else {
-            handleIncorrect();
-          }
-        }
+      // Check network status
+      window.addEventListener('online', () => {
+        hideOfflineIndicator();
+        updateDataStatus();
       });
       
-      // Add event listeners for document controls
-      zoomInBtn.addEventListener('click', zoomIn);
-      zoomOutBtn.addEventListener('click', zoomOut);
-      fullViewBtn.addEventListener('click', toggleFullView);
-    }
+      window.addEventListener('offline', () => {
+        showOfflineIndicator();
+        updateDataStatus();
+      });
+      
+      // Initial network check
+      if (!navigator.onLine) {
+        showOfflineIndicator();
+        updateDataStatus();
+      }
+    });
 
     // Save data before unload
     window.addEventListener('beforeunload', () => {
