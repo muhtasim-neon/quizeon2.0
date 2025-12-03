@@ -1024,13 +1024,15 @@
       z-index: 1000;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
+  /* Your existing CSS styles here */
+    /* ... (all your existing CSS styles remain exactly the same) ... */
   </style>
 </head>
 <body>
   <!-- Loading Spinner -->
   <div id="loadingSpinner" class="loading-spinner">
     <div class="spinner"></div>
-    <div class="loading-text" id="loadingText">Loading essential data...</div>
+    <div class="loading-text" id="loadingText">Starting app...</div>
     <div class="progress-bar-loader">
       <div class="progress-fill" id="loadingProgress"></div>
     </div>
@@ -1039,7 +1041,7 @@
   <!-- Background Loading Indicator -->
   <div id="backgroundLoading" class="background-loading hidden">
     <div class="spinner"></div>
-    <span id="backgroundLoadingText">Loading full data...</span>
+    <span id="backgroundLoadingText">Loading additional data...</span>
   </div>
   
   <!-- Offline Indicator -->
@@ -1068,7 +1070,7 @@
       <div class="header">
         <h1 class="title">Quizeon N5</h1>
         <p class="subtitle">Japanese Learning Platform - Master Hiragana, Katakana, Vocabulary & Kanji</p>
-        <div id="dataStatus" class="text-secondary text-sm"></div>
+        <div id="dataStatus" class="text-secondary text-sm mt-2"></div>
       </div>
       
       <div class="mode-grid">
@@ -1845,7 +1847,7 @@
           { "kanji": "水", "onyomi": "すい", "kunyomi": "みず", "en": "water", "bn": "পানি" }
         ],
         people_family_body: [
-          { "kanji": "人", "onyomi": "じん", "kunyomi": "ひと", "en": "person", "bn": "ব্যক্তি" },
+          { "kanji": "人", "onyomi": "じん", "kunyomi": "হিত", "en": "person", "bn": "ব্যক্তি" },
           { "kanji": "男", "onyomi": "だん", "kunyomi": "おとこ", "en": "man", "bn": "পুরুষ" },
           { "kanji": "女", "onyomi": "じょ", "kunyomi": "おんな", "en": "woman", "bn": "নারী" },
           { "kanji": "子", "onyomi": "し", "kunyomi": "こ", "en": "child", "bn": "শিশু" }
@@ -2073,13 +2075,13 @@
       if (!dataStatus) return;
       
       if (isOfflineMode) {
-        dataStatus.textContent = "⚡ Using offline data";
+        dataStatus.textContent = "⚡ Using embedded data";
         dataStatus.style.color = "#ffa502";
       } else if (isFullDataLoaded) {
         dataStatus.textContent = "✓ Full data loaded";
         dataStatus.style.color = "#2ed573";
       } else {
-        dataStatus.textContent = "⏳ Loading full data in background...";
+        dataStatus.textContent = "⏳ Checking for additional data...";
         dataStatus.style.color = "#3a86ff";
       }
     }
@@ -2140,154 +2142,128 @@
       }
     }
 
-    // === Optimized Data Loading ===
+    // === SIMPLE WORKING SOLUTION ===
     async function loadAppData() {
-      updateLoadingProgress(10, 'Initializing app...');
+      updateLoadingProgress(10, 'Starting app...');
       
-      try {
-        updateLoadingProgress(30, 'Loading essential data...');
-        
-        // Use embedded fallback data immediately
-        appData = { ...fallbackData };
-        
-        // Load custom data from localStorage
-        updateLoadingProgress(60, 'Loading user data...');
-        const customVocab = localStorage.getItem('customVocab');
-        const customKanji = localStorage.getItem('customKanji');
-        
-        if (customVocab) {
-          try {
-            appData.vocab.custom = JSON.parse(customVocab);
-          } catch (e) {
-            console.error('Error parsing customVocab:', e);
-            appData.vocab.custom = [];
-          }
+      // 1. Always use embedded fallback data immediately
+      appData = { ...fallbackData };
+      
+      // 2. Load user's custom data
+      updateLoadingProgress(60, 'Loading your data...');
+      
+      const customVocab = localStorage.getItem('customVocab');
+      const customKanji = localStorage.getItem('customKanji');
+      
+      if (customVocab) {
+        try {
+          appData.vocab.custom = JSON.parse(customVocab);
+        } catch (e) {
+          console.error('Custom vocab error:', e);
         }
-        
-        if (customKanji) {
-          try {
-            appData.kanji.custom = JSON.parse(customKanji);
-          } catch (e) {
-            console.error('Error parsing customKanji:', e);
-            appData.kanji.custom = [];
-          }
-        }
-        
-        updateLoadingProgress(90, 'App is ready!');
-        
-        // Hide main spinner and show app
-        setTimeout(() => {
-          loadingSpinner.classList.add('hidden');
-          modeSelector.classList.remove('hidden');
-          modeSelector.classList.add('fade-in');
-          
-          // Initialize stats
-          initializeStats();
-          
-          // Update data status
-          updateDataStatus();
-        }, 500);
-        
-        // Start loading full data in background
-        setTimeout(() => loadFullDataInBackground(), 1000);
-        
-        return true;
-      } catch (error) {
-        console.error('Failed to load app data:', error);
-        loadingText.textContent = 'Error loading data. Using offline mode.';
-        loadingText.style.color = '#ffa502';
-        
-        setTimeout(() => {
-          loadingSpinner.classList.add('hidden');
-          modeSelector.classList.remove('hidden');
-          showOfflineIndicator();
-          updateDataStatus();
-          initializeStats();
-        }, 1000);
-        
-        return false;
       }
+      
+      if (customKanji) {
+        try {
+          appData.kanji.custom = JSON.parse(customKanji);
+        } catch (e) {
+          console.error('Custom kanji error:', e);
+        }
+      }
+      
+      // Set initial status
+      isOfflineMode = true;
+      isFullDataLoaded = false;
+      updateDataStatus();
+      
+      // 3. Show app immediately
+      updateLoadingProgress(100, 'Ready!');
+      
+      setTimeout(() => {
+        loadingSpinner.classList.add('hidden');
+        modeSelector.classList.remove('hidden');
+        modeSelector.classList.add('fade-in');
+        
+        // Initialize everything
+        initializeStats();
+        showNotification('App loaded successfully!', 'success');
+        
+        // Try to load external data silently in background
+        setTimeout(tryLoadExternalData, 100);
+      }, 500);
+      
+      return true;
     }
 
-    async function loadFullDataInBackground() {
-      if (isOfflineMode) return;
+    async function tryLoadExternalData() {
+      // Try multiple sources
+      const sources = [
+        {
+          name: 'GitHub Raw',
+          url: 'https://raw.githubusercontent.com/muhtasim-neon/quizeon2.0/main/data.json',
+          type: 'json'
+        },
+        {
+          name: 'GitHub Pages',
+          url: './data.json',
+          type: 'json'
+        },
+        {
+          name: 'Relative Path',
+          url: 'data.json',
+          type: 'json'
+        }
+      ];
       
-      showBackgroundLoading('Loading full data...');
+      showBackgroundLoading('Checking for additional data...');
       
       try {
-        // Try to load compressed data first
-        const response = await fetchWithTimeout('data.json.gz', 5000);
-        
-        if (response.ok) {
-          updateBackgroundLoading('Decompressing data...');
-          const compressedData = await response.arrayBuffer();
+        for (const source of sources) {
+          updateBackgroundLoading(`Trying ${source.name}...`);
+          console.log(`Trying: ${source.name} - ${source.url}`);
           
-          // Decompress using pako
-          const decompressedData = pako.inflate(new Uint8Array(compressedData), { to: 'string' });
-          const fullData = JSON.parse(decompressedData);
-          
-          // Merge with current data
-          appData = {
-            kana: { ...appData.kana, ...fullData.kana },
-            vocab: { ...appData.vocab, ...fullData.vocab },
-            kanji: { ...appData.kanji, ...fullData.kanji }
-          };
-          
-          isFullDataLoaded = true;
-          updateBackgroundLoading('Full data loaded!');
-          hideOfflineIndicator();
-          
-          setTimeout(() => {
-            hideBackgroundLoading();
-            updateDataStatus();
-            showNotification('Full data loaded successfully!', 'success');
-          }, 2000);
-          
-        } else {
-          // Try uncompressed data
-          await loadUncompressedData();
+          try {
+            const response = await fetchWithTimeout(source.url, 3000);
+            
+            if (response.ok) {
+              const data = await response.json();
+              
+              // Simple merge - replace existing data
+              if (data.kana) appData.kana = data.kana;
+              if (data.vocab) appData.vocab = data.vocab;
+              if (data.kanji) appData.kanji = data.kanji;
+              
+              isFullDataLoaded = true;
+              isOfflineMode = false;
+              
+              console.log(`✅ Loaded data from ${source.name}`);
+              updateDataStatus();
+              
+              setTimeout(() => {
+                hideBackgroundLoading();
+                showNotification(`Additional data loaded from ${source.name}`, 'success');
+              }, 1000);
+              
+              return;
+            }
+          } catch (error) {
+            console.log(`❌ Failed ${source.name}:`, error.message);
+            continue; // Try next source
+          }
         }
         
-      } catch (error) {
-        console.log('Failed to load full data, using offline mode:', error);
-        showOfflineIndicator();
-        updateBackgroundLoading('Using offline data');
+        // All sources failed
+        console.log('ℹ️ Using embedded data only');
+        isOfflineMode = true;
+        updateDataStatus();
         
         setTimeout(() => {
           hideBackgroundLoading();
-          updateDataStatus();
-          showNotification('Offline mode activated. Using local data.', 'warning');
         }, 1000);
-      }
-    }
-
-    async function loadUncompressedData() {
-      try {
-        updateBackgroundLoading('Loading uncompressed data...');
-        const response = await fetchWithTimeout('data.json', 3000);
         
-        if (response.ok) {
-          const fullData = await response.json();
-          
-          // Merge with current data
-          appData = {
-            kana: { ...appData.kana, ...fullData.kana },
-            vocab: { ...appData.vocab, ...fullData.vocab },
-            kanji: { ...appData.kanji, ...fullData.kanji }
-          };
-          
-          isFullDataLoaded = true;
-          hideOfflineIndicator();
-          
-          updateBackgroundLoading('Full data loaded!');
-          setTimeout(() => {
-            hideBackgroundLoading();
-            updateDataStatus();
-            showNotification('Full data loaded successfully!', 'success');
-          }, 2000);
-        }
       } catch (error) {
-        throw error;
+        console.error('Error in tryLoadExternalData:', error);
+        hideBackgroundLoading();
       }
     }
 
@@ -3884,7 +3860,7 @@
     // === Particle Animation ===
     function createParticles() {
       const container = document.getElementById('particlesContainer');
-      const particleCount = 50;
+      const particleCount = 30;
       
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
@@ -3983,6 +3959,8 @@
       window.addEventListener('online', () => {
         hideOfflineIndicator();
         updateDataStatus();
+        // Try to load external data again when coming online
+        setTimeout(tryLoadExternalData, 1000);
       });
       
       window.addEventListener('offline', () => {
